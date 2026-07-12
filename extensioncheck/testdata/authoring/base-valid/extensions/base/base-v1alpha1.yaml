@@ -1,0 +1,26 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/base/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: example.cache
+
+  interfaceTypes:
+    - name: example.key_value
+      targetKind: example.cache
+
+  interfaceFields:
+    - name: engine
+      targetKind: example.cache
+      targetType: example.key_value
+
+  fieldValues:
+    - field: interface.engine
+      targetKind: example.cache
+      targetType: example.key_value
+      values:
+        - redis
+        - memcached

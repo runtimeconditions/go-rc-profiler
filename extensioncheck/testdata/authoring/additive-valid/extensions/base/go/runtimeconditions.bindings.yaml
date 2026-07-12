@@ -1,0 +1,17 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://example.com/runtimeconditions/base/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../base-v1alpha1.yaml
+  language: go
+
+go:
+  importPath: github.com/example/runtimeconditions/base/go
+  package: base
+
+  declarations:
+    - function: Cache
+      nameArg: 0
+      kind: example.cache
+      interfaceType: example.key_value

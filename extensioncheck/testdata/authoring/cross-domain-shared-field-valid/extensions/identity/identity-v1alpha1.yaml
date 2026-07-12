@@ -1,0 +1,20 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/cross-domain-identity/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: identity.provider
+  conditionFields:
+    - name: trust
+      appliesToKinds:
+        - identity.provider
+  fieldValues:
+    - field: trust.metadata.source
+      targetKind: identity.provider
+      values:
+        - file
+        - url
+        - inline_xml

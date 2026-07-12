@@ -1,0 +1,19 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/qcow2-schema-wrong-kind/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: block.image
+  interfaceTypes:
+    - name: qcow2
+      targetKind: block.image
+  schemas:
+    - id: qcow2-cross-kind
+      description: Schema intentionally targets a kind that does not own qcow2.
+      appliesToKind: file.asset
+      appliesToInterfaceType: qcow2
+      schema:
+        type: object

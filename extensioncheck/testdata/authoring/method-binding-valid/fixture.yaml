@@ -1,0 +1,5 @@
+mode: extension
+root: extensions/method
+languages:
+  - go
+requireLanguagePackage: true

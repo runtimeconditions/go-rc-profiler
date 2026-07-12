@@ -1,0 +1,20 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/alpha/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: alpha.object
+
+  interfaceTypes:
+    - name: alpha.api
+      targetKind: alpha.object
+
+  conditionFields:
+    - name: configuration
+      appliesToKinds:
+        - alpha.object
+      appliesToInterfaceTypes:
+        - alpha.api

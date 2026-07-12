@@ -1,0 +1,94 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/filetype/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: file.asset
+  interfaceTypes:
+    - name: csv
+      targetKind: file.asset
+    - name: parquet
+      targetKind: file.asset
+  interfaceFields:
+    - name: dialect
+      targetKind: file.asset
+      targetType: csv
+    - name: schema
+      targetKind: file.asset
+      targetType: csv
+    - name: compression
+      targetKind: file.asset
+      targetType: parquet
+    - name: rowGroups
+      targetKind: file.asset
+      targetType: parquet
+  conditionFields:
+    - name: source
+      appliesToKinds:
+        - file.asset
+    - name: quality
+      appliesToKinds:
+        - file.asset
+  fieldValues:
+    - field: interface.dialect.delimiter
+      targetKind: file.asset
+      targetType: csv
+      values:
+        - comma
+        - tab
+        - pipe
+        - semicolon
+    - field: interface.dialect.header
+      targetKind: file.asset
+      targetType: csv
+      values:
+        - required
+        - optional
+        - forbidden
+    - field: interface.compression.codec
+      targetKind: file.asset
+      targetType: parquet
+      values:
+        - snappy
+        - zstd
+        - gzip
+        - none
+    - field: source.transport
+      targetKind: file.asset
+      values:
+        - local_path
+        - s3_uri
+        - https
+        - stream
+    - field: quality.badRecordPolicy
+      targetKind: file.asset
+      values:
+        - fail_fast
+        - quarantine
+        - drop
+  schemas:
+    - id: csv-dialect-policy
+      description: CSV parsing shape including delimiter, header, and bad-record policy.
+      appliesToKind: file.asset
+      appliesToInterfaceType: csv
+      schema:
+        type: object
+        properties:
+          dialect:
+            type: object
+          schema:
+            type: object
+    - id: parquet-layout-policy
+      description: Parquet compression and row group expectations.
+      appliesToKind: file.asset
+      appliesToInterfaceType: parquet
+      schema:
+        type: object
+        properties:
+          compression:
+            type: object
+          rowGroups:
+            type: object

@@ -1,0 +1,80 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/qcow2/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: block.image
+  interfaceTypes:
+    - name: qcow2
+      targetKind: block.image
+    - name: raw
+      targetKind: block.image
+  interfaceFields:
+    - name: backingStore
+      targetKind: block.image
+      targetType: qcow2
+    - name: features
+      targetKind: block.image
+      targetType: qcow2
+    - name: geometry
+      targetKind: block.image
+      targetType: raw
+  conditionFields:
+    - name: integrity
+      appliesToKinds:
+        - block.image
+    - name: conversion
+      appliesToKinds:
+        - block.image
+      appliesToInterfaceTypes:
+        - qcow2
+  fieldValues:
+    - field: interface.features[].name
+      targetKind: block.image
+      targetType: qcow2
+      values:
+        - lazy_refcounts
+        - compression
+        - encryption
+        - external_data_file
+    - field: interface.backingStore.mode
+      targetKind: block.image
+      targetType: qcow2
+      values:
+        - required
+        - optional
+        - forbidden
+    - field: interface.geometry.sectorSize
+      targetKind: block.image
+      targetType: raw
+      values:
+        - "512"
+        - "4096"
+    - field: integrity.checksum.algorithm
+      targetKind: block.image
+      values:
+        - sha256
+        - sha512
+        - blake3
+    - field: conversion.targetFormat
+      targetKind: block.image
+      targetType: qcow2
+      values:
+        - raw
+        - vmdk
+        - vhdx
+  schemas:
+    - id: qcow2-backing-store-policy
+      description: QCOW2 backing store and feature compatibility policy.
+      appliesToKind: block.image
+      appliesToInterfaceType: qcow2
+      schema:
+        type: object
+        properties:
+          backingStore:
+            type: object
+          features:
+            type: array

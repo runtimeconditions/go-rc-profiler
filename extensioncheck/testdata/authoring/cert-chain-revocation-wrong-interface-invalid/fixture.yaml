@@ -1,0 +1,6 @@
+mode: extension
+root: extensions/cert-chain
+languages:
+  - go
+requireLanguagePackage: false
+wantErrorContains: "fieldValues field interface.revocation.method interface field cryptographic.trust/jwks/revocation"

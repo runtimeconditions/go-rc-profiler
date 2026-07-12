@@ -1,0 +1,25 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/cert-chain-wrong-interface/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: cryptographic.trust
+  interfaceTypes:
+    - name: x509_chain
+      targetKind: cryptographic.trust
+    - name: jwks
+      targetKind: cryptographic.trust
+  interfaceFields:
+    - name: revocation
+      targetKind: cryptographic.trust
+      targetType: x509_chain
+  fieldValues:
+    - field: interface.revocation.method
+      targetKind: cryptographic.trust
+      targetType: jwks
+      values:
+        - ocsp
+        - crl

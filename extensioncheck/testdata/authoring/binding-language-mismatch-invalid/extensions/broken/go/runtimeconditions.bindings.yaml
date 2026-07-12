@@ -1,0 +1,16 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://example.com/runtimeconditions/binding-language-mismatch/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../broken-v1alpha1.yaml
+  language: python
+
+go:
+  importPath: github.com/example/runtimeconditions/binding/language/go
+  package: broken
+
+  declarations:
+    - function: Cache
+      nameArg: 0
+      kind: binding.cache

@@ -1,0 +1,19 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/option-outside-scope/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: scoped.cache
+    - name: scoped.queue
+  conditionFields:
+    - name: configuration
+      appliesToKinds:
+        - scoped.cache
+  fieldValues:
+    - field: configuration.env[].property
+      targetKind: scoped.cache
+      values:
+        - url

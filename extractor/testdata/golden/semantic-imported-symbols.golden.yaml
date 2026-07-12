@@ -1,0 +1,28 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+    name: semantic-imported-symbols
+workload:
+    uri: github.com/example/runtimeconditions/semantic-imported-symbols
+    version: v0.1.0
+extensions:
+    - https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml
+    - https://runtimeconditions.io/extensions/env-configuration/v1alpha1/runtimeconditions.extension.yaml
+conditions:
+    - name: todos-api
+      kind: api
+      interface:
+        type: http
+        operations:
+            - method: POST
+              path: /todos
+              requestBodySchema:
+                title: string
+                userId: integer
+              responseSchema:
+                completed: boolean
+                id: integer
+      configuration:
+        env:
+            - property: baseUrl
+              name: TODOS_API_URL

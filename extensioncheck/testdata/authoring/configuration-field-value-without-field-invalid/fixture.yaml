@@ -1,0 +1,6 @@
+mode: extension
+root: extensions/broken
+languages:
+  - go
+requireLanguagePackage: false
+wantErrorContains: "fieldValues field configuration.env[].property condition field configuration"

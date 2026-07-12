@@ -1,0 +1,22 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/transitive-base/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: transitive.cache
+  interfaceTypes:
+    - name: transitive.key_value
+      targetKind: transitive.cache
+  interfaceFields:
+    - name: engine
+      targetKind: transitive.cache
+      targetType: transitive.key_value
+  fieldValues:
+    - field: interface.engine
+      targetKind: transitive.cache
+      targetType: transitive.key_value
+      values:
+        - redis

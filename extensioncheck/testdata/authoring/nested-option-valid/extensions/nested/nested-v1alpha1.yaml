@@ -1,0 +1,18 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/nested-options/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: nested.cache
+  conditionFields:
+    - name: configuration
+      appliesToKinds:
+        - nested.cache
+  fieldValues:
+    - field: configuration.env[].property
+      targetKind: nested.cache
+      values:
+        - url

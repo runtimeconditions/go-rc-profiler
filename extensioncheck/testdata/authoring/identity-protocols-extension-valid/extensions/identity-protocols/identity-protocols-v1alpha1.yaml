@@ -1,0 +1,113 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/identity-protocols/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: identity.provider
+  interfaceTypes:
+    - name: ldap
+      targetKind: identity.provider
+    - name: oauth2
+      targetKind: identity.provider
+    - name: saml2
+      targetKind: identity.provider
+  interfaceFields:
+    - name: directory
+      targetKind: identity.provider
+      targetType: ldap
+    - name: flows
+      targetKind: identity.provider
+      targetType: oauth2
+    - name: scopes
+      targetKind: identity.provider
+      targetType: oauth2
+    - name: bindings
+      targetKind: identity.provider
+      targetType: saml2
+    - name: claims
+      targetKind: identity.provider
+      targetType: saml2
+  conditionFields:
+    - name: credentials
+      appliesToKinds:
+        - identity.provider
+    - name: trust
+      appliesToKinds:
+        - identity.provider
+      appliesToInterfaceTypes:
+        - oauth2
+        - saml2
+    - name: network
+      appliesToKinds:
+        - identity.provider
+      appliesToInterfaceTypes:
+        - ldap
+  fieldValues:
+    - field: interface.directory.searchMode
+      targetKind: identity.provider
+      targetType: ldap
+      values:
+        - anonymous
+        - bind_dn
+        - start_tls
+    - field: interface.flows[].grantType
+      targetKind: identity.provider
+      targetType: oauth2
+      values:
+        - authorization_code
+        - client_credentials
+        - device_code
+        - token_exchange
+    - field: interface.bindings[].transport
+      targetKind: identity.provider
+      targetType: saml2
+      values:
+        - http_redirect
+        - http_post
+        - artifact
+    - field: credentials.secret[].property
+      targetKind: identity.provider
+      values:
+        - client_secret
+        - bind_password
+        - signing_key
+    - field: trust.metadata.source
+      targetKind: identity.provider
+      targetType: saml2
+      values:
+        - file
+        - url
+        - inline_xml
+    - field: network.tls.mode
+      targetKind: identity.provider
+      targetType: ldap
+      values:
+        - disabled
+        - start_tls
+        - ldaps
+  schemas:
+    - id: oauth2-client-policy
+      description: OAuth2 client flow, scope, and credential requirements.
+      appliesToKind: identity.provider
+      appliesToInterfaceType: oauth2
+      schema:
+        type: object
+        properties:
+          flows:
+            type: array
+          scopes:
+            type: array
+    - id: saml2-federation-policy
+      description: SAML2 binding, metadata, and claim mapping policy.
+      appliesToKind: identity.provider
+      appliesToInterfaceType: saml2
+      schema:
+        type: object
+        properties:
+          bindings:
+            type: array
+          claims:
+            type: array

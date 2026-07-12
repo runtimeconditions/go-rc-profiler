@@ -1,0 +1,6 @@
+mode: extension
+root: extensions/app
+languages:
+  - go
+requireLanguagePackage: false
+wantErrorContains: "conditionField:access"

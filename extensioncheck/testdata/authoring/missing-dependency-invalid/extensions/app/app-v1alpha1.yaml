@@ -1,0 +1,13 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/app/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  dependencies:
+    - https://example.com/runtimeconditions/missing/v1alpha1/runtimeconditions.extension.yaml
+  conditionFields:
+    - name: configuration
+      appliesToKinds:
+        - missing.cache

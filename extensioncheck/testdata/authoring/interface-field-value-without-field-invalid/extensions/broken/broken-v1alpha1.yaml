@@ -1,0 +1,18 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/interface-field-without-field/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: field.cache
+  interfaceTypes:
+    - name: field.key_value
+      targetKind: field.cache
+  fieldValues:
+    - field: interface.engine
+      targetKind: field.cache
+      targetType: field.key_value
+      values:
+        - redis

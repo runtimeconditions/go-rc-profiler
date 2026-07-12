@@ -1,0 +1,14 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/filesystem-overlap-app/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  dependencies:
+    - https://example.com/runtimeconditions/filesystem-overlap-posix/v1alpha1/runtimeconditions.extension.yaml
+  schemas:
+    - id: filesystem-overlap-policy
+      description: Filesystem overlap policy.
+      schema:
+        type: object

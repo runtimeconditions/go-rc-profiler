@@ -1,0 +1,22 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://example.com/runtimeconditions/transitive-bindings-app/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../app-v1alpha1.yaml
+  language: go
+
+go:
+  importPath: github.com/example/runtimeconditions/transitive/bindings/app/go
+  package: app
+
+  options:
+    - function: Env
+      target: configuration.env[]
+      appliesToKinds:
+        - transitive.bindings.cache
+      appliesToInterfaceTypes:
+        - transitive.bindings.key_value
+      stringArgs:
+        property: 0
+        name: 1

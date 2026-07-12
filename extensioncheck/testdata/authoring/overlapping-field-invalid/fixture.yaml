@@ -1,0 +1,6 @@
+mode: extension
+root: extensions/child
+languages:
+  - go
+requireLanguagePackage: false
+wantErrorContains: "conditionField:configuration"

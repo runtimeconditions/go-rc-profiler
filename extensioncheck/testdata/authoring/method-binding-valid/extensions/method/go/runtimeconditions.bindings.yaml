@@ -1,0 +1,17 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://example.com/runtimeconditions/method-binding/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../method-v1alpha1.yaml
+  language: go
+
+go:
+  importPath: github.com/example/runtimeconditions/method/binding/go
+  package: method
+
+  declarations:
+    - receiver: Builder
+      method: Cache
+      nameArg: 0
+      kind: method.cache

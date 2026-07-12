@@ -1,0 +1,20 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://example.com/runtimeconditions/option-outside-scope/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../broken-v1alpha1.yaml
+  language: go
+
+go:
+  importPath: github.com/example/runtimeconditions/option/outside/scope/go
+  package: broken
+
+  options:
+    - function: Env
+      target: configuration.env[]
+      appliesToKinds:
+        - scoped.queue
+      stringArgs:
+        property: 0
+        name: 1

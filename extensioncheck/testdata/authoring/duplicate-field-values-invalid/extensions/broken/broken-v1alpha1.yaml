@@ -1,0 +1,23 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/duplicate-field-values/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: field.cache
+  interfaceTypes:
+    - name: field.key_value
+      targetKind: field.cache
+  interfaceFields:
+    - name: engine
+      targetKind: field.cache
+      targetType: field.key_value
+  fieldValues:
+    - field: interface.engine
+      targetKind: field.cache
+      targetType: field.key_value
+      values:
+        - redis
+        - redis

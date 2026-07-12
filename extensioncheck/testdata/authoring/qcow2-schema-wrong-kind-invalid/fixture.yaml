@@ -1,0 +1,6 @@
+mode: extension
+root: extensions/qcow2
+languages:
+  - go
+requireLanguagePackage: false
+wantErrorContains: "schema qcow2-cross-kind appliesToKind file.asset"

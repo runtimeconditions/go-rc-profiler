@@ -1,0 +1,28 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+    name: env-transitive-profile
+workload:
+    uri: github.com/example/env-transitive-profile
+    version: v0.1.0
+extensions:
+    - https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml
+    - https://runtimeconditions.io/extensions/env-configuration/v1alpha1/runtimeconditions.extension.yaml
+conditions:
+    - name: todo-cache
+      kind: cache
+      interface:
+        type: key_value
+        engine: redis
+      configuration:
+        alternatives:
+            - env:
+                - property: url
+                  name: REDIS_URL
+                  sensitive: true
+            - env:
+                - property: hostname
+                  name: REDIS_HOST
+                - property: port
+                  name: REDIS_PORT
+                  required: false

@@ -1,0 +1,88 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/cert-chain/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: cryptographic.trust
+  interfaceTypes:
+    - name: x509_chain
+      targetKind: cryptographic.trust
+    - name: jwks
+      targetKind: cryptographic.trust
+  interfaceFields:
+    - name: anchors
+      targetKind: cryptographic.trust
+      targetType: x509_chain
+    - name: intermediates
+      targetKind: cryptographic.trust
+      targetType: x509_chain
+    - name: revocation
+      targetKind: cryptographic.trust
+      targetType: x509_chain
+    - name: keySet
+      targetKind: cryptographic.trust
+      targetType: jwks
+  conditionFields:
+    - name: validation
+      appliesToKinds:
+        - cryptographic.trust
+    - name: rotation
+      appliesToKinds:
+        - cryptographic.trust
+  fieldValues:
+    - field: interface.anchors[].source
+      targetKind: cryptographic.trust
+      targetType: x509_chain
+      values:
+        - system_store
+        - file
+        - secret
+    - field: interface.revocation.method
+      targetKind: cryptographic.trust
+      targetType: x509_chain
+      values:
+        - crl
+        - ocsp
+        - stapled_ocsp
+    - field: interface.keySet.format
+      targetKind: cryptographic.trust
+      targetType: jwks
+      values:
+        - jwks_uri
+        - inline_jwks
+    - field: validation.nameConstraints.mode
+      targetKind: cryptographic.trust
+      values:
+        - strict
+        - allow_wildcards
+        - disabled
+    - field: rotation.trigger
+      targetKind: cryptographic.trust
+      values:
+        - not_after
+        - issuer_change
+        - thumbprint_change
+  schemas:
+    - id: x509-chain-validation-policy
+      description: Certificate chain validation and revocation behavior.
+      appliesToKind: cryptographic.trust
+      appliesToInterfaceType: x509_chain
+      schema:
+        type: object
+        properties:
+          anchors:
+            type: array
+          revocation:
+            type: object
+    - id: jwks-validation-policy
+      description: JSON Web Key Set validation and refresh behavior.
+      appliesToKind: cryptographic.trust
+      appliesToInterfaceType: jwks
+      schema:
+        type: object
+        properties:
+          keySet:
+            type: object

@@ -1,0 +1,21 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://example.com/runtimeconditions/constructor-binding/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../constructor-v1alpha1.yaml
+  language: go
+
+go:
+  importPath: github.com/example/runtimeconditions/constructor/binding/go
+  package: constructor
+
+  constructors:
+    - function: NewClient
+      receiver: Client
+
+  declarations:
+    - receiver: Client
+      method: Publish
+      nameArg: 0
+      kind: constructor.event_sink

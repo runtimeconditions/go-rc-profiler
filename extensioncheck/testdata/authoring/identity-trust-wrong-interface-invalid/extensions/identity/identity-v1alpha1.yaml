@@ -1,0 +1,27 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/identity-trust-wrong-interface/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: identity.provider
+  interfaceTypes:
+    - name: ldap
+      targetKind: identity.provider
+    - name: saml2
+      targetKind: identity.provider
+  conditionFields:
+    - name: trust
+      appliesToKinds:
+        - identity.provider
+      appliesToInterfaceTypes:
+        - saml2
+  fieldValues:
+    - field: trust.metadata.source
+      targetKind: identity.provider
+      targetType: ldap
+      values:
+        - file
+        - url

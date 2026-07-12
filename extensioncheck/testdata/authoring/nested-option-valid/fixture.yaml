@@ -1,0 +1,5 @@
+mode: extension
+root: extensions/nested
+languages:
+  - go
+requireLanguagePackage: true

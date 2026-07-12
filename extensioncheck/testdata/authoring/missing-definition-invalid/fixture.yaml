@@ -1,0 +1,6 @@
+mode: extension
+root: extensions/missing
+languages:
+  - go
+requireLanguagePackage: true
+wantErrorContains: "no RuntimeConditionsExtensionDefinition YAML files found"

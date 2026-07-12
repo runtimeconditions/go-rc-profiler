@@ -1,0 +1,6 @@
+mode: extension
+root: extensions/broken
+languages:
+  - go
+requireLanguagePackage: false
+wantErrorContains: "duplicate field value"

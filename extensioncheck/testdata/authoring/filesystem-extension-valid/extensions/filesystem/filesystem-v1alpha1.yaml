@@ -1,0 +1,103 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/filesystem/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: filesystem
+  interfaceTypes:
+    - name: posix
+      targetKind: filesystem
+    - name: object_mount
+      targetKind: filesystem
+  interfaceFields:
+    - name: mounts
+      targetKind: filesystem
+      targetType: posix
+    - name: consistency
+      targetKind: filesystem
+      targetType: object_mount
+    - name: cache
+      targetKind: filesystem
+      targetType: object_mount
+  conditionFields:
+    - name: access
+      appliesToKinds:
+        - filesystem
+    - name: durability
+      appliesToKinds:
+        - filesystem
+      appliesToInterfaceTypes:
+        - object_mount
+  fieldValues:
+    - field: interface.mounts[].mode
+      targetKind: filesystem
+      targetType: posix
+      values:
+        - read_only
+        - read_write
+        - append_only
+    - field: interface.consistency.model
+      targetKind: filesystem
+      targetType: object_mount
+      values:
+        - read_after_write
+        - eventual
+        - strong
+    - field: interface.cache.policy
+      targetKind: filesystem
+      targetType: object_mount
+      values:
+        - none
+        - metadata
+        - write_through
+    - field: access.identity.kind
+      targetKind: filesystem
+      values:
+        - uid_gid
+        - service_account
+        - workload_identity
+    - field: durability.replication
+      targetKind: filesystem
+      targetType: object_mount
+      values:
+        - single_zone
+        - multi_zone
+  schemas:
+    - id: posix-mount-table
+      description: POSIX mount table and mount option constraints.
+      appliesToKind: filesystem
+      appliesToInterfaceType: posix
+      schema:
+        type: object
+        required:
+          - mounts
+        properties:
+          mounts:
+            type: array
+            items:
+              type: object
+              required:
+                - path
+                - mode
+              properties:
+                path:
+                  type: string
+                mode:
+                  enum:
+                    - read_only
+                    - read_write
+                    - append_only
+    - id: object-mount-cache-policy
+      description: Object-backed filesystem consistency and cache policy.
+      appliesToKind: filesystem
+      appliesToInterfaceType: object_mount
+      schema:
+        type: object
+        properties:
+          consistency:
+            type: object
+          cache:
+            type: object

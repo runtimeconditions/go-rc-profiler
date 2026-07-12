@@ -1,0 +1,25 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/event-sink/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: example.event_sink
+  interfaceTypes:
+    - name: event.stream
+      targetKind: example.event_sink
+  conditionFields:
+    - name: configuration
+      appliesToKinds:
+        - example.event_sink
+      appliesToInterfaceTypes:
+        - event.stream
+  fieldValues:
+    - field: configuration.env[].property
+      targetKind: example.event_sink
+      targetType: event.stream
+      values:
+        - endpoint
+        - token

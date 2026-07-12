@@ -1,0 +1,6 @@
+mode: extension
+root: extensions/broken
+languages:
+  - go
+requireLanguagePackage: false
+wantErrorContains: "field values interface.engine targetType field.cache/field.document"

@@ -1,0 +1,26 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://example.com/runtimeconditions/nested-options/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../nested-v1alpha1.yaml
+  language: go
+
+go:
+  importPath: github.com/example/runtimeconditions/nested/options/go
+  package: nested
+
+  declarations:
+    - function: Cache
+      nameArg: 0
+      kind: nested.cache
+      options:
+        - function: Env
+          target: configuration.env[]
+          stringArgs:
+            property: 0
+            name: 1
+          options:
+            - function: Sensitive
+              target: env.sensitive
+              value: "true"

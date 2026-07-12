@@ -1,0 +1,15 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/wide-field-app/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  dependencies:
+    - https://example.com/runtimeconditions/wide-field-wide/v1alpha1/runtimeconditions.extension.yaml
+    - https://example.com/runtimeconditions/wide-field-narrow/v1alpha1/runtimeconditions.extension.yaml
+  schemas:
+    - id: wide-field-policy
+      description: Wide field policy.
+      schema:
+        type: object

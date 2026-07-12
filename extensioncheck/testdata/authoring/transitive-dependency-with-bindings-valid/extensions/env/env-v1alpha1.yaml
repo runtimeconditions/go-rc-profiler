@@ -1,0 +1,21 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/transitive-bindings-env/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  dependencies:
+    - https://example.com/runtimeconditions/transitive-bindings-base/v1alpha1/runtimeconditions.extension.yaml
+  conditionFields:
+    - name: configuration
+      appliesToKinds:
+        - transitive.bindings.cache
+      appliesToInterfaceTypes:
+        - transitive.bindings.key_value
+  fieldValues:
+    - field: configuration.env[].property
+      targetKind: transitive.bindings.cache
+      targetType: transitive.bindings.key_value
+      values:
+        - url

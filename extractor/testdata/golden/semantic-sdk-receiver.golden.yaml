@@ -1,0 +1,21 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+    name: semantic-sdk-receiver
+workload:
+    uri: github.com/example/runtimeconditions/semantic-sdk-receiver
+    version: v0.1.0
+extensions:
+    - https://example.com/runtimeconditions/event-sink/v1alpha1/runtimeconditions.extension.yaml
+conditions:
+    - name: audit-events
+      kind: example.event_sink
+      interface:
+        type: event.stream
+      configuration:
+        env:
+            - property: endpoint
+              name: EVENTSTREAM_URL
+            - property: token
+              name: EVENTSTREAM_TOKEN
+              sensitive: true

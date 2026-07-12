@@ -1,0 +1,20 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://example.com/runtimeconditions/transitive-bindings-base/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../base-v1alpha1.yaml
+  language: go
+
+go:
+  importPath: github.com/example/runtimeconditions/transitive/bindings/base/go
+  package: base
+
+  constants:
+    Redis: redis
+
+  declarations:
+    - function: Cache
+      nameArg: 0
+      kind: transitive.bindings.cache
+      interfaceType: transitive.bindings.key_value

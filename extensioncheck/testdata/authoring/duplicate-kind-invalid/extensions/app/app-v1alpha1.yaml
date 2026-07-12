@@ -1,0 +1,15 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/duplicate-kind-app/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  dependencies:
+    - https://example.com/runtimeconditions/duplicate-kind-alpha/v1alpha1/runtimeconditions.extension.yaml
+    - https://example.com/runtimeconditions/duplicate-kind-beta/v1alpha1/runtimeconditions.extension.yaml
+  schemas:
+    - id: duplicate-kind-policy
+      description: Duplicate kind policy.
+      schema:
+        type: object

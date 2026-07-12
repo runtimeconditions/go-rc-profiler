@@ -1,0 +1,14 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/config-field-without-field/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: field.cache
+  fieldValues:
+    - field: configuration.env[].property
+      targetKind: field.cache
+      values:
+        - url

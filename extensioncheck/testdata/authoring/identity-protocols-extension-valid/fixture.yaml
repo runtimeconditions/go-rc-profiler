@@ -1,0 +1,5 @@
+mode: extension
+root: extensions/identity-protocols
+languages:
+  - go
+requireLanguagePackage: false

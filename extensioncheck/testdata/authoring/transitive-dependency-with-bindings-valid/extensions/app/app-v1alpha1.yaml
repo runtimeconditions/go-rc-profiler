@@ -1,0 +1,16 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/transitive-bindings-app/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  dependencies:
+    - https://example.com/runtimeconditions/transitive-bindings-env/v1alpha1/runtimeconditions.extension.yaml
+  schemas:
+    - id: transitive-bindings-cache-policy
+      description: Cache policy schema.
+      appliesToKind: transitive.bindings.cache
+      appliesToInterfaceType: transitive.bindings.key_value
+      schema:
+        type: object

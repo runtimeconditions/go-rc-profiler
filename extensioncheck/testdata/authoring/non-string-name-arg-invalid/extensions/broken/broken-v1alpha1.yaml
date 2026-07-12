@@ -1,0 +1,9 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+
+metadata:
+  id: https://example.com/runtimeconditions/non-string-name-arg/v1alpha1/runtimeconditions.extension.yaml
+
+spec:
+  kinds:
+    - name: binding.cache

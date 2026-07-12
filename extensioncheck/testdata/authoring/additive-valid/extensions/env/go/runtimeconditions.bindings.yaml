@@ -1,0 +1,22 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://example.com/runtimeconditions/env/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../env-v1alpha1.yaml
+  language: go
+
+go:
+  importPath: github.com/example/runtimeconditions/env/go
+  package: env
+
+  options:
+    - function: Env
+      target: configuration.env[]
+      appliesToKinds:
+        - example.cache
+      appliesToInterfaceTypes:
+        - example.key_value
+      stringArgs:
+        property: 0
+        name: 1

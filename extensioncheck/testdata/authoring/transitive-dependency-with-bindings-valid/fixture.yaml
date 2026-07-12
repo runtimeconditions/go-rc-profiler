@@ -1,0 +1,5 @@
+mode: extension
+root: extensions/app
+languages:
+  - go
+requireLanguagePackage: true

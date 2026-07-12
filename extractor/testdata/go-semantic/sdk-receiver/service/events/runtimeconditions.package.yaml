@@ -1,0 +1,31 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsPackage
+
+metadata:
+  package: github.com/example/runtimeconditions/semantic-sdk-receiver/service/events
+  language: go
+
+extension:
+  id: https://example.com/runtimeconditions/event-sink/v1alpha1/runtimeconditions.extension.yaml
+
+go:
+  importPath: github.com/example/runtimeconditions/semantic-sdk-receiver/service/events
+  package: events
+
+  constructors:
+    - function: NewClient
+      receiver: Client
+
+  declarations:
+    - receiver: Client
+      method: Publish
+      name: audit-events
+      kind: example.event_sink
+      interfaceType: event.stream
+      configuration:
+        env:
+          - property: endpoint
+            name: EVENTSTREAM_URL
+          - property: token
+            name: EVENTSTREAM_TOKEN
+            sensitive: true

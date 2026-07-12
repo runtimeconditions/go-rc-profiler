@@ -1,0 +1,5 @@
+mode: extension
+root: extensions/filesystem
+languages:
+  - go
+requireLanguagePackage: false

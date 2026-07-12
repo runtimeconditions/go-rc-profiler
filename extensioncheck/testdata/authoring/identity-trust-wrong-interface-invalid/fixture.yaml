@@ -1,0 +1,6 @@
+mode: extension
+root: extensions/identity
+languages:
+  - go
+requireLanguagePackage: false
+wantErrorContains: "fieldValues field trust.metadata.source condition field trust for identity.provider/ldap"

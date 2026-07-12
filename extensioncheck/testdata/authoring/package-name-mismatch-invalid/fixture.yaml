@@ -1,0 +1,6 @@
+mode: extension
+root: extensions/broken
+languages:
+  - go
+requireLanguagePackage: true
+wantErrorContains: "go package name actual does not match binding package expected"

@@ -1,0 +1,16 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://example.com/runtimeconditions/broken/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../broken-v1alpha1.yaml
+  language: go
+
+go:
+  importPath: github.com/example/runtimeconditions/broken/go
+  package: broken
+
+  declarations:
+    - function: Broken
+      nameArg: 0
+      kind: missing.cache
