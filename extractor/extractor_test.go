@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"runtime"
 	"slices"
 	"strings"
 	"testing"
@@ -716,10 +717,7 @@ func writeAuditLog(ctx context.Context) error {
 
 func TestExtractDirWithCheckedInAWSSDKPackageManifest(t *testing.T) {
 	dir := t.TempDir()
-	sdkPath, err := filepath.Abs(filepath.Join("..", "..", "spec", "examples", "sdks", "aws-sdk-go-v2"))
-	if err != nil {
-		t.Fatal(err)
-	}
+	sdkPath := workspacePath(t, "spec", "examples", "sdks", "aws-sdk-go-v2")
 	writeModule(t, dir, map[string]string{
 		"github.com/runtimeconditions/spec/examples/sdks/aws-sdk-go-v2": sdkPath,
 	})
@@ -948,12 +946,9 @@ type extensionFieldValueForTest struct {
 
 func loadExtensionCatalogForTest(t *testing.T) extensionCatalogForTest {
 	t.Helper()
-	root, err := filepath.Abs(filepath.Join("..", "..", "..", "extensions"))
-	if err != nil {
-		t.Fatal(err)
-	}
+	root := workspacePath(t, "extensions")
 	catalog := make(extensionCatalogForTest)
-	err = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -1345,8 +1340,20 @@ func writeFilesForTest(t *testing.T, files map[string]string) {
 
 func extensionModulePath(t *testing.T, name string) string {
 	t.Helper()
-	path, err := filepath.Abs(filepath.Join("..", "..", "extensions", name, "go"))
-	if err != nil {
+	return workspacePath(t, "extensions", name, "go")
+}
+
+func workspacePath(t *testing.T, parts ...string) string {
+	t.Helper()
+	_, source, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("cannot locate extractor test source")
+	}
+	root := filepath.Clean(filepath.Join(filepath.Dir(source), "..", ".."))
+	path := filepath.Join(append([]string{root}, parts...)...)
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		t.Skipf("workspace integration dependency is not checked out at %s", path)
+	} else if err != nil {
 		t.Fatal(err)
 	}
 	return path

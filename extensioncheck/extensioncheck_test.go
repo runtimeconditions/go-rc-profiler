@@ -3,6 +3,7 @@ package extensioncheck
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -72,6 +73,71 @@ func TestExtensionAuthoringFixtures(t *testing.T) {
 				}
 			})
 		}
+	}
+}
+
+func TestValidateProfileYAMLAppliesExtensionJSONSchema(t *testing.T) {
+	root := t.TempDir()
+	writeFiles(t, map[string]string{
+		filepath.Join(root, "nats.yaml"): `apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+metadata:
+  id: https://example.com/runtimeconditions/nats/0.1.0/runtimeconditions.extension.yaml
+spec:
+  kinds:
+  - name: nats
+  interfaceTypes:
+  - name: service
+    targetKind: nats
+  interfaceFields:
+  - name: operations
+    targetKind: nats
+    targetType: service
+  schemas:
+  - id: nats-service
+    description: Validates the extension-owned NATS operation shape.
+    appliesToKind: nats
+    appliesToInterfaceType: service
+    schema:
+      $schema: https://json-schema.org/draft/2020-12/schema
+      type: object
+      required: [kind, interface]
+      properties:
+        kind:
+          const: nats
+        interface:
+          type: object
+          required: [type, operations]
+          properties:
+            type:
+              const: service
+            operations:
+              type: array
+              minItems: 1
+              items:
+                type: object
+                required: [action]
+                properties:
+                  action:
+                    enum: [publish]
+                additionalProperties: false
+          additionalProperties: false
+`,
+	})
+	profile := []byte(`apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+extensions:
+- https://example.com/runtimeconditions/nats/0.1.0/runtimeconditions.extension.yaml
+conditions:
+- kind: nats
+  interface:
+    type: service
+    operations:
+    - action: subscribe
+`)
+	err := ValidateProfileYAML(profile, ProfileOptions{CatalogRoots: []string{root}})
+	if err == nil || !strings.Contains(err.Error(), "does not satisfy extension schema nats-service") {
+		t.Fatalf("unexpected error: %v", err)
 	}
 }
 
@@ -578,11 +644,18 @@ public final class Broken {
 
 func repoPath(t *testing.T, parts ...string) string {
 	t.Helper()
-	root, err := filepath.Abs(filepath.Join("..", "..", ".."))
-	if err != nil {
+	_, source, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("cannot locate extensioncheck test source")
+	}
+	root := filepath.Clean(filepath.Join(filepath.Dir(source), "..", ".."))
+	path := filepath.Join(append([]string{root}, parts...)...)
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		t.Skipf("workspace integration dependency is not checked out at %s", path)
+	} else if err != nil {
 		t.Fatal(err)
 	}
-	return filepath.Join(append([]string{root}, parts...)...)
+	return path
 }
 
 func writeFiles(t *testing.T, files map[string]string) {

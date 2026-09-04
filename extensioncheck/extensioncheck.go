@@ -1,6 +1,8 @@
 package extensioncheck
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -14,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/santhosh-tekuri/jsonschema/v6"
 	"gopkg.in/yaml.v3"
 )
 
@@ -173,10 +176,16 @@ func ValidateProfileYAML(data []byte, opts ProfileOptions) error {
 	if err := yaml.Unmarshal(data, &profile); err != nil {
 		return err
 	}
-	return validateProfile(profile, opts)
+	var raw struct {
+		Conditions []any `yaml:"conditions"`
+	}
+	if err := yaml.Unmarshal(data, &raw); err != nil {
+		return err
+	}
+	return validateProfile(profile, raw.Conditions, opts)
 }
 
-func validateProfile(profile profileDocument, opts ProfileOptions) error {
+func validateProfile(profile profileDocument, rawConditions []any, opts ProfileOptions) error {
 	validator := &validator{}
 	if err := validator.loadCatalog(opts.CatalogRoots); err != nil {
 		return err
@@ -184,7 +193,7 @@ func validateProfile(profile profileDocument, opts ProfileOptions) error {
 	profileValidator := &profileValidator{
 		catalog: validator,
 	}
-	profileValidator.validate(profile)
+	profileValidator.validate(profile, rawConditions)
 	if err := validator.err(); err != nil {
 		profileValidator.errs = appendValidationError(profileValidator.errs, err)
 	}
@@ -760,7 +769,10 @@ func (v *validator) checkSelfDuplicates(node *extensionNode) {
 		}
 		if schema.Schema == nil {
 			v.addf(node.DefinitionPath, "schema %s schema object is required", schema.ID)
+		} else if _, err := compileConditionSchema(schema.Schema, schema.ID); err != nil {
+			v.addf(node.DefinitionPath, "schema %s is invalid: %v", schema.ID, err)
 		}
+		check("schema:" + schema.ID)
 	}
 }
 
@@ -1737,7 +1749,7 @@ type profileValidator struct {
 	errs    []string
 }
 
-func (v *profileValidator) validate(profile profileDocument) {
+func (v *profileValidator) validate(profile profileDocument, rawConditions []any) {
 	if profile.APIVersion != "runtimeconditions.io/v1alpha1" {
 		v.addf("apiVersion must be runtimeconditions.io/v1alpha1")
 	}
@@ -1772,7 +1784,11 @@ func (v *profileValidator) validate(profile profileDocument) {
 	resolved := v.vocabulary(closure)
 	v.catalog.checkResolvedConflicts("profile", resolved)
 	for index, condition := range profile.Conditions {
-		v.validateCondition(index, resolved, condition)
+		var raw any
+		if index < len(rawConditions) {
+			raw = rawConditions[index]
+		}
+		v.validateCondition(index, resolved, condition, raw)
 	}
 }
 
@@ -1812,7 +1828,7 @@ func (v *profileValidator) vocabulary(ids map[string]bool) vocabulary {
 	return vocabulary{nodes: nodes}
 }
 
-func (v *profileValidator) validateCondition(index int, resolved vocabulary, condition profileCondition) {
+func (v *profileValidator) validateCondition(index int, resolved vocabulary, condition profileCondition, raw any) {
 	prefix := fmt.Sprintf("conditions[%d]", index)
 	v.expectExactlyOne(resolved.kindCount(condition.Kind), "%s.kind %s", prefix, condition.Kind)
 	v.expectExactlyOne(resolved.interfaceTypeCount(condition.Kind, condition.Interface.Type), "%s.interface.type %s/%s", prefix, condition.Kind, condition.Interface.Type)
@@ -1824,7 +1840,9 @@ func (v *profileValidator) validateCondition(index int, resolved vocabulary, con
 	if len(condition.Interface.Operations) > 0 {
 		v.expectExactlyOne(resolved.interfaceFieldCount(condition.Kind, condition.Interface.Type, "operations"), "%s.interface.operations for %s/%s", prefix, condition.Kind, condition.Interface.Type)
 		for operationIndex, operation := range condition.Interface.Operations {
-			v.expectExactlyOne(resolved.fieldValueCount("interface.operations[].method", condition.Kind, condition.Interface.Type, operation.Method), "%s.interface.operations[%d].method %s for %s/%s", prefix, operationIndex, operation.Method, condition.Kind, condition.Interface.Type)
+			if operation.Method != "" {
+				v.expectExactlyOne(resolved.fieldValueCount("interface.operations[].method", condition.Kind, condition.Interface.Type, operation.Method), "%s.interface.operations[%d].method %s for %s/%s", prefix, operationIndex, operation.Method, condition.Kind, condition.Interface.Type)
+			}
 		}
 	}
 	if len(condition.Interface.Subjects) > 0 {
@@ -1849,6 +1867,50 @@ func (v *profileValidator) validateCondition(index int, resolved vocabulary, con
 			}
 		}
 	}
+	for _, node := range resolved.nodes {
+		for _, item := range node.Definition.Spec.Schemas {
+			if item.AppliesToKind != "" && item.AppliesToKind != condition.Kind {
+				continue
+			}
+			if item.AppliesToInterfaceType != "" && item.AppliesToInterfaceType != condition.Interface.Type {
+				continue
+			}
+			schema, err := compileConditionSchema(item.Schema, item.ID)
+			if err != nil {
+				v.addf("%s schema %s could not be compiled: %v", prefix, item.ID, err)
+				continue
+			}
+			instance, err := jsonSchemaValue(raw)
+			if err != nil {
+				v.addf("%s could not be converted for schema validation: %v", prefix, err)
+				continue
+			}
+			if err := schema.Validate(instance); err != nil {
+				v.addf("%s does not satisfy extension schema %s: %v", prefix, item.ID, err)
+			}
+		}
+	}
+}
+
+func compileConditionSchema(value any, id string) (*jsonschema.Schema, error) {
+	parsed, err := jsonSchemaValue(value)
+	if err != nil {
+		return nil, err
+	}
+	compiler := jsonschema.NewCompiler()
+	location := "runtimeconditions-extension-schema.json"
+	if err := compiler.AddResource(location, parsed); err != nil {
+		return nil, err
+	}
+	return compiler.Compile(location)
+}
+
+func jsonSchemaValue(value any) (any, error) {
+	data, err := json.Marshal(value)
+	if err != nil {
+		return nil, err
+	}
+	return jsonschema.UnmarshalJSON(bytes.NewReader(data))
 }
 
 func (v *profileValidator) expectExactlyOne(count int, format string, args ...any) {

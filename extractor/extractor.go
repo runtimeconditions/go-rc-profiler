@@ -75,10 +75,11 @@ type APISpec struct {
 }
 
 type Operation struct {
-	Method            string `yaml:"method"`
-	Path              string `yaml:"path"`
-	RequestBodySchema any    `yaml:"requestBodySchema,omitempty"`
-	ResponseSchema    any    `yaml:"responseSchema,omitempty"`
+	Method            string         `yaml:"method,omitempty"`
+	Path              string         `yaml:"path,omitempty"`
+	RequestBodySchema any            `yaml:"requestBodySchema,omitempty"`
+	ResponseSchema    any            `yaml:"responseSchema,omitempty"`
+	Fields            map[string]any `yaml:",inline"`
 }
 
 type Subject struct {
@@ -268,6 +269,10 @@ func ExtractDir(dir string, opts Options) (*RuntimeConditionsProfile, error) {
 		return nil, err
 	}
 	bindings = append(bindings, packageBindings...)
+	sdkMappings, err := discoverGoSDKMappings(absDir, files, opts.ExtensionRoots)
+	if err != nil {
+		return nil, err
+	}
 	catalogRoots := validationCatalogRoots(opts.ExtensionRoots, bindings)
 	if !opts.SkipValidation {
 		if err := extensioncheck.ValidateBindingManifests(bindingManifestPaths(bindings), extensioncheck.Options{
@@ -284,6 +289,14 @@ func ExtractDir(dir string, opts Options) (*RuntimeConditionsProfile, error) {
 	e := &extractor{fset: fset, scope: scope}
 	extensions := make(map[string]bool)
 	var conditions []Condition
+	sdkConditions, sdkExtensions, err := extractGoSDKConditions(files, scope.semantic, sdkMappings)
+	if err != nil {
+		return nil, err
+	}
+	conditions = append(conditions, sdkConditions...)
+	for _, id := range sdkExtensions {
+		extensions[id] = true
+	}
 
 	for _, parsed := range files {
 		bindingImports := runtimeConditionBindingImports(parsed.file, bindings, scope.semantic)
@@ -379,9 +392,12 @@ func discoverGoBindings(roots []string) ([]*goBinding, error) {
 			if !isExtensionBindingManifest(d.Name()) {
 				return nil
 			}
-			binding, err := readGoBinding(path)
+			binding, ok, err := readGoBindingForLanguage(path)
 			if err != nil {
 				return err
+			}
+			if !ok {
+				return nil
 			}
 			bindings = append(bindings, binding)
 			return nil
@@ -391,6 +407,26 @@ func discoverGoBindings(roots []string) ([]*goBinding, error) {
 		}
 	}
 	return bindings, nil
+}
+
+func readGoBindingForLanguage(path string) (*goBinding, bool, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, false, err
+	}
+	var probe struct {
+		Metadata struct {
+			Language string `yaml:"language"`
+		} `yaml:"metadata"`
+	}
+	if err := yaml.Unmarshal(data, &probe); err != nil {
+		return nil, false, fmt.Errorf("%s: %w", path, err)
+	}
+	if probe.Metadata.Language != "go" {
+		return nil, false, nil
+	}
+	binding, err := readGoBinding(path)
+	return binding, err == nil, err
 }
 
 func discoverGoPackageBindings(sourceDir string, files []parsedFile) ([]*goBinding, error) {

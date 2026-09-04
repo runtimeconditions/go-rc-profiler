@@ -37,3 +37,7 @@ go run . validate-extensions -root ../extensions
 ```sh
 go test ./...
 ```
+
+## SDK mappings
+
+The profiler automatically discovers version-aligned static SDK mappings shipped in imported Go modules. No application configuration or Runtime Conditions runtime dependency is required. [`docs/sdk-mappings.md`](docs/sdk-mappings.md) defines the package layout, integrity checks, fail-closed behavior, and current static-analysis boundary.
