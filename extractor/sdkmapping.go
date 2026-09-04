@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go/ast"
+	"go/token"
 	"go/types"
 	"io"
 	"os"
@@ -320,6 +321,10 @@ type sdkResolvedState struct {
 type sdkStateTable struct {
 	semantic         map[types.Object]sdkResolvedState
 	syntax           map[string]sdkResolvedState
+	valuesSemantic   map[types.Object]ast.Expr
+	valuesSyntax     map[string]ast.Expr
+	invalidValues    map[types.Object]bool
+	invalidSyntax    map[string]bool
 	callDependencies map[*ast.CallExpr]string
 }
 
@@ -343,11 +348,18 @@ func extractGoSDKConditions(files []parsedFile, semantic *semanticScope, mapping
 	var observations []sdkConditionObservation
 	usedExtensions := make(map[string]bool)
 	for _, parsed := range files {
-		states := sdkStateTable{semantic: make(map[types.Object]sdkResolvedState), syntax: make(map[string]sdkResolvedState), callDependencies: make(map[*ast.CallExpr]string)}
+		states := sdkStateTable{semantic: make(map[types.Object]sdkResolvedState), syntax: make(map[string]sdkResolvedState), valuesSemantic: make(map[types.Object]ast.Expr), valuesSyntax: make(map[string]ast.Expr), invalidValues: make(map[types.Object]bool), invalidSyntax: make(map[string]bool), callDependencies: make(map[*ast.CallExpr]string)}
 		ast.Inspect(parsed.file, func(node ast.Node) bool {
 			switch item := node.(type) {
+			case *ast.DeclStmt:
+				recordSDKValueDeclaration(item, semantic, &states)
 			case *ast.AssignStmt:
+				recordSDKValueAssignments(item, semantic, &states)
 				recordSDKAssignment(item, semantic, calls, &states)
+			case *ast.UnaryExpr:
+				if item.Op == token.AND {
+					invalidateSDKValue(item.X, semantic, &states)
+				}
 			case *ast.CallExpr:
 				call, ok := goSDKCallForExpression(item, semantic, calls)
 				if !ok {
@@ -366,7 +378,7 @@ func extractGoSDKConditions(files []parsedFile, semantic *semanticScope, mapping
 				if call.ConditionTemplate.Kind == "" {
 					return true
 				}
-				condition, ok := resolveSDKCondition(item, semantic, call, state)
+				condition, ok := resolveSDKCondition(item, semantic, call, state, &states)
 				if ok {
 					dependencyIdentity := state.dependencyIdentity
 					if assignedIdentity := states.callDependencies[item]; assignedIdentity != "" {
@@ -385,6 +397,80 @@ func extractGoSDKConditions(files []parsedFile, semantic *semanticScope, mapping
 	}
 	slices.Sort(ids)
 	return mergeSDKConditionObservations(observations), ids, nil
+}
+
+func recordSDKValueDeclaration(declaration *ast.DeclStmt, semantic *semanticScope, states *sdkStateTable) {
+	general, ok := declaration.Decl.(*ast.GenDecl)
+	if !ok || general.Tok != token.VAR {
+		return
+	}
+	for _, specification := range general.Specs {
+		values, ok := specification.(*ast.ValueSpec)
+		if !ok || len(values.Names) != len(values.Values) {
+			continue
+		}
+		for index, ident := range values.Names {
+			if ident.Name == "_" {
+				continue
+			}
+			if object := semantic.objectForExpr(ident); object != nil {
+				states.valuesSemantic[object] = values.Values[index]
+			} else {
+				states.valuesSyntax[ident.Name] = values.Values[index]
+			}
+		}
+	}
+}
+
+func recordSDKValueAssignments(assign *ast.AssignStmt, semantic *semanticScope, states *sdkStateTable) {
+	for index, left := range assign.Lhs {
+		ident := sdkAssignmentRoot(left)
+		if ident == nil || ident.Name == "_" {
+			continue
+		}
+		object := semantic.objectForExpr(ident)
+		isDirectDefinition := unparen(left) == ident && semantic.defs[ident] != nil && len(assign.Lhs) == len(assign.Rhs)
+		if isDirectDefinition {
+			if object != nil {
+				states.valuesSemantic[object] = assign.Rhs[index]
+			} else {
+				states.valuesSyntax[ident.Name] = assign.Rhs[index]
+			}
+			continue
+		}
+		invalidateSDKIdentifier(ident, object, states)
+	}
+}
+
+func invalidateSDKValue(expression ast.Expr, semantic *semanticScope, states *sdkStateTable) {
+	ident := sdkAssignmentRoot(expression)
+	if ident == nil || ident.Name == "_" {
+		return
+	}
+	invalidateSDKIdentifier(ident, semantic.objectForExpr(ident), states)
+}
+
+func invalidateSDKIdentifier(ident *ast.Ident, object types.Object, states *sdkStateTable) {
+	if object != nil {
+		delete(states.valuesSemantic, object)
+		states.invalidValues[object] = true
+	} else {
+		delete(states.valuesSyntax, ident.Name)
+		states.invalidSyntax[ident.Name] = true
+	}
+}
+
+func sdkAssignmentRoot(expression ast.Expr) *ast.Ident {
+	switch typed := unparen(expression).(type) {
+	case *ast.Ident:
+		return typed
+	case *ast.SelectorExpr:
+		return sdkAssignmentRoot(typed.X)
+	case *ast.IndexExpr:
+		return sdkAssignmentRoot(typed.X)
+	default:
+		return nil
+	}
 }
 
 func recordSDKAssignment(assign *ast.AssignStmt, semantic *semanticScope, calls []goSDKCall, states *sdkStateTable) {
@@ -410,8 +496,11 @@ func recordSDKAssignment(assign *ast.AssignStmt, semantic *semanticScope, calls 
 	}
 	values := make(map[string]any)
 	for name, source := range call.Produces.Bindings {
-		value, ok := resolveSDKValue(callExpr, semantic, source, receiverState)
+		value, ok := resolveSDKValue(callExpr, semantic, source, receiverState, states)
 		if !ok {
+			if source.Optional {
+				continue
+			}
 			return
 		}
 		values[name] = value
@@ -517,13 +606,13 @@ func argumentSDKState(call *ast.CallExpr, semantic *semanticScope, states sdkSta
 	return state, ok
 }
 
-func resolveSDKCondition(call *ast.CallExpr, semantic *semanticScope, mapping goSDKCall, state sdkResolvedState) (Condition, bool) {
+func resolveSDKCondition(call *ast.CallExpr, semantic *semanticScope, mapping goSDKCall, state sdkResolvedState, states *sdkStateTable) (Condition, bool) {
 	operation := make(map[string]any, len(mapping.ConditionTemplate.Operation)+len(mapping.OperationBindings))
 	for name, value := range mapping.ConditionTemplate.Operation {
 		operation[name] = value
 	}
 	for name, source := range mapping.OperationBindings {
-		value, ok := resolveSDKValue(call, semantic, source, state)
+		value, ok := resolveSDKValue(call, semantic, source, state, states)
 		if !ok {
 			if source.Optional {
 				continue
@@ -535,7 +624,7 @@ func resolveSDKCondition(call *ast.CallExpr, semantic *semanticScope, mapping go
 	return Condition{Kind: mapping.ConditionTemplate.Kind, Interface: Interface{Type: mapping.ConditionTemplate.InterfaceType, Operations: []Operation{{Fields: operation}}}}, true
 }
 
-func resolveSDKValue(call *ast.CallExpr, semantic *semanticScope, source goSDKValueSource, state sdkResolvedState) (any, bool) {
+func resolveSDKValue(call *ast.CallExpr, semantic *semanticScope, source goSDKValueSource, state sdkResolvedState, states *sdkStateTable) (any, bool) {
 	if source.State != "" {
 		value, ok := state.values[source.State]
 		return value, ok
@@ -547,7 +636,7 @@ func resolveSDKValue(call *ast.CallExpr, semantic *semanticScope, source goSDKVa
 	if !ok || position >= len(call.Args) {
 		return nil, false
 	}
-	expression := unparen(call.Args[position])
+	expression := resolveSDKExpression(unparen(call.Args[position]), semantic, states)
 	if source.Argument.Field != "" {
 		if address, ok := expression.(*ast.UnaryExpr); ok && address.Op.String() == "&" {
 			expression = unparen(address.X)
@@ -570,7 +659,7 @@ func resolveSDKValue(call *ast.CallExpr, semantic *semanticScope, source goSDKVa
 		if found == nil {
 			return nil, false
 		}
-		expression = unparen(found)
+		expression = resolveSDKExpression(unparen(found), semantic, states)
 	}
 	if value, ok := semantic.stringValue(expression); ok {
 		return value, true
@@ -591,6 +680,31 @@ func resolveSDKValue(call *ast.CallExpr, semantic *semanticScope, source goSDKVa
 		return value, err == nil
 	}
 	return nil, false
+}
+
+func resolveSDKExpression(expression ast.Expr, semantic *semanticScope, states *sdkStateTable) ast.Expr {
+	if states == nil {
+		return unparen(expression)
+	}
+	ident, ok := unparen(expression).(*ast.Ident)
+	if !ok {
+		return unparen(expression)
+	}
+	if object := semantic.objectForExpr(ident); object != nil {
+		if states.invalidValues[object] {
+			return unparen(expression)
+		}
+		if resolved := states.valuesSemantic[object]; resolved != nil {
+			return unparen(resolved)
+		}
+	}
+	if states.invalidSyntax[ident.Name] {
+		return unparen(expression)
+	}
+	if resolved := states.valuesSyntax[ident.Name]; resolved != nil {
+		return unparen(resolved)
+	}
+	return unparen(expression)
 }
 
 func sdkArgumentPosition(call *ast.CallExpr, semantic *semanticScope, source goSDKArgumentSource) (int, bool) {

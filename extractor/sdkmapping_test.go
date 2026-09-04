@@ -38,11 +38,16 @@ import (
 
 type KeyValueManager interface { KeyValue(ctx context.Context, bucket string) (KeyValue, error) }
 type KeyValue interface { Put(ctx context.Context, key string, value []byte) (uint64, error) }
+type KeyValueConfig struct { Bucket string }
+type KeyValueCreator interface { CreateKeyValue(ctx context.Context, cfg KeyValueConfig) (KeyValue, error) }
 type client struct{}
 type keyValue struct{}
 
-func New(connection *nats.Conn) KeyValueManager { return client{} }
+type JetStream interface { KeyValueManager; KeyValueCreator }
+
+func New(connection *nats.Conn) JetStream { return client{} }
 func (client) KeyValue(context.Context, string) (KeyValue, error) { return keyValue{}, nil }
+func (client) CreateKeyValue(context.Context, KeyValueConfig) (KeyValue, error) { return keyValue{}, nil }
 func (keyValue) Put(context.Context, string, []byte) (uint64, error) { return 0, nil }
 `,
 		filepath.Join(extensionRoot, "runtimeconditions.extension.yaml"): testNATSExtension,
@@ -68,6 +73,14 @@ func main() {
 	_ = connection.Publish("orders.created", nil)
 	_ = connection.Publish(os.Getenv("SUBJECT"), nil)
 	js := jetstream.New(connection)
+	var config = jetstream.KeyValueConfig{Bucket: "profiles"}
+	_, _ = js.CreateKeyValue(context.Background(), config)
+	mutated := jetstream.KeyValueConfig{Bucket: "must.not.emit"}
+	mutated.Bucket = os.Getenv("BUCKET")
+	_, _ = js.CreateKeyValue(context.Background(), mutated)
+	escaped := jetstream.KeyValueConfig{Bucket: "escaped.must.not.emit"}
+	_ = &escaped
+	_, _ = js.CreateKeyValue(context.Background(), escaped)
 	store, _ := js.KeyValue(context.Background(), "profiles")
 	_, _ = store.Put(context.Background(), "current", []byte("production"))
 	other, _ := nats.Connect("nats://other:4222")
@@ -90,6 +103,7 @@ func main() {
 	wantOperations := []map[string]any{
 		{"resource": "connection", "action": "connect"},
 		{"resource": "subject", "action": "publish", "subject": "orders.created"},
+		{"resource": "key_value", "action": "create", "bucket": "profiles"},
 		{"resource": "key_value", "action": "inspect", "bucket": "profiles"},
 		{"resource": "key_value", "action": "write", "bucket": "profiles"},
 	}
@@ -155,6 +169,7 @@ func writeTestGoSDKMapping(t *testing.T, sdkRoot string, version string) {
 			map[string]any{"id": "connect", "symbol": map[string]any{"package": "github.com/example/nats", "function": "Connect"}, "conditionTemplate": template("connection", "connect"), "produces": map[string]any{"stateType": "nats.connection", "dependencyIdentity": "new", "bindings": map[string]any{}}},
 			map[string]any{"id": "publish", "symbol": map[string]any{"package": "github.com/example/nats", "receiver": "Conn", "method": "Publish"}, "receiverState": "nats.connection", "conditionTemplate": template("subject", "publish"), "operationBindings": map[string]any{"subject": argument("subject")}},
 			map[string]any{"id": "jetstream-new", "symbol": map[string]any{"package": "github.com/example/nats/jetstream", "function": "New"}, "argumentState": map[string]any{"stateType": "nats.connection", "argument": map[string]any{"parameter": "connection"}}, "produces": map[string]any{"stateType": "nats.jetstream", "dependencyIdentity": "inherit", "bindings": map[string]any{}}},
+			map[string]any{"id": "create-key-value", "symbol": map[string]any{"package": "github.com/example/nats/jetstream", "receiver": "KeyValueCreator", "method": "CreateKeyValue"}, "receiverState": "nats.jetstream", "conditionTemplate": template("key_value", "create"), "operationBindings": map[string]any{"bucket": map[string]any{"argument": map[string]any{"parameter": "cfg", "field": "Bucket"}}}, "produces": map[string]any{"stateType": "nats.key_value", "dependencyIdentity": "inherit", "bindings": map[string]any{"bucket": map[string]any{"argument": map[string]any{"parameter": "cfg", "field": "Bucket"}}}}},
 			map[string]any{"id": "key-value", "symbol": map[string]any{"package": "github.com/example/nats/jetstream", "receiver": "KeyValueManager", "method": "KeyValue"}, "receiverState": "nats.jetstream", "conditionTemplate": template("key_value", "inspect"), "operationBindings": map[string]any{"bucket": argument("bucket")}, "produces": map[string]any{"stateType": "nats.key_value", "dependencyIdentity": "inherit", "bindings": map[string]any{"bucket": argument("bucket")}}},
 			map[string]any{"id": "key-value-put", "symbol": map[string]any{"package": "github.com/example/nats/jetstream", "receiver": "KeyValue", "method": "Put"}, "receiverState": "nats.key_value", "conditionTemplate": template("key_value", "write"), "operationBindings": map[string]any{"bucket": map[string]any{"state": "bucket"}}},
 		},
