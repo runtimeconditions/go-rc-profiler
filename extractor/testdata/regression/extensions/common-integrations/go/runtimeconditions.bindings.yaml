@@ -1,0 +1,112 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../common-integrations-v1alpha1.yaml
+  language: go
+
+go:
+  importPath: github.com/runtimeconditions/extensions/common-integrations/go
+  package: commonintegrations
+
+  constants:
+    Postgres: postgres
+    MySQL: mysql
+    MariaDB: mariadb
+    SQLServer: sqlserver
+    Oracle: oracle
+    SQLite: sqlite
+    MongoDB: mongodb
+    Couchbase: couchbase
+    Redis: redis
+    Memcached: memcached
+
+  declarations:
+    - function: API
+      nameArg: 0
+      kind: api
+      interfaceType: http
+      options:
+        - function: Spec
+          target: interface.spec
+          stringArgs:
+            format: 0
+            uri: 1
+            version: 2
+        - function: GET
+          target: interface.operations[]
+          method: GET
+          stringArgs:
+            path: 0
+          options: &schema_options
+            - function: Request
+              target: requestBodySchema
+              typeArg: 0
+            - function: Response
+              target: responseSchema
+              typeArg: 0
+        - function: HEAD
+          target: interface.operations[]
+          method: HEAD
+          stringArgs:
+            path: 0
+          options: *schema_options
+        - function: POST
+          target: interface.operations[]
+          method: POST
+          stringArgs:
+            path: 0
+          options: *schema_options
+        - function: PUT
+          target: interface.operations[]
+          method: PUT
+          stringArgs:
+            path: 0
+          options: *schema_options
+        - function: PATCH
+          target: interface.operations[]
+          method: PATCH
+          stringArgs:
+            path: 0
+          options: *schema_options
+        - function: DELETE
+          target: interface.operations[]
+          method: DELETE
+          stringArgs:
+            path: 0
+          options: *schema_options
+        - function: OPTIONS
+          target: interface.operations[]
+          method: OPTIONS
+          stringArgs:
+            path: 0
+          options: *schema_options
+        - function: TRACE
+          target: interface.operations[]
+          method: TRACE
+          stringArgs:
+            path: 0
+          options: *schema_options
+
+    - function: Datastore
+      nameArg: 0
+      kind: datastore
+      options:
+        - function: Relational
+          target: interface.type
+          value: relational
+          engineArg: 0
+        - function: Document
+          target: interface.type
+          value: document
+          engineArg: 0
+
+    - function: Cache
+      nameArg: 0
+      kind: cache
+      options:
+        - function: KeyValue
+          target: interface.type
+          value: key_value
+          engineArg: 0

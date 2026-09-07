@@ -1,0 +1,44 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsBinding
+
+metadata:
+  extension: https://runtimeconditions.io/extensions/env-configuration/v1alpha1/runtimeconditions.extension.yaml
+  extensionDefinition: ../env-configuration-v1alpha1.yaml
+  language: go
+
+go:
+  importPath: github.com/runtimeconditions/extensions/env-configuration/go
+  package: envconfiguration
+
+  options:
+    - function: Env
+      target: configuration.env[]
+      appliesToKinds: &condition_kinds
+        - api
+        - datastore
+        - cache
+      appliesToInterfaceTypes: &condition_interface_types
+        - http
+        - relational
+        - document
+        - key_value
+      stringArgs: &env_string_args
+        property: 0
+        name: 1
+      options: &env_input_options
+        - function: Sensitive
+          target: env.sensitive
+          value: "true"
+        - function: Optional
+          target: env.required
+          value: "false"
+
+    - function: EnvAlternative
+      target: configuration.alternatives[]
+      appliesToKinds: *condition_kinds
+      appliesToInterfaceTypes: *condition_interface_types
+      options:
+        - function: Env
+          target: configuration.env[]
+          stringArgs: *env_string_args
+          options: *env_input_options

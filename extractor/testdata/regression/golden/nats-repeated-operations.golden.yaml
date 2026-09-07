@@ -1,0 +1,22 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+    name: nats-repeated-operations
+workload:
+    uri: github.com/runtimeconditions/go-rc-profiler/regression/nats-repeated-operations
+    version: v1.0.0
+extensions:
+    - https://runtimeconditions.io/extensions/nats-service/0.1.0/runtimeconditions.extension.yaml
+conditions:
+    - kind: nats
+      interface:
+        type: service
+        operations:
+            - action: connect
+              resource: connection
+            - action: publish
+              resource: subject
+              subject: orders.created
+            - action: publish
+              resource: subject
+              subject: orders.cancelled

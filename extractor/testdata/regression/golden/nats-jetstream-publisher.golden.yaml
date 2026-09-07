@@ -1,0 +1,24 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+    name: nats-jetstream-publisher
+workload:
+    uri: https://github.com/runtimeconditions/sdk-authorship-discovery/tree/main/nats/go/jetstream-publisher
+    version: 0.1.0
+extensions:
+    - https://runtimeconditions.io/extensions/nats-service/0.1.0/runtimeconditions.extension.yaml
+conditions:
+    - kind: nats
+      interface:
+        type: service
+        operations:
+            - action: connect
+              resource: connection
+            - action: create
+              name: ORDERS
+              resource: stream
+              subjects:
+                - orders.>
+            - action: publish
+              resource: stream
+              subject: orders.created

@@ -1,0 +1,117 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+    name: nats-complete-service
+workload:
+    uri: https://github.com/runtimeconditions/sdk-authorship-discovery/tree/main/nats/go/complete-service
+    version: 0.1.0
+extensions:
+    - https://runtimeconditions.io/extensions/nats-service/0.1.0/runtimeconditions.extension.yaml
+conditions:
+    - kind: nats
+      interface:
+        type: service
+        operations:
+            - action: connect
+              resource: connection
+            - action: publish
+              resource: subject
+              subject: orders.created
+            - action: subscribe
+              resource: subject
+              subject: orders.fulfilled
+            - action: request
+              resource: subject
+              subject: inventory.reserve
+            - action: create
+              name: ORDERS
+              resource: stream
+              subjects:
+                - orders.>
+            - action: inspect
+              name: ORDERS
+              resource: stream
+            - action: update
+              name: ORDERS
+              resource: stream
+              subjects:
+                - orders.>
+            - action: delete
+              name: ARCHIVE
+              resource: stream
+            - action: publish
+              resource: stream
+              subject: orders.created
+            - action: create
+              name: order-worker
+              resource: consumer
+              stream: ORDERS
+            - action: inspect
+              name: order-worker
+              resource: consumer
+              stream: ORDERS
+            - action: consume
+              name: order-worker
+              resource: consumer
+              stream: ORDERS
+            - action: update
+              name: order-worker
+              resource: consumer
+              stream: ORDERS
+            - action: create
+              name: stream-worker
+              resource: consumer
+              stream: ORDERS
+            - action: inspect
+              name: stream-worker
+              resource: consumer
+              stream: ORDERS
+            - action: delete
+              name: old-worker
+              resource: consumer
+              stream: ORDERS
+            - action: create
+              bucket: profiles
+              resource: key_value
+            - action: write
+              bucket: profiles
+              resource: key_value
+            - action: read
+              bucket: profiles
+              resource: key_value
+            - action: inspect
+              bucket: profiles
+              resource: key_value
+            - action: watch
+              bucket: profiles
+              resource: key_value
+            - action: delete
+              bucket: retired-profiles
+              resource: key_value
+            - action: create
+              bucket: configuration
+              resource: object_store
+            - action: write
+              bucket: configuration
+              resource: object_store
+            - action: read
+              bucket: configuration
+              resource: object_store
+            - action: inspect
+              bucket: configuration
+              resource: object_store
+            - action: watch
+              bucket: configuration
+              resource: object_store
+            - action: delete
+              bucket: retired-configuration
+              resource: object_store
+    - kind: nats
+      interface:
+        type: service
+        operations:
+            - action: connect
+              resource: connection
+            - action: publish
+              resource: subject
+              subject: audit.created

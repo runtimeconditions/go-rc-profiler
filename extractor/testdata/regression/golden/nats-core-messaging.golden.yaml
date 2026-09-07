@@ -1,0 +1,25 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+    name: nats-core-messaging
+workload:
+    uri: https://github.com/runtimeconditions/sdk-authorship-discovery/tree/main/nats/go/core-messaging
+    version: 0.1.0
+extensions:
+    - https://runtimeconditions.io/extensions/nats-service/0.1.0/runtimeconditions.extension.yaml
+conditions:
+    - kind: nats
+      interface:
+        type: service
+        operations:
+            - action: connect
+              resource: connection
+            - action: publish
+              resource: subject
+              subject: orders.created
+            - action: subscribe
+              resource: subject
+              subject: orders.fulfilled
+            - action: request
+              resource: subject
+              subject: inventory.reserve

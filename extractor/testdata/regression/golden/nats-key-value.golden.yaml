@@ -1,0 +1,28 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+    name: nats-key-value
+workload:
+    uri: https://github.com/runtimeconditions/sdk-authorship-discovery/tree/main/nats/go/key-value
+    version: 0.1.0
+extensions:
+    - https://runtimeconditions.io/extensions/nats-service/0.1.0/runtimeconditions.extension.yaml
+conditions:
+    - kind: nats
+      interface:
+        type: service
+        operations:
+            - action: connect
+              resource: connection
+            - action: create
+              bucket: profiles
+              resource: key_value
+            - action: write
+              bucket: profiles
+              resource: key_value
+            - action: read
+              bucket: profiles
+              resource: key_value
+            - action: watch
+              bucket: profiles
+              resource: key_value

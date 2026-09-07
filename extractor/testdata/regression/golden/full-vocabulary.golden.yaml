@@ -1,0 +1,163 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+    name: full-vocabulary
+workload:
+    uri: github.com/runtimeconditions/go-rc-profiler/regression/full-vocabulary
+    version: v1.0.0
+extensions:
+    - https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml
+    - https://runtimeconditions.io/extensions/env-configuration/v1alpha1/runtimeconditions.extension.yaml
+conditions:
+    - name: todos-api
+      kind: api
+      interface:
+        type: http
+        spec:
+            format: openapi
+            uri: catalog://api/default/todos-api
+            version: 1.0.0
+        operations:
+            - method: GET
+              path: /todos
+              responseSchema:
+                - Untagged: string
+                  completed: boolean
+                  createdAt: string
+                  createdBy: string
+                  dueAt: string
+                  id: integer
+                  labels:
+                    - key: string
+                      value: string
+                  metadata:
+                    additionalProperties: string
+                  priority: number
+                  tags:
+                    - string
+                  title: string
+            - method: GET
+              path: /todos/{id}
+              responseSchema:
+                Untagged: string
+                completed: boolean
+                createdAt: string
+                createdBy: string
+                dueAt: string
+                id: integer
+                labels:
+                    - key: string
+                      value: string
+                metadata:
+                    additionalProperties: string
+                priority: number
+                tags:
+                    - string
+                title: string
+            - method: HEAD
+              path: /todos/{id}
+            - method: POST
+              path: /todos
+              requestBodySchema:
+                priority: number
+                tags:
+                    - string
+                title: string
+              responseSchema:
+                Untagged: string
+                completed: boolean
+                createdAt: string
+                createdBy: string
+                dueAt: string
+                id: integer
+                labels:
+                    - key: string
+                      value: string
+                metadata:
+                    additionalProperties: string
+                priority: number
+                tags:
+                    - string
+                title: string
+            - method: PUT
+              path: /todos/{id}
+              requestBodySchema:
+                priority: number
+                tags:
+                    - string
+                title: string
+            - method: PATCH
+              path: /todos/{id}
+              requestBodySchema:
+                priority: number
+                tags:
+                    - string
+                title: string
+            - method: DELETE
+              path: /todos/{id}
+            - method: OPTIONS
+              path: /todos
+            - method: TRACE
+              path: /todos
+      configuration:
+        env:
+            - property: baseUrl
+              name: TODOS_API_URL
+            - property: token
+              name: TODOS_API_TOKEN
+              sensitive: true
+            - property: scheme
+              name: TODOS_API_SCHEME
+              required: false
+    - name: legacy-api
+      kind: api
+      interface:
+        type: http
+        spec:
+            format: openapi
+            uri: catalog://api/default/legacy-api
+    - name: primary-db
+      kind: datastore
+      interface:
+        type: relational
+        engine: postgres
+      configuration:
+        env:
+            - property: hostname
+              name: POSTGRES_HOST
+            - property: port
+              name: POSTGRES_PORT
+            - property: database
+              name: POSTGRES_DATABASE
+            - property: username
+              name: POSTGRES_USERNAME
+            - property: password
+              name: POSTGRES_PASSWORD
+              sensitive: true
+    - name: document-store
+      kind: datastore
+      interface:
+        type: document
+        engine: mongodb
+    - name: request-cache
+      kind: cache
+      interface:
+        type: key_value
+        engine: redis
+      configuration:
+        alternatives:
+            - env:
+                - property: url
+                  name: REDIS_URL
+                  sensitive: true
+            - env:
+                - property: hostname
+                  name: REDIS_HOST
+                - property: port
+                  name: REDIS_PORT
+                  required: false
+    - name: session-cache
+      kind: cache
+      interface:
+        type: key_value
+        engine: memcached

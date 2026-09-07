@@ -1,0 +1,28 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+    name: nats-object-store
+workload:
+    uri: https://github.com/runtimeconditions/sdk-authorship-discovery/tree/main/nats/go/object-store
+    version: 0.1.0
+extensions:
+    - https://runtimeconditions.io/extensions/nats-service/0.1.0/runtimeconditions.extension.yaml
+conditions:
+    - kind: nats
+      interface:
+        type: service
+        operations:
+            - action: connect
+              resource: connection
+            - action: create
+              bucket: configuration
+              resource: object_store
+            - action: write
+              bucket: configuration
+              resource: object_store
+            - action: read
+              bucket: configuration
+              resource: object_store
+            - action: watch
+              bucket: configuration
+              resource: object_store

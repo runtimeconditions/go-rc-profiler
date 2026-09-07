@@ -1,0 +1,24 @@
+apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsProfile
+metadata:
+    name: nats-jetstream-consumer
+workload:
+    uri: https://github.com/runtimeconditions/sdk-authorship-discovery/tree/main/nats/go/jetstream-consumer
+    version: 0.1.0
+extensions:
+    - https://runtimeconditions.io/extensions/nats-service/0.1.0/runtimeconditions.extension.yaml
+conditions:
+    - kind: nats
+      interface:
+        type: service
+        operations:
+            - action: connect
+              resource: connection
+            - action: inspect
+              name: order-worker
+              resource: consumer
+              stream: ORDERS
+            - action: consume
+              name: order-worker
+              resource: consumer
+              stream: ORDERS
