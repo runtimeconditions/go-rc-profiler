@@ -10,6 +10,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/runtimeconditions/go-rc-profiler/extractor/internal/binding"
 	"gopkg.in/yaml.v3"
 )
 
@@ -325,14 +326,14 @@ var _ = common.Cache("request-cache",
 			}
 			validateProfileVocabularyForTest(t, roundTripped, resolved)
 
-			manifestPath, ok, err := findPackageBindingManifest(test.targetBindingDir)
+			manifestPath, ok, err := binding.FindPackageManifest(test.targetBindingDir)
 			if err != nil {
 				t.Fatal(err)
 			}
 			if !ok {
 				t.Fatalf("missing Runtime Conditions binding manifest in %s", test.targetBindingDir)
 			}
-			binding, err := readGoBinding(manifestPath)
+			binding, err := binding.Read(manifestPath)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -360,7 +361,7 @@ spec:
 `), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	manifest := filepath.Join(bindingDir, goBindingsManifest)
+	manifest := filepath.Join(bindingDir, binding.BindingsManifest)
 	if err := os.WriteFile(manifest, []byte(`apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsBinding
 
@@ -381,7 +382,7 @@ go:
 		t.Fatal(err)
 	}
 
-	bindings, err := discoverGoBindings([]string{root})
+	bindings, err := binding.Discover([]string{root})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -632,7 +633,7 @@ func writeAuditLog(ctx context.Context, client *events.Client) error {
 func TestExtractDirValidatesPackageManifestBeforeExtraction(t *testing.T) {
 	dir := t.TempDir()
 	sdkPath := writePackageManifestSDK(t)
-	manifestPath := filepath.Join(sdkPath, "service", "events", goPackageBindingManifest)
+	manifestPath := filepath.Join(sdkPath, "service", "events", binding.PackageManifest)
 	data, err := os.ReadFile(manifestPath)
 	if err != nil {
 		t.Fatal(err)
@@ -675,7 +676,7 @@ func writeAuditLog(ctx context.Context) error {
 func TestExtractDirValidatesGeneratedProfile(t *testing.T) {
 	dir := t.TempDir()
 	sdkPath := writePackageManifestSDK(t)
-	manifestPath := filepath.Join(sdkPath, "service", "events", goPackageBindingManifest)
+	manifestPath := filepath.Join(sdkPath, "service", "events", binding.PackageManifest)
 	data, err := os.ReadFile(manifestPath)
 	if err != nil {
 		t.Fatal(err)
@@ -1063,7 +1064,7 @@ func validateProfileVocabularyForTest(t *testing.T, profile RuntimeConditionsPro
 	}
 }
 
-func validateGoBindingVocabularyForTest(t *testing.T, binding *goBinding, resolved resolvedExtensionDefinitionsForTest) {
+func validateGoBindingVocabularyForTest(t *testing.T, binding *binding.Binding, resolved resolvedExtensionDefinitionsForTest) {
 	t.Helper()
 	if _, ok := resolved.definitions[binding.ExtensionID]; !ok {
 		t.Fatalf("binding extension %s is not in the resolved extension set %#v", binding.ExtensionID, resolved.ids())
@@ -1082,7 +1083,7 @@ func validateGoBindingVocabularyForTest(t *testing.T, binding *goBinding, resolv
 	}
 }
 
-func validateDeclarationOptionVocabularyForTest(t *testing.T, resolved resolvedExtensionDefinitionsForTest, kind string, interfaceType string, option goBindingOption) {
+func validateDeclarationOptionVocabularyForTest(t *testing.T, resolved resolvedExtensionDefinitionsForTest, kind string, interfaceType string, option binding.Option) {
 	t.Helper()
 	switch option.Target {
 	case "interface.spec":
@@ -1110,7 +1111,7 @@ func validateDeclarationOptionVocabularyForTest(t *testing.T, resolved resolvedE
 	}
 }
 
-func validateStandaloneOptionVocabularyForTest(t *testing.T, resolved resolvedExtensionDefinitionsForTest, option goBindingOption) {
+func validateStandaloneOptionVocabularyForTest(t *testing.T, resolved resolvedExtensionDefinitionsForTest, option binding.Option) {
 	t.Helper()
 	for _, kind := range option.AppliesToKinds {
 		requireExactlyOneForTest(t, resolved.kindCount(kind), "standalone option appliesToKind %q", kind)
