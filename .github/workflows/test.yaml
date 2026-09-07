@@ -13,9 +13,24 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+    # The integration tests resolve extensions/ and spec/ as siblings of this
+    # checkout, so every repository is placed beside the others under the
+    # workspace root rather than at it.
     - uses: actions/checkout@v7
+      with:
+        path: go-rc-profiler
+    - uses: actions/checkout@v7
+      with:
+        repository: runtimeconditions/extensions
+        path: extensions
+    - uses: actions/checkout@v7
+      with:
+        repository: runtimeconditions/spec
+        path: spec
     - uses: actions/setup-go@v7
       with:
-        go-version-file: go.mod
+        go-version-file: go-rc-profiler/go.mod
+        cache-dependency-path: go-rc-profiler/go.sum
         cache: true
     - run: go test ./...
+      working-directory: go-rc-profiler

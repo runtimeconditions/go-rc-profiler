@@ -7,5 +7,5 @@ require (
 	github.com/runtimeconditions/extensions/env-configuration/go v0.0.0
 )
 
-replace github.com/runtimeconditions/extensions/common-integrations/go => ../../../../../extensions/common-integrations/go
-replace github.com/runtimeconditions/extensions/env-configuration/go => ../../../../../extensions/env-configuration/go
+replace github.com/runtimeconditions/extensions/common-integrations/go => ../../regression/extensions/common-integrations/go
+replace github.com/runtimeconditions/extensions/env-configuration/go => ../../regression/extensions/env-configuration/go
