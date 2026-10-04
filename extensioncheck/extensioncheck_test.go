@@ -3,7 +3,6 @@ package extensioncheck
 import (
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 
@@ -21,27 +20,9 @@ type authoringFixture struct {
 	WantErrorContains      string   `yaml:"wantErrorContains"`
 }
 
-func TestValidateFirstPartyExtensions(t *testing.T) {
-	extensionsRoot := repoPath(t, "extensions")
-
-	tests := []struct {
-		root     string
-		language string
-		require  bool
-	}{
-		{root: filepath.Join(extensionsRoot, "common-integrations"), language: "go", require: true},
-		{root: filepath.Join(extensionsRoot, "env-configuration"), language: "go", require: true},
-	}
-	for _, test := range tests {
-		t.Run(filepath.Base(test.root)+"/"+test.language, func(t *testing.T) {
-			err := ValidateExtension(test.root, Options{
-				Language:               test.language,
-				RequireLanguagePackage: test.require,
-			})
-			if err != nil {
-				t.Fatal(err)
-			}
-		})
+func TestParseDocumentRejectsCyclicAlias(t *testing.T) {
+	if _, err := parseDocument([]byte("root: &root\n  nested: *root\n")); err == nil || !strings.Contains(err.Error(), "cyclic YAML alias") {
+		t.Fatalf("expected cyclic YAML alias error, got %v", err)
 	}
 }
 
@@ -447,22 +428,6 @@ spec:
 	if !strings.Contains(err.Error(), "conditionField:configuration") {
 		t.Fatalf("unexpected error: %v", err)
 	}
-}
-
-func repoPath(t *testing.T, parts ...string) string {
-	t.Helper()
-	_, source, _, ok := runtime.Caller(0)
-	if !ok {
-		t.Fatal("cannot locate extensioncheck test source")
-	}
-	root := filepath.Clean(filepath.Join(filepath.Dir(source), "..", ".."))
-	path := filepath.Join(append([]string{root}, parts...)...)
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		t.Skipf("workspace integration dependency is not checked out at %s", path)
-	} else if err != nil {
-		t.Fatal(err)
-	}
-	return path
 }
 
 func writeFiles(t *testing.T, files map[string]string) {

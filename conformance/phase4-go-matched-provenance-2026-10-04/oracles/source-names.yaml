@@ -1,0 +1,16 @@
+apiVersion: runtimeconditions.io/v1alpha1
+conditions:
+    - api_url: ""
+      café: ""
+      interface:
+        type: http_server2_url
+      kind: class
+      patch9: ""
+extensions:
+    - urn:runtimeconditions:conformance:source-name-preservation
+kind: RuntimeConditionsProfile
+metadata:
+    name: phase4-source-names
+workload:
+    uri: https://example.test/phase4/source-names
+    version: 1.0.0

@@ -1,0 +1,1532 @@
+format: runtimeconditions.io/go-phase4-acceptance/v1
+status: behavior-passed-provenance-pending
+invocation:
+- /private/tmp/rc-profiler-step3-venv/bin/python
+- conformance/phase4-go-dependency-schema-2026-10-04/run.py
+- --fixtures
+- /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004
+- --results
+- /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004
+- --profiler
+- /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+- --schema
+- /Users/colacy/code/github.com/runtimeconditions/spec/schema/runtimeconditions.profile.v0.1.0.schema.yaml
+- --catalog
+- /Users/colacy/code/github.com/runtimeconditions/extensions/tooling/extension-bindings/fixtures/conformance.yaml
+- --source-root
+- /Users/colacy/code/github.com/runtimeconditions
+- --cache-root
+- /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004
+- --output
+- /Users/colacy/code/github.com/runtimeconditions/go-rc-profiler/conformance/phase4-go-dependency-schema-2026-10-04
+assembledFixtureTree: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004
+preparedResultTree: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004
+externalCacheRoot: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004
+runner: /Users/colacy/code/github.com/runtimeconditions/go-rc-profiler/conformance/phase4-go-dependency-schema-2026-10-04/run.py
+runnerSha256: 5188950bf6c8cd0e85741abba2460e85868264ab063875f42b20f6e481e1766a
+profiler:
+  path: /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  sha256: b2e2aee5e10af47a0e75998d3ac591ee17f2887aaaddeae46405296763bc1444
+  goBuildInfo: "/private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004: go1.26.5\n\tpath\tgithub.com/runtimeconditions/go-rc-profiler\n\tmod\tgithub.com/runtimeconditions/go-rc-profiler\tv0.0.0-20260907095056-5d2e860e4884+dirty\t\n\tdep\tgithub.com/santhosh-tekuri/jsonschema/v6\tv6.0.3\th1:1EYB5IzjZawrrnELUi78f9fPu57HuXjmddZPjrls/28=\n\tdep\tgolang.org/x/mod\tv0.28.0\th1:gQBtGhjxykdjY9YhZpSlZIsbnaE2+PgjfLWUQTnoZ1U=\n\tdep\tgolang.org/x/sync\tv0.17.0\th1:l60nONMj9l5drqw6jlhIELNv9I0A4OFgRsG9k2oT9Ug=\n\tdep\tgolang.org/x/text\tv0.14.0\th1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=\n\tdep\tgolang.org/x/tools\tv0.37.0\th1:DVSRzp7FwePZW356yEAChSdNcQo6Nsp+fex1SUW09lE=\n\tdep\tgopkg.in/yaml.v3\tv3.0.1\th1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-trimpath=true\n\tbuild\tDefaultGODEBUG=cryptocustomrand=1,tlssecpmlkem=0,urlstrictcolons=0\n\tbuild\tCGO_ENABLED=1\n\tbuild\tGOARCH=arm64\n\tbuild\tGOOS=darwin\n\tbuild\tGOARM64=v8.0\n\t\
+    build\tvcs=git\n\tbuild\tvcs.revision=5d2e860e48842b89ec83414123a7e59228f61d36\n\tbuild\tvcs.time=2026-09-07T09:50:56Z\n\tbuild\tvcs.modified=true\n"
+coreSchema:
+  source: /Users/colacy/code/github.com/runtimeconditions/spec/schema/runtimeconditions.profile.v0.1.0.schema.yaml
+  id: https://runtimeconditions.io/schemas/profile/0.1.0/runtimeconditions.profile.schema.yaml
+  version: 0.1.0
+  sourceSha256: ad101336b676b468ec975aff45c21749df22fddf422371156c586ed62abf3223
+  semanticSha256: 49890a0f3e7276d1e480d654176672d977df9c63094f3a24983b0a8102e1a3e3
+goVersion: go version go1.26.5 darwin/arm64
+catalogSha256: 971e27588cf3e5e22710dd35f9fec70569b70e61cf681c1eeb302212c40ffb61
+inventorySha256: 55cf3e7b7ebcfffd7f09968f593fbfabef024b5e50773e282ad339c3d1b9cc37
+fixtureAssemblyTools:
+  assembler: /Users/colacy/code/github.com/runtimeconditions/extensions/tooling/extension-bindings/fixtures/assemble.py
+  assemblerSha256: 2962a18c99a48324e4e755e22c63ce30d872e742a4904a6f5d90e4599ef0537e
+  preparer: /Users/colacy/code/github.com/runtimeconditions/extensions/tooling/extension-bindings/fixtures/prepare_results.py
+  preparerSha256: af5a76a2e5f889301f858a0839d3212825d859445c23aa8ba93a44d864a6220a
+reviewedCoverage:
+  positive: 19
+  negative: 6
+  emittedCalls:
+  - - owned
+    - package: conformance-owned-kind-interface
+      index: 0
+      function: Service
+  - - additive-owner
+    - package: conformance-additive-field-base
+      index: 0
+      function: Service
+  - - recursive
+    - package: conformance-recursive-reference
+      index: 0
+      function: Tree
+  - - alternatives-command
+    - package: conformance-object-alternatives
+      index: 0
+      function: Deployment
+  - - alternatives-image
+    - package: conformance-object-alternatives
+      index: 1
+      function: Deployment
+  - - union-object
+    - package: conformance-heterogeneous-union
+      index: 0
+      function: Selector
+  - - collections
+    - package: conformance-collections-and-maps
+      index: 0
+      function: Collection
+  - - scoped-grpc
+    - package: conformance-scoped-domains-collisions
+      index: 0
+      function: Service
+  - - scoped-http
+    - package: conformance-scoped-domains-collisions
+      index: 1
+      function: Service
+  - - source-names
+    - package: conformance-source-name-preservation
+      index: 0
+      function: Class
+  - - dependency-schema-only
+    - package: conformance-dependency-schema-only-root
+      index: 0
+      function: Job
+  completedDeferredDeclarations:
+  - - transitive-leaf-consumer
+    - package: conformance-transitive-leaf
+      function: Worker
+  directContributorDiffersFromClosureCases:
+  - dependency-schema-only
+  - dependency-schema-invalid
+fixturePackages:
+- module: example.com/runtimeconditions/conformance/additive-field
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/additive-field/@v/v1.0.0.zip
+  archiveSha256: 175b3aad2b0c7371c21cde66773ad4904277e97591e035c42ef811a54366728b
+  resourceSha256:
+    runtimeconditions.bindings.yaml: 73e201ccc1fb13390b59bba104f8aa097614d9511a1799355be54dcf7402a8e6
+    runtimeconditions.binding-model.yaml: 515cce1923234ef352da72b636d9ef1d92f2c80e1d4b8eddbdf8fb090a19658d
+    runtimeconditions.extension.yaml: a8f9d8878fe06a98cb7442028ee74ea5ba5b54cf843a2938af4bdbcb8ee4cdfd
+    runtimeconditions.binding-release.yaml: 5d791b87e89f01a724e0eb8f6b988bae3a1f5b464a908f236a91b8359af8307d
+- module: example.com/runtimeconditions/conformance/additive-field-base
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/additive-field-base/@v/v1.0.0.zip
+  archiveSha256: dd4b1f4a6a97428b1c9af90b678bdaa8b5a80dab0cb50a34e1ece11e8ed060db
+  resourceSha256:
+    runtimeconditions.bindings.yaml: ad4fcbc699af0033a434645cbb04eb2c5c1c60f9654c89f0b28a45adbb8a26ce
+    runtimeconditions.binding-model.yaml: 6fb28d30866857fd48b82649d1c89803924b229c280820e220d842fde54315d9
+    runtimeconditions.extension.yaml: d5d0ba225a3f135f40c3d63d2752226e8e3887879863203102ebfbd3aa75a119
+    runtimeconditions.binding-release.yaml: 9b1e3dddbddb2caef4f0c4fa007e8e12e6ad7e5bc32ad93a6aac92fdfb7edc06
+- module: example.com/runtimeconditions/conformance/collections-and-maps
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/collections-and-maps/@v/v1.0.0.zip
+  archiveSha256: 4efa094c51e82f08224a3c4570e78f6a68322e9b056956bbaf10b43543ffdf4e
+  resourceSha256:
+    runtimeconditions.bindings.yaml: af581b6ba415eee66c23749e35c535225fa807c1dfeb00fc53ade7be84adb2c4
+    runtimeconditions.binding-model.yaml: 4f5fc3014afa83276ef2339bae7c67cc5b04982046247f777bf7d9735b363fe1
+    runtimeconditions.extension.yaml: 3af26e18a85f8d8045e0cfe29ec5b01de3dc7ec7c1ee5ecc6fe31f79d24a973d
+    runtimeconditions.binding-release.yaml: ad6a9fbc4f55605be81475816b12b65b42d85e95c9d42402825800e6baba0b7f
+- module: example.com/runtimeconditions/conformance/dependency-schema-only-dependency
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/dependency-schema-only-dependency/@v/v1.0.0.zip
+  archiveSha256: d64fbc1195ba851b6fda5b162c4362913efa6bb722ce34c96c4dee67a5edd63d
+  resourceSha256:
+    runtimeconditions.bindings.yaml: 96002a6805df8057c16db626d6268075d4f69968745e61815ac09a22e0dc53e3
+    runtimeconditions.binding-model.yaml: 7de525342294321d3ae12da4bf0dfcad6ff6b353871f5a0d5435eb355c1b58f0
+    runtimeconditions.extension.yaml: a28b19eeb95c23948521ecd4e5faad6525ce4e04e75b921ccfe8727afef4c243
+    runtimeconditions.binding-release.yaml: 07083c4c24fa87c021725efe956bca75eda429768f1b055cdf2b6d505d5497a2
+- module: example.com/runtimeconditions/conformance/dependency-schema-only-root
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/dependency-schema-only-root/@v/v1.0.0.zip
+  archiveSha256: feca98707c067536882c30819c4d6c864c1a65423e5a17805a11d0f56943d96a
+  resourceSha256:
+    runtimeconditions.bindings.yaml: be01d95f0a6c6a88dc493f2dc8d50f89601df1294de4ddcb3f3bd40d0272da16
+    runtimeconditions.binding-model.yaml: e7765d044ae584e320fdcae25f0fb7e7571b3f46302d780f0d8ecc415960f7a3
+    runtimeconditions.extension.yaml: d2b8cf0eda27b6678d240bbf6e791c3269397461442527f558dfedaa449ec75e
+    runtimeconditions.binding-release.yaml: 887c2065ddcffa722902a618cf6143d7f8241d894c24efadbd87ed70725e1f0e
+- module: example.com/runtimeconditions/conformance/heterogeneous-union
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/heterogeneous-union/@v/v1.0.0.zip
+  archiveSha256: 2e51d733b500b9da18f7354374912d6f0c415c08361e003a389f3432e8fd0856
+  resourceSha256:
+    runtimeconditions.bindings.yaml: eae225b5e25bb12c0dcc33d9c71038aab729f48fde77c627162732d04b5be9c4
+    runtimeconditions.binding-model.yaml: e3425b696f52e1e5fb808c0cce06fb962d0217087c6121d6d1df259f384c2a3e
+    runtimeconditions.extension.yaml: 49c2669df7fcc4465e39dbb452cc5f926932b899dc4adf5ce9aac80c13b58c11
+    runtimeconditions.binding-release.yaml: 9e8b770b05508a86d3180f56b911b72f847c1079e724cc85e1f52326fae250cb
+- module: example.com/runtimeconditions/conformance/object-alternatives
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/object-alternatives/@v/v1.0.0.zip
+  archiveSha256: 7611dc3357d91d4cdf1e0690e7bbf47a0b7ad7a4368ca604a76b131374d5200a
+  resourceSha256:
+    runtimeconditions.bindings.yaml: f64083468c760a506749d06a02bb71facc874c448ed245d6704b6c141d873d28
+    runtimeconditions.binding-model.yaml: 35f010e479b74271803e7c3d2d58fc363dadb5ad2c96d86fc86dd3b49e220ac4
+    runtimeconditions.extension.yaml: 41a787d91afacffd523eac0d7016c013fcfe4ecf9e0ee4969e62e1ce23946c40
+    runtimeconditions.binding-release.yaml: 4d8b5f88cbc104c93eb21ae7432af7683e9a06106e9efc9e426ea9326fe33db5
+- module: example.com/runtimeconditions/conformance/owned-kind-interface
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/owned-kind-interface/@v/v1.0.0.zip
+  archiveSha256: 218e87a366da16de178500353000b559eaeccf1827e33094b6cb3566fb06fcb2
+  resourceSha256:
+    runtimeconditions.bindings.yaml: 60c9c2aaf4ab43b677e077bb66baca046debf3c4cd82b75c7ad9d93989a2ee7b
+    runtimeconditions.binding-model.yaml: 136e406881d60cd01cf0edceba73a0e099be923d29a01291862223ba9a1d4a41
+    runtimeconditions.extension.yaml: 3f5aee725f21969bdd4ff9bb9e644f9e6cb9eb5d1e7cd14103b46c98f6eaa9ef
+    runtimeconditions.binding-release.yaml: de831b70303ba01f564d90f5613a350c02bde59be9551bba74c13db77ed3b934
+- module: example.com/runtimeconditions/conformance/recursive-reference
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/recursive-reference/@v/v1.0.0.zip
+  archiveSha256: 6c850398e048c2dc0692208fe7403667e1c39f1a07534b78ad3a98a8f9c3baa7
+  resourceSha256:
+    runtimeconditions.bindings.yaml: 52cac6e385f2b77a26516d4d343375761786968920ed340cd791022726799ce2
+    runtimeconditions.binding-model.yaml: 808f9acb9898139fff7b9df5002e1bf38f527b09d1aa24527fb5f9f6f1c50b59
+    runtimeconditions.extension.yaml: 483db1d37f224593183d60f4b08faea18ab031e2cb5ff14e624086523c488450
+    runtimeconditions.binding-release.yaml: 1f90ddaef91ce2f96d3be7380d8c05a34b2f844bb2711f6e469215ebe790baf8
+- module: example.com/runtimeconditions/conformance/scoped-domains-collisions
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/scoped-domains-collisions/@v/v1.0.0.zip
+  archiveSha256: 0ba5b96b83ec241277e8c01b74db60f784ccdc779fbb7013c1b91c6b237c3770
+  resourceSha256:
+    runtimeconditions.bindings.yaml: 195219d3419f8a67cbf8bc193f665760b0924c27265acc8e34317a8bd3332f98
+    runtimeconditions.binding-model.yaml: 358636e88a40983f4cb49ee919df6054d41a6432f3e1fbe7306446ad91f3c8ca
+    runtimeconditions.extension.yaml: 0a51f8e0a1ef50cd5394768450158a5763a41a55f661bb952fff0e4b3094ece7
+    runtimeconditions.binding-release.yaml: 56bb1852dc81c94629b5e700384fcbd4a79a8e4dafd3891a125bf7601bc8c9ed
+- module: example.com/runtimeconditions/conformance/source-name-preservation
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/source-name-preservation/@v/v1.0.0.zip
+  archiveSha256: 313898b64891349ea1934e0a8ae088f2ddcce70606d9fe0bf24f64f54e690210
+  resourceSha256:
+    runtimeconditions.bindings.yaml: 11819abc2b7f5581b399af7631472e517e9bffd541f4f4d8016ca32470fa33e7
+    runtimeconditions.binding-model.yaml: 45f16ff9d0b030e985f6388305a531be39754748e0621a54ada31a2b0e2dc116
+    runtimeconditions.extension.yaml: 6941867e7918169fe393b75fc7a39e7a9fa1477fb25e7dfc5dfdf86b7cc35aa7
+    runtimeconditions.binding-release.yaml: 1b0194da234abb0c0c40547420b66f5435f6a4c050a92d59ef943f21569aefad
+- module: example.com/runtimeconditions/conformance/transitive-leaf
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/transitive-leaf/@v/v1.0.0.zip
+  archiveSha256: 598c2de48d29940e4bc649be5516729c26f482c729f0496b141db89b1d04b33c
+  resourceSha256:
+    runtimeconditions.bindings.yaml: 17e87f8fb260677dddfb9f72b7c40f1c4cf09ec8dc0e3737dc8812889c992679
+    runtimeconditions.binding-model.yaml: 63aeb85c80a650021b37cef259d23047e4002efaefce6d004f52e7b63a7030b6
+    runtimeconditions.extension.yaml: 254ea2dceab63b753aed1c75e6402871c18e716ec263fad27511e6406bf43992
+    runtimeconditions.binding-release.yaml: 06204cf878e879470e844d83486c708fcca26af600ea27c67cfc46a8eabb0763
+- module: example.com/runtimeconditions/conformance/transitive-middle
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/transitive-middle/@v/v1.0.0.zip
+  archiveSha256: d2085b00cd1f34dc3aa4e366ddaf822237be9945383c3cef9580581c0692ae81
+  resourceSha256:
+    runtimeconditions.bindings.yaml: da8e3d9e07e8217734a843e3f633fff72750a5134da6a35a59588743763b7357
+    runtimeconditions.binding-model.yaml: ac845f420fbd7e2cf666b14fb190d57726f7d99e67d0d64ee4c1dfd762e40fd1
+    runtimeconditions.extension.yaml: bf8331112b3fece59362ee8041528fae58d03855a3b136ed869a7f80577b3e56
+    runtimeconditions.binding-release.yaml: 6fca68d95294e1343732601d7a19ce76fc3ae8a34a2bc44ece67168d6eaf1ff0
+- module: example.com/runtimeconditions/conformance/transitive-root
+  archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/transitive-root/@v/v1.0.0.zip
+  archiveSha256: c876d878d81d60d3f94f7d05d1c92497e15cf6338120c83ce8655e64f99e5985
+  resourceSha256:
+    runtimeconditions.bindings.yaml: a41c256491cef011cea2be8b9e1f396d106fe4c90c33c6815b9d4813b546447f
+    runtimeconditions.binding-model.yaml: 10739f50f2031a0beea29240de6aad4a860221a3d0921f7aed5ef5bf9eb00b04
+    runtimeconditions.extension.yaml: 8ccd7ff2429e212ffa6faf8c8fcdc6b594e7afc0f21f02296eb60786d2223679
+    runtimeconditions.binding-release.yaml: 364dc92e72dbd85b189a1f53edc12dfbe9ad4c4d2e3871dd45098bb563cf5d59
+fixtureReleaseProfilerProvenance:
+  byModule:
+    example.com/runtimeconditions/conformance/additive-field: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/additive-field-base: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/collections-and-maps: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/dependency-schema-only-dependency: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/dependency-schema-only-root: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/heterogeneous-union: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/object-alternatives: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/owned-kind-interface: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/recursive-reference: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/scoped-domains-collisions: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/source-name-preservation: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/transitive-leaf: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/transitive-middle: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+    example.com/runtimeconditions/conformance/transitive-root: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+  matchesTestedBinary: false
+runtimeBoundary:
+  dependencyRetrieval: go mod download all
+  profilerGOPROXY: 'off'
+  macOSSandboxPolicy: (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  denialControls:
+  - path: /Users/colacy/code/github.com/runtimeconditions/extensions/tooling/extension-bindings/fixtures/conformance.yaml
+    command:
+    - sandbox-exec
+    - -p
+    - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+    - /bin/cat
+    - /Users/colacy/code/github.com/runtimeconditions/extensions/tooling/extension-bindings/fixtures/conformance.yaml
+    exitCode: 1
+    stderr: 'cat: /Users/colacy/code/github.com/runtimeconditions/extensions/tooling/extension-bindings/fixtures/conformance.yaml: Operation not permitted
+
+      '
+  - path: /Users/colacy/code/github.com/runtimeconditions/spec/schema/runtimeconditions.profile.v0.1.0.schema.yaml
+    command:
+    - sandbox-exec
+    - -p
+    - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+    - /bin/cat
+    - /Users/colacy/code/github.com/runtimeconditions/spec/schema/runtimeconditions.profile.v0.1.0.schema.yaml
+    exitCode: 1
+    stderr: 'cat: /Users/colacy/code/github.com/runtimeconditions/spec/schema/runtimeconditions.profile.v0.1.0.schema.yaml: Operation not permitted
+
+      '
+  - path: /Users/colacy/code/github.com/runtimeconditions/go-rc-profiler/main.go
+    command:
+    - sandbox-exec
+    - -p
+    - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+    - /bin/cat
+    - /Users/colacy/code/github.com/runtimeconditions/go-rc-profiler/main.go
+    exitCode: 1
+    stderr: 'cat: /Users/colacy/code/github.com/runtimeconditions/go-rc-profiler/main.go: Operation not permitted
+
+      '
+  sourceCheckoutReadsDenied:
+  - /Users/colacy/code/github.com/runtimeconditions/extensions
+  - /Users/colacy/code/github.com/runtimeconditions/spec
+  - /Users/colacy/code/github.com/runtimeconditions/go-rc-profiler
+workloads:
+- id: owned
+  case: 01-owned-kind-interface
+  outcome: positive
+  installCommand: &id001
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/owned
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/owned-kind-interface: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/owned/modules/example.com/runtimeconditions/conformance/owned-kind-interface@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:owned-kind-interface
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:owned-kind-interface
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-owned
+  - -workload-uri
+  - https://example.test/phase4/owned
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: dd3c7c48f284d6251d6742bb659c35e83f0741f4057be6822132e774478645ca
+  status: passed
+  actual: actual/profiles/owned.yaml
+  actualSha256: dd3c7c48f284d6251d6742bb659c35e83f0741f4057be6822132e774478645ca
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: additive-owner
+  case: 02-additive-field
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/additive-owner
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/additive-field-base: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/additive-owner/modules/example.com/runtimeconditions/conformance/additive-field-base@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:additive-field:base
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:additive-field:base
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-additive-owner
+  - -workload-uri
+  - https://example.test/phase4/additive-owner
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: f3f2ab80bb909ba53495a0528deb87836b7d5a3e1d6145cfc4e995342fb6cd62
+  status: passed
+  actual: actual/profiles/additive-owner.yaml
+  actualSha256: f3f2ab80bb909ba53495a0528deb87836b7d5a3e1d6145cfc4e995342fb6cd62
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: additive-consumer
+  case: 02-additive-field
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/additive-consumer
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/additive-field: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/additive-consumer/modules/example.com/runtimeconditions/conformance/additive-field@v1.0.0
+    example.com/runtimeconditions/conformance/additive-field-base: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/additive-consumer/modules/example.com/runtimeconditions/conformance/additive-field-base@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:additive-field
+  - urn:runtimeconditions:conformance:additive-field:base
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:additive-field
+  - urn:runtimeconditions:conformance:additive-field:base
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-additive-consumer
+  - -workload-uri
+  - https://example.test/phase4/additive-consumer
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 24a1f33314c52192e3e2512bdf730e988a2d983f69da16e49aa9b0a8eb7eb6c3
+  status: passed
+  actual: actual/profiles/additive-consumer.yaml
+  actualSha256: 24a1f33314c52192e3e2512bdf730e988a2d983f69da16e49aa9b0a8eb7eb6c3
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: transitive-leaf-consumer
+  case: 03-transitive-closure
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-leaf-consumer
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/transitive-leaf: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-leaf-consumer/modules/example.com/runtimeconditions/conformance/transitive-leaf@v1.0.0
+    example.com/runtimeconditions/conformance/transitive-middle: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-leaf-consumer/modules/example.com/runtimeconditions/conformance/transitive-middle@v1.0.0
+    example.com/runtimeconditions/conformance/transitive-root: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-leaf-consumer/modules/example.com/runtimeconditions/conformance/transitive-root@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:transitive:leaf
+  - urn:runtimeconditions:conformance:transitive:middle
+  - urn:runtimeconditions:conformance:transitive:root
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:transitive:leaf
+  - urn:runtimeconditions:conformance:transitive:middle
+  - urn:runtimeconditions:conformance:transitive:root
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-transitive-leaf-consumer
+  - -workload-uri
+  - https://example.test/phase4/transitive-leaf-consumer
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 548051b5c9fcf584b0eb7c56a783bbb78982de3c4a201c25a0aef621d66e4161
+  status: passed
+  actual: actual/profiles/transitive-leaf-consumer.yaml
+  actualSha256: 548051b5c9fcf584b0eb7c56a783bbb78982de3c4a201c25a0aef621d66e4161
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: transitive-middle-consumer
+  case: 03-transitive-closure
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-middle-consumer
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/transitive-leaf: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-middle-consumer/modules/example.com/runtimeconditions/conformance/transitive-leaf@v1.0.0
+    example.com/runtimeconditions/conformance/transitive-middle: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-middle-consumer/modules/example.com/runtimeconditions/conformance/transitive-middle@v1.0.0
+    example.com/runtimeconditions/conformance/transitive-root: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-middle-consumer/modules/example.com/runtimeconditions/conformance/transitive-root@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:transitive:leaf
+  - urn:runtimeconditions:conformance:transitive:middle
+  - urn:runtimeconditions:conformance:transitive:root
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:transitive:leaf
+  - urn:runtimeconditions:conformance:transitive:middle
+  - urn:runtimeconditions:conformance:transitive:root
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-transitive-middle-consumer
+  - -workload-uri
+  - https://example.test/phase4/transitive-middle-consumer
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: be1a74a567d5fd56aeb45c9e9079e148ef54bae783ef5e3cda5422a724669a6c
+  status: passed
+  actual: actual/profiles/transitive-middle-consumer.yaml
+  actualSha256: be1a74a567d5fd56aeb45c9e9079e148ef54bae783ef5e3cda5422a724669a6c
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: transitive-root-consumer
+  case: 03-transitive-closure
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-root-consumer
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/transitive-leaf: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-root-consumer/modules/example.com/runtimeconditions/conformance/transitive-leaf@v1.0.0
+    example.com/runtimeconditions/conformance/transitive-middle: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-root-consumer/modules/example.com/runtimeconditions/conformance/transitive-middle@v1.0.0
+    example.com/runtimeconditions/conformance/transitive-root: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/transitive-root-consumer/modules/example.com/runtimeconditions/conformance/transitive-root@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:transitive:leaf
+  - urn:runtimeconditions:conformance:transitive:middle
+  - urn:runtimeconditions:conformance:transitive:root
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:transitive:leaf
+  - urn:runtimeconditions:conformance:transitive:middle
+  - urn:runtimeconditions:conformance:transitive:root
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-transitive-root-consumer
+  - -workload-uri
+  - https://example.test/phase4/transitive-root-consumer
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: fbc12e3c60dbbc75c8443f28f9f6855e81f2952f4e2f9b238a9b2f4fe62427e4
+  status: passed
+  actual: actual/profiles/transitive-root-consumer.yaml
+  actualSha256: fbc12e3c60dbbc75c8443f28f9f6855e81f2952f4e2f9b238a9b2f4fe62427e4
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: recursive
+  case: 06-recursive-reference
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/recursive
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/recursive-reference: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/recursive/modules/example.com/runtimeconditions/conformance/recursive-reference@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:recursive-reference
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:recursive-reference
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-recursive
+  - -workload-uri
+  - https://example.test/phase4/recursive
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 2b81a149d0a44887c4716a60e3a41c9e1302d23c4f521105a20e944fd8592853
+  status: passed
+  actual: actual/profiles/recursive.yaml
+  actualSha256: 2b81a149d0a44887c4716a60e3a41c9e1302d23c4f521105a20e944fd8592853
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: alternatives-command
+  case: 07-object-alternatives
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/alternatives-command
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/object-alternatives: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/alternatives-command/modules/example.com/runtimeconditions/conformance/object-alternatives@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:object-alternatives
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:object-alternatives
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-alternatives-command
+  - -workload-uri
+  - https://example.test/phase4/alternatives-command
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 106ab524ea2487cf51a9d228a1b25f1d3c0e67c775feac3a6a5bdec1cc36e14f
+  status: passed
+  actual: actual/profiles/alternatives-command.yaml
+  actualSha256: 106ab524ea2487cf51a9d228a1b25f1d3c0e67c775feac3a6a5bdec1cc36e14f
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: alternatives-image
+  case: 07-object-alternatives
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/alternatives-image
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/object-alternatives: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/alternatives-image/modules/example.com/runtimeconditions/conformance/object-alternatives@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:object-alternatives
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:object-alternatives
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-alternatives-image
+  - -workload-uri
+  - https://example.test/phase4/alternatives-image
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 404cd3b81f622a71e831f358be4e81e0db7638c61b2e83995374afd5ec30b0d7
+  status: passed
+  actual: actual/profiles/alternatives-image.yaml
+  actualSha256: 404cd3b81f622a71e831f358be4e81e0db7638c61b2e83995374afd5ec30b0d7
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: union-object
+  case: 08-heterogeneous-union
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/union-object
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/heterogeneous-union: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/union-object/modules/example.com/runtimeconditions/conformance/heterogeneous-union@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:heterogeneous-union
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:heterogeneous-union
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-union-object
+  - -workload-uri
+  - https://example.test/phase4/union-object
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 7f45d7c752c9bb512b5885c181e1696680e2adf61c0914f1ac5b7383f8820632
+  status: passed
+  actual: actual/profiles/union-object.yaml
+  actualSha256: 7f45d7c752c9bb512b5885c181e1696680e2adf61c0914f1ac5b7383f8820632
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: union-string
+  case: 08-heterogeneous-union
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/union-string
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/heterogeneous-union: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/union-string/modules/example.com/runtimeconditions/conformance/heterogeneous-union@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:heterogeneous-union
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:heterogeneous-union
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-union-string
+  - -workload-uri
+  - https://example.test/phase4/union-string
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: ea961246209200fae8ca2704df442276808b13993f56c1a7e57e8957311524e3
+  status: passed
+  actual: actual/profiles/union-string.yaml
+  actualSha256: ea961246209200fae8ca2704df442276808b13993f56c1a7e57e8957311524e3
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: collections
+  case: 09-collections-and-maps
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/collections
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/collections-and-maps: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/collections/modules/example.com/runtimeconditions/conformance/collections-and-maps@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:collections-and-maps
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:collections-and-maps
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-collections
+  - -workload-uri
+  - https://example.test/phase4/collections
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 263946994f8856824a8f35f6ef1d7570a5741f4bd3f497767414274468db407c
+  status: passed
+  actual: actual/profiles/collections.yaml
+  actualSha256: 263946994f8856824a8f35f6ef1d7570a5741f4bd3f497767414274468db407c
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: collection-second-value
+  case: 09-collections-and-maps
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/collection-second-value
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/collections-and-maps: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/collection-second-value/modules/example.com/runtimeconditions/conformance/collections-and-maps@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:collections-and-maps
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:collections-and-maps
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-collection-second-value
+  - -workload-uri
+  - https://example.test/phase4/collection-second-value
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 9dc9624eaba4bbaaae3dd5b96d9058014521bdeb5af62312e160d56e1b072469
+  status: passed
+  actual: actual/profiles/collection-second-value.yaml
+  actualSha256: 9dc9624eaba4bbaaae3dd5b96d9058014521bdeb5af62312e160d56e1b072469
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: scoped-grpc
+  case: 10-scoped-domains-collisions
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/scoped-grpc
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/scoped-domains-collisions: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/scoped-grpc/modules/example.com/runtimeconditions/conformance/scoped-domains-collisions@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:scoped-domains-collisions
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:scoped-domains-collisions
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-scoped-grpc
+  - -workload-uri
+  - https://example.test/phase4/scoped-grpc
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 7644e5e2c6159eb5ba56623ce6675c7fcf3bddfd1277761db8a408a8eeff8653
+  status: passed
+  actual: actual/profiles/scoped-grpc.yaml
+  actualSha256: 7644e5e2c6159eb5ba56623ce6675c7fcf3bddfd1277761db8a408a8eeff8653
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: scoped-http
+  case: 10-scoped-domains-collisions
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/scoped-http
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/scoped-domains-collisions: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/scoped-http/modules/example.com/runtimeconditions/conformance/scoped-domains-collisions@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:scoped-domains-collisions
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:scoped-domains-collisions
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-scoped-http
+  - -workload-uri
+  - https://example.test/phase4/scoped-http
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: b131409505a9e6b5478aaff79e0eedf80b238930ab79248c7a844a8f24b696c1
+  status: passed
+  actual: actual/profiles/scoped-http.yaml
+  actualSha256: b131409505a9e6b5478aaff79e0eedf80b238930ab79248c7a844a8f24b696c1
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: scoped-http-proxy
+  case: 10-scoped-domains-collisions
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/scoped-http-proxy
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/scoped-domains-collisions: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/scoped-http-proxy/modules/example.com/runtimeconditions/conformance/scoped-domains-collisions@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:scoped-domains-collisions
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:scoped-domains-collisions
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-scoped-http-proxy
+  - -workload-uri
+  - https://example.test/phase4/scoped-http-proxy
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 3f27b0c2047e0f775407aac9ec3d4dfdc3a8f2e0cce33660173c8a7795ece681
+  status: passed
+  actual: actual/profiles/scoped-http-proxy.yaml
+  actualSha256: 3f27b0c2047e0f775407aac9ec3d4dfdc3a8f2e0cce33660173c8a7795ece681
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: scoped-optional-omitted
+  case: 10-scoped-domains-collisions
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/scoped-optional-omitted
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/scoped-domains-collisions: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/scoped-optional-omitted/modules/example.com/runtimeconditions/conformance/scoped-domains-collisions@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:scoped-domains-collisions
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:scoped-domains-collisions
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-scoped-optional-omitted
+  - -workload-uri
+  - https://example.test/phase4/scoped-optional-omitted
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 92ac0da33ecb1ba2a64755f3f1ab476f44f7758ae050054775c8b9dde02343c0
+  status: passed
+  actual: actual/profiles/scoped-optional-omitted.yaml
+  actualSha256: 92ac0da33ecb1ba2a64755f3f1ab476f44f7758ae050054775c8b9dde02343c0
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: source-names
+  case: 11-source-name-preservation
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/source-names
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/source-name-preservation: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/source-names/modules/example.com/runtimeconditions/conformance/source-name-preservation@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:source-name-preservation
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:source-name-preservation
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-source-names
+  - -workload-uri
+  - https://example.test/phase4/source-names
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: 2f0c24d954c016bfd1cbefce242042ed8ff6b513acaf1b1291546977c5f3e811
+  serializedSourceNames:
+  - api_url
+  - café
+  - http_server2_url
+  - patch9
+  status: passed
+  actual: actual/profiles/source-names.yaml
+  actualSha256: 2f0c24d954c016bfd1cbefce242042ed8ff6b513acaf1b1291546977c5f3e811
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: dependency-schema-only
+  case: 13-dependency-schema-only
+  outcome: positive
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/dependency-schema-only
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/dependency-schema-only-dependency: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/dependency-schema-only/modules/example.com/runtimeconditions/conformance/dependency-schema-only-dependency@v1.0.0
+    example.com/runtimeconditions/conformance/dependency-schema-only-root: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/dependency-schema-only/modules/example.com/runtimeconditions/conformance/dependency-schema-only-root@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:dependency-schema-only:root
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:dependency-schema-only:dependency
+  - urn:runtimeconditions:conformance:dependency-schema-only:root
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-dependency-schema-only
+  - -workload-uri
+  - https://example.test/phase4/dependency-schema-only
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 0
+  oracleSha256: cb8dcf8cd24eb010a8a93daf7514a3c107f91572fea46d1212d49a3a598aef0e
+  status: passed
+  actual: actual/profiles/dependency-schema-only.yaml
+  actualSha256: cb8dcf8cd24eb010a8a93daf7514a3c107f91572fea46d1212d49a3a598aef0e
+  exactYamlBytes: true
+  repeatedBytesIdentical: true
+- id: dependency-schema-invalid
+  case: 13-dependency-schema-only
+  outcome: negative
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/dependency-schema-invalid
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/dependency-schema-only-dependency: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/dependency-schema-invalid/modules/example.com/runtimeconditions/conformance/dependency-schema-only-dependency@v1.0.0
+    example.com/runtimeconditions/conformance/dependency-schema-only-root: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/dependency-schema-invalid/modules/example.com/runtimeconditions/conformance/dependency-schema-only-root@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:dependency-schema-only:root
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:dependency-schema-only:dependency
+  - urn:runtimeconditions:conformance:dependency-schema-only:root
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-dependency-schema-invalid
+  - -workload-uri
+  - https://example.test/phase4/dependency-schema-invalid
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 1
+  oracleSha256: 1246d88263a467cc3bb8cec4a9fb4bb7f16fe5b390fc3b4b53428c132fbdd244
+  status: passed
+  actual: actual/diagnostics/dependency-schema-invalid.stderr.txt
+  actualSha256: 60586a7c41188f4635b3196483c24fef53726c05998ee4818aa4fc82ff4a731a
+  failureStage: schema
+  exactDiagnostic: true
+  noProfileOutput: true
+- id: alternatives-missing
+  case: 07-object-alternatives
+  outcome: negative
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/alternatives-missing
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/object-alternatives: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/alternatives-missing/modules/example.com/runtimeconditions/conformance/object-alternatives@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:object-alternatives
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:object-alternatives
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-alternatives-missing
+  - -workload-uri
+  - https://example.test/phase4/alternatives-missing
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 1
+  oracleSha256: dec53b8aab8f212fb77ac274a2b7fbfb8bbd7e520d46c2b2350f78523cd62868
+  status: passed
+  actual: actual/diagnostics/alternatives-missing.stderr.txt
+  actualSha256: 34c31da8a6fef7e5370114f52c7184220170c87d9769e92af1812d95db952183
+  failureStage: schema
+  exactDiagnostic: true
+  noProfileOutput: true
+- id: alternatives-both
+  case: 07-object-alternatives
+  outcome: negative
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/alternatives-both
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/object-alternatives: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/alternatives-both/modules/example.com/runtimeconditions/conformance/object-alternatives@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:object-alternatives
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:object-alternatives
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-alternatives-both
+  - -workload-uri
+  - https://example.test/phase4/alternatives-both
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 1
+  oracleSha256: 7ed1bc106477ece15f149d4ae505877e2c3f3b032848c4cb50b75403c1ab5459
+  status: passed
+  actual: actual/diagnostics/alternatives-both.stderr.txt
+  actualSha256: 6f0ff7c890004933820f026710c7b4aa482b31596e7c7a7edc55e1699478d27b
+  failureStage: schema
+  exactDiagnostic: true
+  noProfileOutput: true
+- id: union-missing-id
+  case: 08-heterogeneous-union
+  outcome: negative
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/union-missing-id
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/heterogeneous-union: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/union-missing-id/modules/example.com/runtimeconditions/conformance/heterogeneous-union@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:heterogeneous-union
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:heterogeneous-union
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-union-missing-id
+  - -workload-uri
+  - https://example.test/phase4/union-missing-id
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 1
+  oracleSha256: 8f4e0529d8fb7ea72961e1adfcc8148dc2618cb239507d0f43f75978279fa113
+  status: passed
+  actual: actual/diagnostics/union-missing-id.stderr.txt
+  actualSha256: 8bc47f17c68f153002d7112b94cc889e624a8eb7d0e69bcfa1447446a812c9da
+  failureStage: structure
+  exactDiagnostic: true
+  noProfileOutput: true
+- id: collection-invalid-value
+  case: 09-collections-and-maps
+  outcome: negative
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/collection-invalid-value
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/collections-and-maps: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/collection-invalid-value/modules/example.com/runtimeconditions/conformance/collections-and-maps@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:collections-and-maps
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:collections-and-maps
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-collection-invalid-value
+  - -workload-uri
+  - https://example.test/phase4/collection-invalid-value
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 1
+  oracleSha256: 7fb79c6e6cfcdc7ae6d76a1f7d2cd53a90a84fe0ed5bc17a198f70ae57e14a35
+  status: passed
+  actual: actual/diagnostics/collection-invalid-value.stderr.txt
+  actualSha256: c875f174f98ff747c55e5261a8f053a1c304de7f26dd9d667d065c4abe582a7f
+  failureStage: schema
+  exactDiagnostic: true
+  noProfileOutput: true
+- id: scoped-invalid-value
+  case: 10-scoped-domains-collisions
+  outcome: negative
+  installCommand:
+  - go
+  - mod
+  - download
+  - all
+  installExitCode: 0
+  installProxy: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+  cache: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/scoped-invalid-value
+  resolvedBindingDirectories:
+    example.com/runtimeconditions/conformance/scoped-domains-collisions: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/scoped-invalid-value/modules/example.com/runtimeconditions/conformance/scoped-domains-collisions@v1.0.0
+  declarationSourcePresentBesideResources: true
+  allFourResourcesMatchArchive: true
+  workloadExecutionSentinelPresent: true
+  directContributors:
+  - urn:runtimeconditions:conformance:scoped-domains-collisions
+  resolvedExtensionClosure:
+  - urn:runtimeconditions:conformance:scoped-domains-collisions
+  profileCommand:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-scoped-invalid-value
+  - -workload-uri
+  - https://example.test/phase4/scoped-invalid-value
+  - -workload-version
+  - 1.0.0
+  - -out
+  - profile.yaml
+  profilerGOPROXY: 'off'
+  exitCode: 1
+  oracleSha256: 69baa9eab3bec4faff3f84fc49808c6784ce5cf57c29168173fba1e11d000dd0
+  status: passed
+  actual: actual/diagnostics/scoped-invalid-value.stderr.txt
+  actualSha256: e3726261478d6e003e30edf51fb6c0f77fde468c2066b40c5540dd3fa0a7fd57
+  failureStage: vocabulary
+  exactDiagnostic: true
+  noProfileOutput: true
+normalizerNegatives:
+- case: 04-dependency-cycle
+  status: passed
+  command:
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/rc-binding-model
+  - --root
+  - urn:runtimeconditions:conformance:cycle:root
+  - --extension-root
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/04-dependency-cycle
+  - --semantic-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.extension-semantic.schema.yaml
+  - --model-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.binding-model.schema.yaml
+  - --core-profile-id
+  - https://runtimeconditions.io/schemas/profile/0.1.0/runtimeconditions.profile.schema.yaml
+  - --core-profile-version
+  - 0.1.0
+  - --core-profile-semantic-sha256
+  - 49890a0f3e7276d1e480d654176672d977df9c63094f3a24983b0a8102e1a3e3
+  - --normalizer-sha256
+  - b07ec6fda47dd7f227ff79fd13d6a1f87b9ff4d2ba7ed290154f6d63c7621526
+  - --output
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/04-dependency-cycle.model.yaml
+  exitCode: 1
+  noModelOutput: true
+  actual: actual/diagnostics/04-dependency-cycle.stderr.txt
+  actualSha256: a5da6b25c8835b8ece081b4bb3fa75c56f1cebc9a227ec6a136d71609707ab83
+  oracleSha256: a8f8da69158400b3bfa7f3e8588a6aaff86f02ee960c704eb66e5bc74b4852eb
+  exactDiagnostic: true
+- case: 05-vocabulary-conflict
+  status: passed
+  command:
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/rc-binding-model
+  - --root
+  - urn:runtimeconditions:conformance:conflict:root
+  - --extension-root
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/05-vocabulary-conflict
+  - --semantic-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.extension-semantic.schema.yaml
+  - --model-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.binding-model.schema.yaml
+  - --core-profile-id
+  - https://runtimeconditions.io/schemas/profile/0.1.0/runtimeconditions.profile.schema.yaml
+  - --core-profile-version
+  - 0.1.0
+  - --core-profile-semantic-sha256
+  - 49890a0f3e7276d1e480d654176672d977df9c63094f3a24983b0a8102e1a3e3
+  - --normalizer-sha256
+  - b07ec6fda47dd7f227ff79fd13d6a1f87b9ff4d2ba7ed290154f6d63c7621526
+  - --output
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/05-vocabulary-conflict.model.yaml
+  exitCode: 1
+  noModelOutput: true
+  actual: actual/diagnostics/05-vocabulary-conflict.stderr.txt
+  actualSha256: 8cbc56990be64ad96842ff153213d669ee60d2d19a0acd8b588506f6636dcfe2
+  oracleSha256: daf633b36a1139cd5a91cb15b010d9ab2c1bada290641c76c18e74aebaa2087d
+  exactDiagnostic: true
+- case: 12-unsupported-structural-keyword
+  status: passed
+  command:
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/rc-binding-model
+  - --root
+  - urn:runtimeconditions:conformance:unsupported-structural-keyword
+  - --extension-root
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/12-unsupported-structural-keyword
+  - --semantic-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.extension-semantic.schema.yaml
+  - --model-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.binding-model.schema.yaml
+  - --core-profile-id
+  - https://runtimeconditions.io/schemas/profile/0.1.0/runtimeconditions.profile.schema.yaml
+  - --core-profile-version
+  - 0.1.0
+  - --core-profile-semantic-sha256
+  - 49890a0f3e7276d1e480d654176672d977df9c63094f3a24983b0a8102e1a3e3
+  - --normalizer-sha256
+  - b07ec6fda47dd7f227ff79fd13d6a1f87b9ff4d2ba7ed290154f6d63c7621526
+  - --output
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/12-unsupported-structural-keyword.model.yaml
+  exitCode: 1
+  noModelOutput: true
+  actual: actual/diagnostics/12-unsupported-structural-keyword.stderr.txt
+  actualSha256: f782f1517abfb7c486144359246f0ff8d5155d2c46097306d04b2122de2c3abf
+  oracleSha256: 42927ecc0e40063daf875fd73f8403431dcd9523ed3c5547e0b5849f4a97fcb2
+  exactDiagnostic: true
+bindingCodeCanary:
+  status: passed
+  workload: owned
+  downloadedBindingSource: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/binding-canary/modules/example.com/runtimeconditions/conformance/owned-kind-interface@v1.0.0/bindings.go
+  derivedExternalProxy: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/canary-proxy
+  derivedArchive: /private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/canary-proxy/example.com/runtimeconditions/conformance/owned-kind-interface/@v/v1.0.0.zip
+  derivedArchiveSha256: 29d47449b3909fbd79d9ccb4bfa63e83efdd621070e084c13fcdb7006d98d82b
+  sourceSha256BeforeInjection: a789fe731a5bfddc958911bd2ef1d9743b9835caf5f5362d0413c31a4b1b4550
+  sourceSha256AfterInjection: d0c348f58ac6b6f302e80129d821e7def87e163091d7d8bbbab7bd22c4f65ea0
+  injectedSource: func init() { panic("binding package must not execute") }
+  installCommand: *id001
+  installProxy: file:///private/tmp/rc-phase4-go-dependency-evidence-cache-v3-20261004/canary-proxy
+  profilerGOPROXY: 'off'
+  command:
+  - sandbox-exec
+  - -p
+  - (version 1)(allow default)(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/extensions"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/spec"))(deny file-read* (subpath "/Users/colacy/code/github.com/runtimeconditions/go-rc-profiler"))
+  - /private/tmp/rc-phase4-profiler-dependency-fix-v2-20261004
+  - generate
+  - -dir
+  - .
+  - -name
+  - phase4-owned
+  - -workload-uri
+  - https://example.test/phase4/owned
+  - -workload-version
+  - 1.0.0
+  - -out
+  - canary.yaml
+  exitCode: 0
+  profileSha256: dd3c7c48f284d6251d6742bb659c35e83f0741f4057be6822132e774478645ca
+  matchesUnmodifiedOracle: true
+counts:
+  positive: 19
+  negative: 6
+  packages: 14
+  emittedCalls: 11
+  completedDeferredDeclarations: 1

@@ -1,5 +1,6 @@
-// Package extensioncheck validates Runtime Conditions extension definitions,
-// the Go binding manifests that accompany them, and the profiles they produce.
+// Package extensioncheck validates generated Go binding packages resolved from
+// a workload's module graph. It also retains catalog-based authoring checks for
+// extension definitions and older hand-written bindings.
 package extensioncheck
 
 import (
@@ -29,19 +30,20 @@ type ProfileOptions struct {
 	CatalogRoots []string
 }
 
-// ValidateExtension validates the extension definition under root, plus any
-// dependency extensions required to check its binding and declaration package.
+// ValidateExtension is a legacy authoring check for a local extension
+// definition tree. Generated packages are validated with
+// ValidateImportedGoPackages instead.
 func ValidateExtension(root string, opts Options) error {
 	return validate(root, opts, true)
 }
 
-// ValidateExtensions validates every extension definition found under root.
+// ValidateExtensions is a legacy authoring check for local definitions.
 func ValidateExtensions(root string, opts Options) error {
 	return validate(root, opts, false)
 }
 
-// ValidateBindingManifest validates a Go binding or package manifest against
-// its referenced extension definition and resolved dependency graph.
+// ValidateBindingManifest checks an older hand-written authoring manifest.
+// It does not validate a generated v1alpha2 package.
 func ValidateBindingManifest(path string, opts Options) error {
 	absPath, err := filepath.Abs(path)
 	if err != nil {

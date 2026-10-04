@@ -1,0 +1,15 @@
+apiVersion: runtimeconditions.io/v1alpha1
+conditions:
+    - configuration:
+        command: ""
+      interface:
+        type: process
+      kind: deployment
+extensions:
+    - urn:runtimeconditions:conformance:object-alternatives
+kind: RuntimeConditionsProfile
+metadata:
+    name: phase4-alternatives-command
+workload:
+    uri: https://example.test/phase4/alternatives-command
+    version: 1.0.0

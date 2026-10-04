@@ -1,0 +1,12 @@
+coordinate: urn:runtimeconditions:conformance:scoped-domains-collisions#schema:service-grpc
+conditionPointer: /mode
+schemaPointer: /properties/mode/const
+keyword: const
+reason: The HTTP value direct is invalid in the GRPC scope.
+stage: vocabulary
+exitCode: nonzero
+profileOutput: absent
+message: conditions[0] value direct is outside domain field-domain:service:grpc:mode
+stderr: 'runtimeconditions: conditions[0] value direct is outside domain field-domain:service:grpc:mode
+
+  '

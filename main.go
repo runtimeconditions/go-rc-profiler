@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"flag"
 	"fmt"
 	"os"
@@ -16,12 +17,18 @@ import (
 func main() {
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
+		case "generate":
+			runGenerate(os.Args[2:])
+			return
 		case "validate-extension":
 			runValidateExtension(os.Args[2:])
 			return
 		case "validate-extensions":
 			runValidateExtensions(os.Args[2:])
 			return
+		}
+		if !strings.HasPrefix(os.Args[1], "-") {
+			exitErr(fmt.Errorf("unknown command %q", os.Args[1]))
 		}
 	}
 	runGenerate(os.Args[1:])
@@ -33,10 +40,6 @@ func runGenerate(args []string) {
 	name := flags.String("name", "", "profile metadata.name")
 	workloadURI := flags.String("workload-uri", "", "workload.uri")
 	workloadVersion := flags.String("workload-version", "dev", "workload.version")
-	extensionsRoot := flags.String("extensions-root", "", "development root containing extension definitions; package manifests are discovered from resolved Go imports")
-	skipValidation := flags.Bool("skip-validation", false, "skip extension manifest and generated profile validation")
-	disableGoPackages := flags.Bool("disable-go-packages", false, "disable semantic Go package loading and use syntax-only extraction")
-	requireGoPackages := flags.Bool("require-go-packages", false, "fail extraction when semantic Go package loading fails")
 	out := flags.String("out", "", "output file path; defaults to stdout")
 	flags.Parse(args)
 
@@ -55,14 +58,10 @@ func runGenerate(args []string) {
 		uri = modulePath(absDir)
 	}
 
-	profile, err := extractor.ExtractDir(absDir, extractor.Options{
-		Name:              profileName,
-		WorkloadURI:       uri,
-		WorkloadVersion:   *workloadVersion,
-		ExtensionRoots:    splitList(*extensionsRoot),
-		SkipValidation:    *skipValidation,
-		DisableGoPackages: *disableGoPackages,
-		RequireGoPackages: *requireGoPackages,
+	profile, err := extractor.ExtractGeneratedDir(absDir, extractor.GeneratedOptions{
+		Name:            profileName,
+		WorkloadURI:     uri,
+		WorkloadVersion: *workloadVersion,
 	})
 	if err != nil {
 		exitErr(err)
@@ -76,64 +75,61 @@ func runGenerate(args []string) {
 	if *out == "" {
 		_, err = os.Stdout.Write(data)
 	} else {
-		err = os.WriteFile(*out, data, 0o644)
+		err = writeProfileAtomically(*out, data)
 	}
 	if err != nil {
 		exitErr(err)
 	}
+}
+
+func writeProfileAtomically(path string, data []byte) error {
+	file, err := os.CreateTemp(filepath.Dir(path), ".runtimeconditions-profile-*")
+	if err != nil {
+		return err
+	}
+	defer os.Remove(file.Name())
+	if err := file.Chmod(0o644); err != nil {
+		file.Close()
+		return err
+	}
+	if _, err := file.Write(data); err != nil {
+		file.Close()
+		return err
+	}
+	if err := file.Sync(); err != nil {
+		file.Close()
+		return err
+	}
+	if err := file.Close(); err != nil {
+		return err
+	}
+	return os.Rename(file.Name(), path)
 }
 
 func runValidateExtension(args []string) {
 	flags := flag.NewFlagSet("validate-extension", flag.ExitOnError)
-	root := flags.String("root", ".", "extension directory to validate")
-	language := flags.String("language", "go", "language binding package to validate")
-	catalogRoot := flags.String("catalog-root", "", "additional comma-separated directories containing dependency extension definitions")
-	requireLanguagePackage := flags.Bool("require-language-package", false, "require the selected language package and bindings")
+	dir := flags.String("dir", ".", "Go workload module directory")
+	packagePath := flags.String("package", "", "import path of a generated extension binding package")
 	flags.Parse(args)
-
-	err := extensioncheck.ValidateExtension(*root, extensioncheck.Options{
-		Language:               *language,
-		CatalogRoots:           splitList(*catalogRoot),
-		RequireLanguagePackage: *requireLanguagePackage,
-	})
+	if *packagePath == "" {
+		exitErr(fmt.Errorf("-package is required"))
+	}
+	_, err := extensioncheck.ValidateImportedGoPackages(context.Background(), *dir, []string{*packagePath})
 	if err != nil {
 		exitErr(err)
 	}
-	fmt.Fprintln(os.Stderr, "runtimeconditions: extension validation passed")
+	fmt.Fprintln(os.Stderr, "runtimeconditions: generated binding structure validated")
 }
 
 func runValidateExtensions(args []string) {
 	flags := flag.NewFlagSet("validate-extensions", flag.ExitOnError)
-	root := flags.String("root", ".", "directory containing extension definitions to validate")
-	language := flags.String("language", "go", "language binding package to validate")
-	catalogRoot := flags.String("catalog-root", "", "additional comma-separated directories containing dependency extension definitions")
-	requireLanguagePackage := flags.Bool("require-language-package", false, "require every extension to provide the selected language package and bindings")
+	dir := flags.String("dir", ".", "Go workload module directory")
 	flags.Parse(args)
-
-	err := extensioncheck.ValidateExtensions(*root, extensioncheck.Options{
-		Language:               *language,
-		CatalogRoots:           splitList(*catalogRoot),
-		RequireLanguagePackage: *requireLanguagePackage,
-	})
+	_, err := extensioncheck.ValidateImportedGoPackages(context.Background(), *dir, nil)
 	if err != nil {
 		exitErr(err)
 	}
-	fmt.Fprintln(os.Stderr, "runtimeconditions: extensions validation passed")
-}
-
-func splitList(value string) []string {
-	if strings.TrimSpace(value) == "" {
-		return nil
-	}
-	parts := strings.Split(value, ",")
-	result := make([]string, 0, len(parts))
-	for _, part := range parts {
-		part = strings.TrimSpace(part)
-		if part != "" {
-			result = append(result, part)
-		}
-	}
-	return result
+	fmt.Fprintln(os.Stderr, "runtimeconditions: generated binding structures validated")
 }
 
 func modulePath(dir string) string {

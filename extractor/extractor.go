@@ -1,11 +1,9 @@
 // Package extractor generates a Runtime Conditions Profile from Go source.
 //
-// Two independent paths contribute conditions. The binding path reads
-// declarations a workload makes deliberately through an extension's Go API. The
-// SDK mapping path infers conditions from ordinary SDK calls, using metadata the
-// SDK itself publishes. Both are driven by installed vocabulary rather than by
-// knowledge of any particular extension or library, so support for a new
-// dependency is added by shipping metadata, not by changing this code.
+// The legacy binding path reads declarations a workload makes deliberately
+// through an extension's Go API. SDK mappings may additionally infer conditions
+// from ordinary calls when explicitly enabled. Generated structural bindings
+// use a separate, fail-closed entry point.
 //
 // Nothing in the target workload is executed. The Go toolchain is used to
 // type-check it, which is what makes a call attributable to the module that
@@ -13,6 +11,7 @@
 package extractor
 
 import (
+	"fmt"
 	"go/token"
 	"path/filepath"
 	"slices"
@@ -29,6 +28,10 @@ type Options struct {
 	Name            string
 	WorkloadURI     string
 	WorkloadVersion string
+
+	// EnableSDKMappings opts into inferred conditions from installed SDK
+	// mapping metadata. It requires semantic Go package loading.
+	EnableSDKMappings bool
 
 	// ExtensionRoots are the catalogs searched for extension definitions and
 	// their language bindings.
@@ -47,10 +50,16 @@ type Options struct {
 	RequireGoPackages bool
 }
 
-// ExtractDir reads Go source declarations from dir and converts them to a
-// Runtime Conditions Profile. It may use the Go toolchain to resolve package
-// semantics, but it does not execute the target package.
+// ExtractDir reads the earlier handwritten Go declaration and SDK mapping
+// contracts. It remains available for existing integrations; generated
+// structural bindings use ExtractGeneratedDir instead.
 func ExtractDir(dir string, opts Options) (*RuntimeConditionsProfile, error) {
+	if opts.EnableSDKMappings {
+		if opts.DisableGoPackages {
+			return nil, fmt.Errorf("SDK mapping extraction requires semantic Go package loading")
+		}
+		opts.RequireGoPackages = true
+	}
 	absDir, err := filepath.Abs(dir)
 	if err != nil {
 		return nil, err
@@ -81,9 +90,13 @@ func ExtractDir(dir string, opts Options) (*RuntimeConditionsProfile, error) {
 
 	// SDK conditions come first so a profile reads dependency-inward: what the
 	// workload was observed doing, then what it declares about itself.
-	sdkConditions, sdkExtensions, err := sdkmap.ExtractConditions(files, scope.Semantic, mappings)
-	if err != nil {
-		return nil, err
+	var sdkConditions []Condition
+	var sdkExtensions []string
+	if opts.EnableSDKMappings {
+		sdkConditions, sdkExtensions, err = sdkmap.ExtractConditions(files, scope.Semantic, mappings)
+		if err != nil {
+			return nil, err
+		}
 	}
 	declaredConditions, declaredExtensions, err := binding.ExtractConditions(fset, scope, files, bindings)
 	if err != nil {
@@ -152,9 +165,12 @@ func discoverVocabulary(absDir string, files []gosource.File, opts Options) ([]*
 	}
 	bindings = append(bindings, packageBindings...)
 
-	mappings, err := sdkmap.Discover(absDir, files, opts.ExtensionRoots)
-	if err != nil {
-		return nil, nil, err
+	var mappings []sdkmap.Mapping
+	if opts.EnableSDKMappings {
+		mappings, err = sdkmap.Discover(absDir, files, opts.ExtensionRoots)
+		if err != nil {
+			return nil, nil, err
+		}
 	}
 	return bindings, mappings, nil
 }

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "schema-linked-go-test",
+    "command": "go test -ldflags '-X github.com/runtimeconditions/go-rc-profiler/extensioncheck.installedCoreSchemaBase64=<base64 core schema>' ./... -count=1",
+    "environment": {
+      "RC_GO_BINDING_FIXTURE_PROXY": "/private/tmp/rc-phase4-official-fixtures-20261004/go/proxy",
+      "RC_GO_BINDING_CONFORMANCE_PROXY": "/private/tmp/rc-phase4-official-fixtures-20261004/go/proxy",
+      "RC_GO_PROFILER_BIN": "/private/tmp/rc-phase4-profiler-20261004",
+      "GOCACHE": "/private/tmp/rc-phase4-go-regression-cache-20261004"
+    },
+    "exitCode": 0,
+    "log": "checks/schema-linked-go-test.log"
+  },
+  {
+    "name": "go-vet",
+    "command": "go vet ./...",
+    "environment": {
+      "RC_GO_BINDING_FIXTURE_PROXY": "/private/tmp/rc-phase4-official-fixtures-20261004/go/proxy",
+      "RC_GO_BINDING_CONFORMANCE_PROXY": "/private/tmp/rc-phase4-official-fixtures-20261004/go/proxy",
+      "RC_GO_PROFILER_BIN": "/private/tmp/rc-phase4-profiler-20261004",
+      "GOCACHE": "/private/tmp/rc-phase4-go-regression-cache-20261004"
+    },
+    "exitCode": 0,
+    "log": "checks/go-vet.log"
+  }
+]

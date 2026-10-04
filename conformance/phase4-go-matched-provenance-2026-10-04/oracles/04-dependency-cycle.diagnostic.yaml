@@ -1,0 +1,4 @@
+category: extension-dependency
+code: RCB1204
+coordinate: urn:runtimeconditions:conformance:cycle:root
+message: 'dependency cycle: urn:runtimeconditions:conformance:cycle:root -> urn:runtimeconditions:conformance:cycle:dependency -> urn:runtimeconditions:conformance:cycle:root'

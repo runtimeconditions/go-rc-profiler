@@ -1,0 +1,15 @@
+apiVersion: runtimeconditions.io/v1alpha1
+conditions:
+    - interface:
+        type: target
+      kind: selector
+      target:
+        id: ""
+extensions:
+    - urn:runtimeconditions:conformance:heterogeneous-union
+kind: RuntimeConditionsProfile
+metadata:
+    name: phase4-union-object
+workload:
+    uri: https://example.test/phase4/union-object
+    version: 1.0.0

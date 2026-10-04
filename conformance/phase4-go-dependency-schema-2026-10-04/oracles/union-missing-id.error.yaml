@@ -1,0 +1,14 @@
+coordinate: urn:runtimeconditions:conformance:heterogeneous-union#schema:heterogeneous-target
+conditionPointer: /target
+schemaPointer: /properties/target/oneOf
+keyword: oneOf
+reason: The object variant lacks id and cannot satisfy the string variant.
+stage: structure
+exitCode: nonzero
+profileOutput: absent
+message: required field id is absent
+stderr: 'runtimeconditions: <workload>/main.go:5:9: Selector (kind:selector): <workload>/main.go:5:40:
+  urn:runtimeconditions:conformance:heterogeneous-union#schema:heterogeneous-target
+  /properties/target: required field id is absent
+
+  '

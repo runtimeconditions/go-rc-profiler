@@ -1,0 +1,344 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://runtimeconditions.io/schemas/runtimeconditions.binding-manifest.v1alpha2.schema.yaml
+title: Runtime Conditions structural binding manifest
+description: >-
+  Native binding symbols and their structural relationships to one normalized
+  binding model. Consumers must recompute the model digest, compare the root
+  extension identity and digest with the resolved extension, compare package
+  identity with native package-manager resolution, and verify every modelRef
+  and native type edge. v1alpha1 symbol inventories are invalid here.
+type: object
+additionalProperties: false
+required:
+  - apiVersion
+  - kind
+  - generated
+  - model
+  - extension
+  - package
+  - declarations
+  - importedMarkerContracts
+  - rootBindings
+  - types
+properties:
+  apiVersion: {const: runtimeconditions.io/bindings/v1alpha2}
+  kind: {const: RuntimeConditionsBindingManifest}
+  generated:
+    type: object
+    additionalProperties: false
+    required: [nonEditable, emitter, version]
+    properties:
+      nonEditable: {const: true}
+      emitter: {type: string, minLength: 1}
+      version: {type: string, minLength: 1}
+  model:
+    type: object
+    additionalProperties: false
+    required: [apiVersion, semanticSha256]
+    properties:
+      apiVersion: {const: runtimeconditions.io/binding-model/v1alpha1}
+      semanticSha256: {$ref: '#/$defs/sha256'}
+  extension:
+    type: object
+    additionalProperties: false
+    required: [id, semanticSha256]
+    properties:
+      id: {type: string, minLength: 1}
+      semanticSha256: {$ref: '#/$defs/sha256'}
+  package:
+    description: >-
+      For Go, coordinate is the package import path, name is the Go package
+      name, and version is the resolved module version. For Python, coordinate
+      is the distribution name, name is the import package, and version is the
+      installed distribution version. Consumers must compare all applicable
+      fields to native package-manager metadata.
+    type: object
+    additionalProperties: false
+    required: [language, coordinate, name, version]
+    properties:
+      language: {enum: [go, python]}
+      coordinate: {type: string, minLength: 1}
+      name: {type: string, pattern: '^[A-Za-z_][A-Za-z0-9_]*$'}
+      version: {type: string, minLength: 1}
+      minimumGoVersion: {type: string, pattern: '^[0-9]+\.[0-9]+$'}
+      minimumPythonVersion: {type: string, pattern: '^[0-9]+\.[0-9]+$'}
+    allOf:
+      - if:
+          properties:
+            language: {const: go}
+        then:
+          required: [minimumGoVersion]
+          not:
+            required: [minimumPythonVersion]
+        else:
+          required: [minimumPythonVersion]
+          not:
+            required: [minimumGoVersion]
+  declarations:
+    type: array
+    items: {$ref: '#/$defs/declaration'}
+  importedMarkerContracts:
+    type: array
+    items: {$ref: '#/$defs/importedMarkerContract'}
+  rootBindings:
+    type: array
+    items: {$ref: '#/$defs/rootBinding'}
+  types:
+    type: array
+    items: {$ref: '#/$defs/namedType'}
+allOf:
+  - if:
+      properties:
+        package:
+          properties:
+            language: {const: go}
+    then:
+      properties:
+        declarations:
+          items:
+            properties:
+              file: {const: bindings.go}
+        types:
+          items:
+            properties:
+              file: {const: bindings.go}
+    else:
+      properties:
+        declarations:
+          items:
+            properties:
+              file: {const: bindings.py}
+        importedMarkerContracts:
+          items:
+            required: [providerPackage]
+        types:
+          items:
+            properties:
+              file: {const: bindings.py}
+$defs:
+  sha256:
+    type: string
+    pattern: '^[0-9a-f]{64}$'
+  nativeIdentifier:
+    type: string
+    minLength: 1
+  modelRef:
+    description: >-
+      The coordinate and optional JSON Pointer are separate normalized-model
+      fields. Consumers must locate exactly one referenced node in the model;
+      a string concatenation of these values is not a substitute for that
+      lookup.
+    type: object
+    additionalProperties: false
+    required: [coordinate]
+    properties:
+      coordinate: {type: string, minLength: 1}
+      jsonPointer: {type: string, pattern: '^/'}
+  scope:
+    type: object
+    additionalProperties: false
+    required: [kind]
+    properties:
+      kind: {type: string, minLength: 1}
+      interfaceType: {type: string, minLength: 1}
+  pathSegment:
+    type: object
+    additionalProperties: false
+    required: [name]
+    properties:
+      name: {type: string, minLength: 1}
+      array: {const: true}
+  reference:
+    description: >-
+      Exactly one local native type or language builtin. Pointer records Go
+      pointer syntax; nullable records a Python annotation accepting None.
+      A consumer must resolve every type to exactly one entry in types.
+    type: object
+    additionalProperties: false
+    properties:
+      type: {$ref: '#/$defs/nativeIdentifier'}
+      builtin: {enum: [string, bool, int64, float64, 'struct{}', any, str, int, float, 'None', JSONValue]}
+      pointer: {const: true}
+      nullable: {const: true}
+    not:
+      required: [pointer, nullable]
+    oneOf:
+      - required: [type]
+      - required: [builtin]
+  declaration:
+    type: object
+    additionalProperties: false
+    required: [modelRef, owner, sourceName, function, markerInterface, markerMethod, file]
+    properties:
+      modelRef: {$ref: '#/$defs/modelRef'}
+      owner: {type: string, minLength: 1}
+      sourceName: {type: string, minLength: 1}
+      function: {$ref: '#/$defs/nativeIdentifier'}
+      markerInterface: {$ref: '#/$defs/nativeIdentifier'}
+      markerMethod: {$ref: '#/$defs/nativeIdentifier'}
+      file: {enum: [bindings.go, bindings.py]}
+  importedMarkerContract:
+    type: object
+    additionalProperties: false
+    required: [modelRef, owner, sourceName, markerInterface, markerMethod]
+    properties:
+      modelRef: {$ref: '#/$defs/modelRef'}
+      owner: {type: string, minLength: 1}
+      sourceName: {type: string, minLength: 1}
+      markerInterface: {$ref: '#/$defs/nativeIdentifier'}
+      markerMethod: {$ref: '#/$defs/nativeIdentifier'}
+      providerPackage: {type: string, minLength: 1}
+  rootBinding:
+    description: >-
+      Connects a declaration call to a value at an exact scope and serialized
+      path. The modelRef identifies the vocabulary or schema node represented
+      by this binding. schemaCoordinate and vocabularyCoordinate disambiguate
+      Python schema-specific wrappers and vocabulary identities when present.
+    type: object
+    additionalProperties: false
+    required: [role, modelRef, declarationCoordinate, scope, sourceName, path, value]
+    properties:
+      role: {enum: [interface, condition-field, schema-field]}
+      modelRef: {$ref: '#/$defs/modelRef'}
+      declarationCoordinate: {type: string, minLength: 1}
+      scope: {$ref: '#/$defs/scope'}
+      sourceName: {type: string, minLength: 1}
+      path:
+        type: array
+        minItems: 1
+        items: {$ref: '#/$defs/pathSegment'}
+      value: {$ref: '#/$defs/reference'}
+      fixedInterfaceType: {type: string, minLength: 1}
+      schemaCoordinate: {type: string, minLength: 1}
+      vocabularyCoordinate: {type: string, minLength: 1}
+    allOf:
+      - if:
+          properties:
+            role: {const: interface}
+        then:
+          required: [fixedInterfaceType]
+          properties:
+            path:
+              const: [{name: interface}]
+        else:
+          not:
+            required: [fixedInterfaceType]
+  field:
+    description: >-
+      A child of its containing named type. sourceName is the serialized
+      property name; synthetic marks a Python wrapper's native value field,
+      whose sourceName is inherited from the wrapped property.
+    type: object
+    additionalProperties: false
+    required: [modelRef, sourceName, nativeName, required, value]
+    properties:
+      modelRef: {$ref: '#/$defs/modelRef'}
+      sourceName: {type: string, minLength: 1}
+      nativeName: {$ref: '#/$defs/nativeIdentifier'}
+      required: {type: boolean}
+      value: {$ref: '#/$defs/reference'}
+      synthetic: {const: true}
+  element:
+    description: >-
+      The array item or map value of its containing named type. Its modelRef
+      identifies the child shape, including an exact JSON Pointer when present.
+    type: object
+    additionalProperties: false
+    required: [modelRef, value]
+    properties:
+      modelRef: {$ref: '#/$defs/modelRef'}
+      value: {$ref: '#/$defs/reference'}
+  variant:
+    description: >-
+      One union alternative in normalized model order. Its value identifies
+      the exact native representation of that alternative.
+    type: object
+    additionalProperties: false
+    required: [modelRef, value]
+    properties:
+      modelRef: {$ref: '#/$defs/modelRef'}
+      value: {$ref: '#/$defs/reference'}
+  member:
+    description: >-
+      A string-domain value on its containing scalar type. The literal value
+      disambiguates members sharing a domain or shape modelRef.
+    type: object
+    additionalProperties: false
+    required: [modelRef, nativeName, value]
+    properties:
+      modelRef: {$ref: '#/$defs/modelRef'}
+      nativeName: {$ref: '#/$defs/nativeIdentifier'}
+      value: {type: string}
+  implements:
+    type: object
+    additionalProperties: false
+    required: [declarationCoordinate, markerMethod]
+    properties:
+      declarationCoordinate: {type: string, minLength: 1}
+      markerMethod: {$ref: '#/$defs/nativeIdentifier'}
+  namedType:
+    description: >-
+      A local native symbol. Its fields, element, variants, and members belong
+      to this symbol; no separate parent string is needed. wrapper represents
+      a Python declaration field object around a non-object model shape.
+      Anonymous child shapes inherit their parent's serialized sourceName;
+      modelRef and the containing edge identify the precise child.
+    type: object
+    additionalProperties: false
+    required: [modelRef, sourceName, nativeName, construct, file]
+    properties:
+      modelRef: {$ref: '#/$defs/modelRef'}
+      sourceName: {type: string, minLength: 1}
+      nativeName: {$ref: '#/$defs/nativeIdentifier'}
+      construct: {enum: [scalar, object, collection, map, union, any, wrapper]}
+      file: {enum: [bindings.go, bindings.py]}
+      implements:
+        type: array
+        items: {$ref: '#/$defs/implements'}
+      underlying: {enum: [string, bool, int64, float64, 'struct{}', any, str, int, float, 'None']}
+      fields:
+        type: array
+        items: {$ref: '#/$defs/field'}
+      element: {$ref: '#/$defs/element'}
+      variants:
+        type: array
+        minItems: 1
+        items: {$ref: '#/$defs/variant'}
+      members:
+        type: array
+        items: {$ref: '#/$defs/member'}
+    allOf:
+      - if:
+          properties:
+            construct: {const: scalar}
+        then:
+          required: [underlying]
+        else:
+          not:
+            anyOf:
+              - required: [underlying]
+              - required: [members]
+      - if:
+          properties:
+            construct: {enum: [object, wrapper]}
+        then:
+          required: [fields]
+        else:
+          not:
+            required: [fields]
+      - if:
+          properties:
+            construct: {enum: [collection, map]}
+        then:
+          required: [element]
+        else:
+          not:
+            required: [element]
+      - if:
+          properties:
+            construct: {const: union}
+        then:
+          required: [variants]
+        else:
+          not:
+            required: [variants]

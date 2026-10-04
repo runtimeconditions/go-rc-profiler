@@ -1,0 +1,40 @@
+case: 13-dependency-schema-only
+workload: dependency-schema-only
+fixtureTree: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004
+originalProfilerSha256: 46af7aa54375acc74bc9019c7cf1d36080ccf240b2bd58d116ee93ac7384a531
+command:
+  cwd: /private/tmp/rc-phase4-go-dependency-evidence-cache-20261004/dependency-schema-only/workload
+  environment:
+    GOWORK: 'off'
+    GOSUMDB: 'off'
+    GOPROXY: 'off'
+    GOMODCACHE: /private/tmp/rc-phase4-go-dependency-evidence-cache-20261004/dependency-schema-only/modules
+    GOCACHE: /private/tmp/rc-phase4-go-dependency-evidence-cache-20261004/dependency-schema-only/build
+  argv:
+    - /private/tmp/rc-phase4-profiler-20261004
+    - generate
+    - -dir
+    - .
+    - -name
+    - phase4-dependency-schema-only
+    - -workload-uri
+    - https://example.test/phase4/dependency-schema-only
+    - -workload-version
+    - 1.0.0
+    - -out
+    - profile.yaml
+expected:
+  exitCode: 0
+  profileSha256: cb8dcf8cd24eb010a8a93daf7514a3c107f91572fea46d1212d49a3a598aef0e
+  extensions:
+    - urn:runtimeconditions:conformance:dependency-schema-only:root
+actual:
+  exitCode: 1
+  profileOutput: absent
+  stderr: |
+    runtimeconditions: go list example.com/runtimeconditions/conformance/dependency-schema-only-dependency: go: updates to go.mod needed, disabled by -mod=readonly; to update it:
+    	go mod tidy
+cause: The dependency is a selected, downloaded Go module, but its package is not imported by workload source. Resolving it with go list from the workload under -mod=readonly requests a go.mod edit.
+fix: Resolve the exact dependency module from go list -m -json all, inspect its package at the downloaded module root, and retain the selected workload module identity for resource validation.
+repairedProfilerSha256: b2e2aee5e10af47a0e75998d3ac591ee17f2887aaaddeae46405296763bc1444
+regressionTest: TestInstalledValidationOnlyDependency

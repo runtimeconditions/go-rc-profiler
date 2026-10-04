@@ -1,0 +1,4 @@
+runtimeconditions: conditions[0] fails extension schema urn:runtimeconditions:conformance:object-alternatives#schema:object-alternatives: jsonschema validation failed with 'urn:runtimeconditions:installed-schema:a02f4d7c7e121759da7c197f2084c56d5c42340173741e6bd2df7f3f1b61facc#'
+- at '/configuration': 'oneOf' failed, none matched
+  - at '/configuration': additional properties 'image' not allowed
+  - at '/configuration': additional properties 'command' not allowed

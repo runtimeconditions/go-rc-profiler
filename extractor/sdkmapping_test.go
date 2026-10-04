@@ -90,7 +90,7 @@ func main() {
 	})
 	writeTestGoSDKMapping(t, sdkRoot, "v1.2.3")
 
-	profile, err := ExtractDir(appRoot, Options{Name: "go-sdk", WorkloadURI: "github.com/example/app", WorkloadVersion: "v0.1.0", ExtensionRoots: []string{filepath.Dir(extensionRoot)}, RequireGoPackages: true})
+	profile, err := ExtractDir(appRoot, Options{Name: "go-sdk", WorkloadURI: "github.com/example/app", WorkloadVersion: "v0.1.0", ExtensionRoots: []string{filepath.Dir(extensionRoot)}, EnableSDKMappings: true, RequireGoPackages: true})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -150,7 +150,7 @@ func TestExtractDirRejectsTamperedGoSDKMapping(t *testing.T) {
 	if err := os.WriteFile(mappingPath, data, 0o644); err != nil {
 		t.Fatal(err)
 	}
-	_, err = ExtractDir(appRoot, Options{Name: "tampered", ExtensionRoots: []string{filepath.Dir(extensionRoot)}, RequireGoPackages: true})
+	_, err = ExtractDir(appRoot, Options{Name: "tampered", ExtensionRoots: []string{filepath.Dir(extensionRoot)}, EnableSDKMappings: true, RequireGoPackages: true})
 	if err == nil || !strings.Contains(err.Error(), "mapping SHA-256 does not match index") {
 		t.Fatalf("unexpected error: %v", err)
 	}

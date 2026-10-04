@@ -1,0 +1,13 @@
+apiVersion: runtimeconditions.io/v1alpha1
+conditions:
+    - interface:
+        type: grpc
+      kind: service
+extensions:
+    - urn:runtimeconditions:conformance:scoped-domains-collisions
+kind: RuntimeConditionsProfile
+metadata:
+    name: phase4-scoped-optional-omitted
+workload:
+    uri: https://example.test/phase4/scoped-optional-omitted
+    version: 1.0.0

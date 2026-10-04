@@ -58,6 +58,23 @@ func (s *Semantic) StringValue(expr ast.Expr) (string, bool) {
 	return constant.StringVal(object.Val()), true
 }
 
+// ConstantValue returns the value determined by Go's type checker. It covers
+// literals, named constants, arithmetic, and constant type conversions without
+// evaluating application code.
+func (s *Semantic) ConstantValue(expr ast.Expr) (constant.Value, bool) {
+	if s == nil {
+		return nil, false
+	}
+	expr = Unparen(expr)
+	if value, ok := s.types[expr]; ok && value.Value != nil {
+		return value.Value, true
+	}
+	if object, ok := s.ObjectForExpr(expr).(*types.Const); ok {
+		return object.Val(), true
+	}
+	return nil, false
+}
+
 // TypeOf reports the resolved type of an expression, falling back to the type
 // of the object it names.
 func (s *Semantic) TypeOf(expr ast.Expr) (types.Type, bool) {

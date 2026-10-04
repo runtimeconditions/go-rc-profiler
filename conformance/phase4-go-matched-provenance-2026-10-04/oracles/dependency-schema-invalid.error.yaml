@@ -1,0 +1,14 @@
+coordinate: urn:runtimeconditions:conformance:dependency-schema-only:dependency#schema:command-limit
+conditionPointer: /command
+schemaPointer: /$defs/CommandLimit/properties/command/maxLength
+keyword: maxLength
+reason: Only the dependency schema limits the root-owned command to six characters.
+stage: schema
+exitCode: nonzero
+profileOutput: absent
+stderr: 'runtimeconditions: conditions[0] fails extension schema urn:runtimeconditions:conformance:dependency-schema-only:dependency#schema:command-limit:
+  jsonschema validation failed with ''urn:runtimeconditions:installed-schema:ce34c92c5be0d90bb0c15f0cd0d37851bed4191bfadc763cd7f0de49b95d8bff#''
+
+  - at ''/command'': maxLength: got 8, want 6
+
+  '

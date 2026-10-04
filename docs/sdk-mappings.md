@@ -2,7 +2,7 @@
 
 ## Application experience
 
-An application developer does not configure an SDK mapping. The profiler resolves the application's ordinary Go module graph, discovers static Runtime Conditions metadata shipped inside imported modules, verifies it, and analyzes existing application calls without importing or executing the SDK or application.
+The SDK mapping extractor is not exposed by the current CLI. Library callers can opt into it through `extractor.ExtractDir` with `EnableSDKMappings`, without configuring individual mappings. It resolves the application's ordinary Go module graph, discovers static Runtime Conditions metadata shipped inside imported modules, verifies it, and analyzes existing application calls without importing or executing the SDK or application.
 
 If an imported SDK has no mapping, profiling continues with the declarative extension bindings and other mapped SDKs that are available. An unresolved application value does not produce a widened condition. Invalid installed metadata is different: an identity, version, digest, path, or extension mismatch stops profiling because silently trusting corrupt metadata would make every emitted condition suspect.
 
@@ -32,7 +32,7 @@ Compatible observations merge only when their extension identity, condition kind
 
 The profiler verifies the module index, mapping byte digest, mapping semantic digest, exact module version, mapping path containment, mapping identity, and exact extension coordinates before using a call record. Generated profiles are then validated against the extension's vocabulary and complete Draft 2020-12 JSON Schema. The schema step is essential because operation fields are extension-owned and must not be hard-coded into the Go profiler.
 
-SDK metadata is discovered only for modules actually imported by the application. A malformed mapping in an unrelated module therefore cannot break a profile, while malformed metadata for an imported SDK fails visibly.
+When SDK mapping extraction is enabled, metadata is discovered only for modules actually imported by the application. A malformed mapping in an unrelated module therefore cannot break a profile, while malformed metadata for an imported SDK fails visibly.
 
 ## Maintainer validation
 

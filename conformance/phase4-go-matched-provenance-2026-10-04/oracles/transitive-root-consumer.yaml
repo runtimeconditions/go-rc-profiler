@@ -1,0 +1,16 @@
+apiVersion: runtimeconditions.io/v1alpha1
+conditions:
+    - command: sample
+      interface:
+        type: process
+      kind: worker
+extensions:
+    - urn:runtimeconditions:conformance:transitive:leaf
+    - urn:runtimeconditions:conformance:transitive:middle
+    - urn:runtimeconditions:conformance:transitive:root
+kind: RuntimeConditionsProfile
+metadata:
+    name: phase4-transitive-root-consumer
+workload:
+    uri: https://example.test/phase4/transitive-root-consumer
+    version: 1.0.0
