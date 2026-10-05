@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/runtimeconditions/go-rc-profiler/extensionidentity"
 	"go/ast"
 	"go/parser"
 	"go/token"
