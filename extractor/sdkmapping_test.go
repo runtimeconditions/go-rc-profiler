@@ -212,12 +212,12 @@ func equalJSONValue(left any, right any) bool {
 	return string(leftData) == string(rightData)
 }
 
-const testNATSExtensionID = "https://example.com/runtimeconditions/nats/0.1.0/runtimeconditions.extension.yaml"
+const testNATSExtensionID = "https://example.com/runtimeconditions/nats:0.1.0"
 
 const testNATSExtension = `apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 metadata:
-  id: https://example.com/runtimeconditions/nats/0.1.0/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/nats
   version: 0.1.0
   semanticSha256: test-extension-digest
 spec:

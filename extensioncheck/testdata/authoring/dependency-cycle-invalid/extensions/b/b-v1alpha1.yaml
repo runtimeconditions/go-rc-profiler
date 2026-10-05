@@ -2,10 +2,11 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/cycle-b/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/cycle-b
+  version: v1alpha1
 
 spec:
   dependencies:
-    - https://example.com/runtimeconditions/cycle-a/v1alpha1/runtimeconditions.extension.yaml
+    - https://example.com/runtimeconditions/cycle-a:v1alpha1
   kinds:
     - name: cycle.b

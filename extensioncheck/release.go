@@ -34,7 +34,7 @@ func checkReleaseIdentity(release, manifest, model, extension map[string]any, pk
 			return fmt.Errorf("binding release rootExtension.%s does not match normalized model", key)
 		}
 	}
-	if stringValue(root, "id") != stringValue(object(extension, "metadata"), "id") {
+	if stringValue(root, "id") != stringValue(object(extension, "metadata"), "uri")+":"+stringValue(object(extension, "metadata"), "version") {
 		return fmt.Errorf("binding release root extension does not match packaged definition")
 	}
 	provenance := object(release, "provenance")

@@ -73,16 +73,16 @@ var _ = common.Cache("todo-cache",
 	}
 
 	if !slices.Equal(profile.Extensions, []string{
-		"https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml",
-		"https://runtimeconditions.io/extensions/env-configuration/v1alpha1/runtimeconditions.extension.yaml",
+		"https://runtimeconditions.io/common-integrations:v1alpha1",
+		"https://runtimeconditions.io/env-configuration:v1alpha1",
 	}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
 	resolvedExtensions := resolveExtensionsForTest(t, profile.Extensions, map[string]string{
-		"https://runtimeconditions.io/extensions/env-configuration/v1alpha1/runtimeconditions.extension.yaml":   filepath.Join(envPath, "..", "env-configuration-v1alpha1.yaml"),
-		"https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml": filepath.Join(envPath, "..", "..", "common-integrations", "common-integrations-v1alpha1.yaml"),
+		"https://runtimeconditions.io/env-configuration:v1alpha1":   filepath.Join(envPath, "..", "env-configuration-v1alpha1.yaml"),
+		"https://runtimeconditions.io/common-integrations:v1alpha1": filepath.Join(envPath, "..", "..", "common-integrations", "common-integrations-v1alpha1.yaml"),
 	})
-	if !slices.Contains(resolvedExtensions, "https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml") {
+	if !slices.Contains(resolvedExtensions, "https://runtimeconditions.io/common-integrations:v1alpha1") {
 		t.Fatalf("resolved extensions do not include common integrations: %#v", resolvedExtensions)
 	}
 	if len(profile.Conditions) != 3 {
@@ -145,7 +145,7 @@ var _ = common.Cache("todo-cache", common.KeyValue(common.Redis))
 		t.Fatal(err)
 	}
 
-	if !slices.Equal(profile.Extensions, []string{"https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml"}) {
+	if !slices.Equal(profile.Extensions, []string{"https://runtimeconditions.io/common-integrations:v1alpha1"}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
 	if len(profile.Conditions) != 1 {
@@ -193,7 +193,7 @@ var _ = common.Cache("todo-cache", common.KeyValue(common.Redis))
 		t.Fatal(err)
 	}
 
-	if !slices.Equal(profile.Extensions, []string{"https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml"}) {
+	if !slices.Equal(profile.Extensions, []string{"https://runtimeconditions.io/common-integrations:v1alpha1"}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
 	if len(profile.Conditions) != 1 {
@@ -243,10 +243,10 @@ var _ = common.Cache("request-cache", common.KeyValue(common.Redis))
 			},
 			targetBindingDir: commonPath,
 			wantExtensions: []string{
-				"https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml",
+				"https://runtimeconditions.io/common-integrations:v1alpha1",
 			},
 			wantResolved: []string{
-				"https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml",
+				"https://runtimeconditions.io/common-integrations:v1alpha1",
 			},
 		},
 		{
@@ -278,12 +278,12 @@ var _ = common.Cache("request-cache",
 			},
 			targetBindingDir: envPath,
 			wantExtensions: []string{
-				"https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml",
-				"https://runtimeconditions.io/extensions/env-configuration/v1alpha1/runtimeconditions.extension.yaml",
+				"https://runtimeconditions.io/common-integrations:v1alpha1",
+				"https://runtimeconditions.io/env-configuration:v1alpha1",
 			},
 			wantResolved: []string{
-				"https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml",
-				"https://runtimeconditions.io/extensions/env-configuration/v1alpha1/runtimeconditions.extension.yaml",
+				"https://runtimeconditions.io/common-integrations:v1alpha1",
+				"https://runtimeconditions.io/env-configuration:v1alpha1",
 			},
 		},
 	}
@@ -353,7 +353,8 @@ func TestDiscoverGoBindingsAcceptsBindingsManifestName(t *testing.T) {
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/example/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/example
+  version: v1alpha1
 
 spec:
   kinds:
@@ -366,7 +367,7 @@ spec:
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/example/v1alpha1/runtimeconditions.extension.yaml
+  extension: https://example.com/runtimeconditions/example:v1alpha1
   extensionDefinition: ../example-v1alpha1.yaml
   language: go
 
@@ -389,7 +390,7 @@ go:
 	if len(bindings) != 1 {
 		t.Fatalf("expected 1 binding, got %d", len(bindings))
 	}
-	if bindings[0].ExtensionID != "https://example.com/runtimeconditions/example/v1alpha1/runtimeconditions.extension.yaml" {
+	if bindings[0].ExtensionID != "https://example.com/runtimeconditions/example:v1alpha1" {
 		t.Fatalf("unexpected extension id: %s", bindings[0].ExtensionID)
 	}
 }
@@ -437,7 +438,7 @@ func writeAuditLog(ctx context.Context) error {
 		t.Fatal(err)
 	}
 
-	if !slices.Equal(profile.Extensions, []string{"https://example.com/runtimeconditions/event-sink/v1alpha1/runtimeconditions.extension.yaml"}) {
+	if !slices.Equal(profile.Extensions, []string{"https://example.com/runtimeconditions/event-sink:v1alpha1"}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
 	if len(profile.Conditions) != 1 {
@@ -568,8 +569,8 @@ var _ = common.API(settings.APIName,
 		t.Fatal(err)
 	}
 	if !slices.Equal(profile.Extensions, []string{
-		"https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml",
-		"https://runtimeconditions.io/extensions/env-configuration/v1alpha1/runtimeconditions.extension.yaml",
+		"https://runtimeconditions.io/common-integrations:v1alpha1",
+		"https://runtimeconditions.io/env-configuration:v1alpha1",
 	}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
@@ -638,7 +639,7 @@ func TestExtractDirValidatesPackageManifestBeforeExtraction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	data = []byte(strings.Replace(string(data), "https://example.com/runtimeconditions/event-sink/v1alpha1/runtimeconditions.extension.yaml", "https://example.com/runtimeconditions/other/v1alpha1/runtimeconditions.extension.yaml", 1))
+	data = []byte(strings.Replace(string(data), "https://example.com/runtimeconditions/event-sink:v1alpha1", "https://example.com/runtimeconditions/other:v1alpha1", 1))
 	if err := os.WriteFile(manifestPath, data, 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -668,7 +669,7 @@ func writeAuditLog(ctx context.Context) error {
 	if err == nil {
 		t.Fatal("expected package manifest validation error")
 	}
-	if !strings.Contains(err.Error(), "binding extension id https://example.com/runtimeconditions/other/v1alpha1/runtimeconditions.extension.yaml does not match extension definition https://example.com/runtimeconditions/event-sink/v1alpha1/runtimeconditions.extension.yaml") {
+	if !strings.Contains(err.Error(), "binding extension id https://example.com/runtimeconditions/other:v1alpha1 does not match extension definition https://example.com/runtimeconditions/event-sink:v1alpha1") {
 		t.Fatalf("unexpected error: %v", err)
 	}
 }
@@ -756,7 +757,7 @@ func writeObject(ctx context.Context) error {
 		t.Fatal(err)
 	}
 
-	if !slices.Equal(profile.Extensions, []string{"https://aws.example.com/runtimeconditions/object-store/v1alpha1/runtimeconditions.extension.yaml"}) {
+	if !slices.Equal(profile.Extensions, []string{"https://aws.example.com/aws/object-store:v1alpha1"}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
 	if len(profile.Conditions) != 1 {
@@ -903,7 +904,8 @@ type extensionDefinitionForTest struct {
 	Kind       string `yaml:"kind"`
 	APIVersion string `yaml:"apiVersion"`
 	Metadata   struct {
-		ID string `yaml:"id"`
+		URI     string `yaml:"uri"`
+		Version string `yaml:"version"`
 	} `yaml:"metadata"`
 	Spec extensionSpecForTest `yaml:"spec"`
 }
@@ -991,7 +993,7 @@ func loadExtensionCatalogForTest(t *testing.T) extensionCatalogForTest {
 }
 
 func (d extensionDefinitionForTest) id() string {
-	return d.Metadata.ID
+	return d.Metadata.URI + ":" + d.Metadata.Version
 }
 
 func resolveExtensionDefinitionsForTest(t *testing.T, ids []string, catalog extensionCatalogForTest) resolvedExtensionDefinitionsForTest {
@@ -1264,7 +1266,8 @@ func (c *Client) Publish(ctx context.Context, event Event) error {
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/event-sink/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/event-sink
+  version: v1alpha1
 
 spec:
   kinds:
@@ -1294,7 +1297,7 @@ metadata:
   language: go
 
 extension:
-  id: https://example.com/runtimeconditions/event-sink/v1alpha1/runtimeconditions.extension.yaml
+  id: https://example.com/runtimeconditions/event-sink:v1alpha1
 
 go:
   importPath: github.com/example/eventstream/service/events

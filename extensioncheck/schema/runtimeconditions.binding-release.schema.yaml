@@ -86,8 +86,11 @@ allOf:
               items:
                 properties:
                   sourceBackend:
-                    enum: [catalog, package, cache, https, oci]
+                    enum: [catalog, package, cache, https]
 $defs:
+  extensionIdentifier:
+    type: string
+    pattern: '^https://[^/?#@\s]+/[^/:?#%\s]+(?:/[^/:?#%\s]+)?:[^/:?#%\s]+$'
   sha256:
     type: string
     pattern: '^[0-9a-f]{64}$'
@@ -161,9 +164,9 @@ $defs:
   extensionIdentity:
     type: object
     additionalProperties: false
-    required: [id, semanticSha256]
+    required: [id, version, semanticSha256]
     properties:
-      id: {$ref: '#/$defs/nonEmptyString'}
+      id: {$ref: '#/$defs/extensionIdentifier'}
       version: {$ref: '#/$defs/nonEmptyString'}
       semanticSha256: {$ref: '#/$defs/sha256'}
   dependencyLock:
@@ -186,17 +189,18 @@ $defs:
     additionalProperties: false
     required:
       - id
+      - version
       - sourceSha256
       - semanticSha256
       - sourceBackend
       - sourceLocator
     properties:
-      id: {$ref: '#/$defs/nonEmptyString'}
+      id: {$ref: '#/$defs/extensionIdentifier'}
       version: {$ref: '#/$defs/nonEmptyString'}
       sourceSha256: {$ref: '#/$defs/sha256'}
       semanticSha256: {$ref: '#/$defs/sha256'}
       sourceBackend:
-        enum: [override, catalog, package, cache, file, https, oci]
+        enum: [override, catalog, package, cache, https]
       sourceLocator: {$ref: '#/$defs/nonEmptyString'}
       dependencies:
         type: array

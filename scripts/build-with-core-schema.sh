@@ -8,7 +8,7 @@ fi
 
 schema_file=$1
 output_binary=$2
-expected_source_sha256=ad101336b676b468ec975aff45c21749df22fddf422371156c586ed62abf3223
+expected_source_sha256=342bf20bce479f5012b9fc2c6238dc1fb0935e327ecb0fbca6e647362563c73c
 actual_source_sha256=$(shasum -a 256 "$schema_file" | awk '{print $1}')
 if [[ "$actual_source_sha256" != "$expected_source_sha256" ]]; then
   echo "core profile schema source SHA-256 mismatch: $actual_source_sha256" >&2

@@ -16,10 +16,10 @@ func (c *Checker) validateDefinition(node *catalog.Node) {
 	if def.Kind != "RuntimeConditionsExtensionDefinition" {
 		c.collector.Addf(node.DefinitionPath, "kind must be RuntimeConditionsExtensionDefinition")
 	}
-	if def.Metadata.ID == "" {
-		c.collector.Addf(node.DefinitionPath, "metadata.id is required")
-	} else if !catalog.ValidExtensionID(def.Metadata.ID) {
-		c.collector.Addf(node.DefinitionPath, "metadata.id must be an absolute HTTP or HTTPS URI")
+	if catalog.DefinitionID(def) == "" {
+		c.collector.Addf(node.DefinitionPath, "metadata.uri and metadata.version are required")
+	} else if !catalog.ValidExtensionID(catalog.DefinitionID(def)) {
+		c.collector.Addf(node.DefinitionPath, "metadata.uri/version must identify a supported HTTPS extension")
 	}
 	if node.ID != catalog.DefinitionID(def) {
 		c.collector.Addf(node.DefinitionPath, "extension id %s does not match metadata", node.ID)

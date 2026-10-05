@@ -12,14 +12,14 @@ metadata:
   semanticSha256: 412f6ca7deee248e363dcbd384c5f2daa48ae8eb89caca4285f4d6d441b29a1f
 dependencies:
 - kind: extension
-  id: https://runtimeconditions.io/extensions/nats-service/0.1.0/runtimeconditions.extension.yaml
+  id: https://runtimeconditions.io/nats/nats-service:0.1.0
   version: 0.1.0
   semanticSha256: 84a3797300ed1912858b393ca46512f2363ae838cb38bce26e687017026bb7e2
 - kind: serviceMapping
   name: nats.service
   semanticSha256: 791de4f22212d2c6e61952a154ca6c1bd1904c6c430c766cb27680a8aeb01cb7
 extension:
-  id: https://runtimeconditions.io/extensions/nats-service/0.1.0/runtimeconditions.extension.yaml
+  id: https://runtimeconditions.io/nats/nats-service:0.1.0
   version: 0.1.0
   semanticSha256: 84a3797300ed1912858b393ca46512f2363ae838cb38bce26e687017026bb7e2
 go:

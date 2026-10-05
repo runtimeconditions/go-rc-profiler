@@ -2,7 +2,7 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/transitive-app/v1alpha1/runtimeconditions.extension.yaml
+  extension: https://example.com/runtimeconditions/transitive-app:v1alpha1
   extensionDefinition: ../app-v1alpha1.yaml
   language: go
 

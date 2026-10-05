@@ -2,7 +2,8 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://runtimeconditions.io/common-integrations
+  version: v1alpha1
 
 spec:
   kinds:

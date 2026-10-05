@@ -43,7 +43,7 @@ properties:
     additionalProperties: false
     required: [id, semanticSha256]
     properties:
-      id: {type: string, minLength: 1}
+      id: {$ref: '#/$defs/extensionIdentifier'}
       semanticSha256: {$ref: '#/$defs/sha256'}
   package:
     description: >-
@@ -116,6 +116,9 @@ allOf:
             properties:
               file: {const: bindings.py}
 $defs:
+  extensionIdentifier:
+    type: string
+    pattern: '^https://[^/?#@\s]+/[^/:?#%\s]+(?:/[^/:?#%\s]+)?:[^/:?#%\s]+$'
   sha256:
     type: string
     pattern: '^[0-9a-f]{64}$'

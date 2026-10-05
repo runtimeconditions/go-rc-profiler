@@ -2,7 +2,7 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsPythonBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/binding-kind-mismatch/v1alpha1/runtimeconditions.extension.yaml
+  extension: https://example.com/runtimeconditions/binding-kind-mismatch:v1alpha1
   extensionDefinition: ../broken-v1alpha1.yaml
   language: go
 

@@ -1,5 +1,15 @@
 # Go profiler Phase 4 conformance report
 
+The Phase 4 evidence below records the pre-migration contract and remains
+historical evidence. On 2026-10-05 the active contract moved to HTTPS
+`<uri>:<version>` identifiers, `metadata.uri`/`metadata.version`, catalog URL
+derivation with default provider `rc`, and core schema `0.2.0`. Active
+conformance inputs and models were regenerated; the original v4 evidence was
+preserved. This identity migration does not yet add remote retrieval to the
+installed profiler CLI. See the
+[identity migration result](conformance/identity-contract-2026-10-05/result.yaml)
+for its separate installed CLI checks.
+
 **Result (2026-10-04): the Go profiler's Phase 4 obligations pass in the tested
 local environment.** The separately installed CLI passed all **19 positive**
 and **six negative** prepared consumer workloads against the official v4

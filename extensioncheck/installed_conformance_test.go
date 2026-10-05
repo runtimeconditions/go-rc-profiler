@@ -41,22 +41,22 @@ func TestInstalledConformanceSchemas(t *testing.T) {
 		name, module, owner string
 		valid, invalid      map[string]any
 	}{
-		{"recursive", "recursive-reference", "urn:runtimeconditions:conformance:recursive-reference",
+		{"recursive", "recursive-reference", "https://runtimeconditions.io/conformance/recursive-reference:1.0.0",
 			map[string]any{"kind": "tree", "interface": map[string]any{"type": "node"}, "root": map[string]any{"name": "root", "children": []any{map[string]any{"name": "child"}}}},
 			map[string]any{"kind": "tree", "interface": map[string]any{"type": "node"}, "root": map[string]any{"name": "root", "children": []any{map[string]any{"children": []any{}}}}}},
-		{"alternatives", "object-alternatives", "urn:runtimeconditions:conformance:object-alternatives",
+		{"alternatives", "object-alternatives", "https://runtimeconditions.io/conformance/object-alternatives:1.0.0",
 			map[string]any{"kind": "deployment", "interface": map[string]any{"type": "process"}, "configuration": map[string]any{"image": "example"}},
 			map[string]any{"kind": "deployment", "interface": map[string]any{"type": "process"}, "configuration": map[string]any{"image": "example", "command": "run"}}},
-		{"union", "heterogeneous-union", "urn:runtimeconditions:conformance:heterogeneous-union",
+		{"union", "heterogeneous-union", "https://runtimeconditions.io/conformance/heterogeneous-union:1.0.0",
 			map[string]any{"kind": "selector", "interface": map[string]any{"type": "target"}, "target": map[string]any{"id": "object"}},
 			map[string]any{"kind": "selector", "interface": map[string]any{"type": "target"}, "target": map[string]any{"other": "value"}}},
-		{"collections", "collections-and-maps", "urn:runtimeconditions:conformance:collections-and-maps",
+		{"collections", "collections-and-maps", "https://runtimeconditions.io/conformance/collections-and-maps:1.0.0",
 			map[string]any{"kind": "collection", "interface": map[string]any{"type": "items"}, "tags": []any{"tag"}, "entries": []any{map[string]any{"key": "key", "value": int64(1)}}, "labels": map[string]any{"team": "example"}},
 			map[string]any{"kind": "collection", "interface": map[string]any{"type": "items"}, "entries": []any{map[string]any{"key": "key", "value": int64(3)}}}},
-		{"scoped", "scoped-domains-collisions", "urn:runtimeconditions:conformance:scoped-domains-collisions",
+		{"scoped", "scoped-domains-collisions", "https://runtimeconditions.io/conformance/scoped-domains-collisions:1.0.0",
 			map[string]any{"kind": "service", "interface": map[string]any{"type": "http"}, "mode": "direct"},
 			map[string]any{"kind": "service", "interface": map[string]any{"type": "http"}, "mode": "streaming"}},
-		{"source-names", "source-name-preservation", "urn:runtimeconditions:conformance:source-name-preservation",
+		{"source-names", "source-name-preservation", "https://runtimeconditions.io/conformance/source-name-preservation:1.0.0",
 			map[string]any{"kind": "class", "interface": map[string]any{"type": "http_server2_url"}, "café": "cafe"},
 			map[string]any{"kind": "class", "interface": map[string]any{"type": "http_server2_url"}, "café": int64(1)}},
 	}
@@ -129,8 +129,8 @@ func TestInstalledValidationOnlyDependency(t *testing.T) {
 		})
 	})
 	const rootPath = "example.com/runtimeconditions/conformance/dependency-schema-only-root"
-	const rootID = "urn:runtimeconditions:conformance:dependency-schema-only:root"
-	const dependencyID = "urn:runtimeconditions:conformance:dependency-schema-only:dependency"
+	const rootID = "https://runtimeconditions.io/conformance/dependency-schema-only-root:1.0.0"
+	const dependencyID = "https://runtimeconditions.io/conformance/dependency-schema-only-dependency:1.0.0"
 	if err := os.WriteFile(filepath.Join(root, "go.mod"), []byte(
 		"module example.com/validation-only-consumer\n\ngo 1.22\n\nrequire "+rootPath+" v1.0.0\n"), 0o644); err != nil {
 		t.Fatal(err)

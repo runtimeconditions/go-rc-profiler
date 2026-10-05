@@ -130,9 +130,9 @@ func TestReleaseCoreSchemaMatchesVersionedSpec(t *testing.T) {
 		t.Skip("plain go test has no release core schema")
 	}
 	model := map[string]any{"coreProfileSchema": map[string]any{
-		"id":             "https://runtimeconditions.io/schemas/profile/0.1.0/runtimeconditions.profile.schema.yaml",
-		"version":        "0.1.0",
-		"semanticSha256": "49890a0f3e7276d1e480d654176672d977df9c63094f3a24983b0a8102e1a3e3",
+		"id":             "https://runtimeconditions.io/schemas/profile/0.2.0/runtimeconditions.profile.schema.yaml",
+		"version":        "0.2.0",
+		"semanticSha256": "a090a8016d045f9c3fa872a67f8df293b77ca2809a1bea5ae9fa31a27a06109a",
 	}}
 	if _, err := loadCoreProfileSchema([]*VerifiedGoPackage{{Model: model}}); err != nil {
 		t.Fatalf("installed release core schema does not match the versioned spec: %v", err)

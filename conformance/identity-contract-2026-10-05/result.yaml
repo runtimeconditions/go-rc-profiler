@@ -1,0 +1,99 @@
+apiVersion: runtimeconditions.io/conformance-result/v1alpha1
+kind: RuntimeConditionsConformanceResult
+date: '2026-10-05'
+scope: identity-contract-migration-installed-go-cli
+binarySha256: 370d3ef64ba0c21a8e71ead354906e971ecd51268dbbcf30f16f9fef6f141d77
+inventorySha256: e7b53f0e78da4503d0ced253c7caec2174ecab8c8e8514a3b6de78234f0ccfe2
+coreSchemaVersion: 0.2.0
+positive: 19
+negative: 6
+deterministicProfiles: true
+goModuleRetrievalDuringProfiling: disabled
+remoteExtensionRetrieval: not-yet-integrated-into-profiler
+results:
+- id: owned
+  outcome: positive
+  passed: true
+- id: additive-owner
+  outcome: positive
+  passed: true
+- id: additive-consumer
+  outcome: positive
+  passed: true
+- id: transitive-leaf-consumer
+  outcome: positive
+  passed: true
+- id: transitive-middle-consumer
+  outcome: positive
+  passed: true
+- id: transitive-root-consumer
+  outcome: positive
+  passed: true
+- id: recursive
+  outcome: positive
+  passed: true
+- id: alternatives-command
+  outcome: positive
+  passed: true
+- id: alternatives-image
+  outcome: positive
+  passed: true
+- id: union-object
+  outcome: positive
+  passed: true
+- id: union-string
+  outcome: positive
+  passed: true
+- id: collections
+  outcome: positive
+  passed: true
+- id: collection-second-value
+  outcome: positive
+  passed: true
+- id: scoped-grpc
+  outcome: positive
+  passed: true
+- id: scoped-http
+  outcome: positive
+  passed: true
+- id: scoped-http-proxy
+  outcome: positive
+  passed: true
+- id: scoped-optional-omitted
+  outcome: positive
+  passed: true
+- id: source-names
+  outcome: positive
+  passed: true
+- id: dependency-schema-only
+  outcome: positive
+  passed: true
+- id: dependency-schema-invalid
+  outcome: negative
+  passed: true
+- id: alternatives-missing
+  outcome: negative
+  passed: true
+- id: alternatives-both
+  outcome: negative
+  passed: true
+- id: union-missing-id
+  outcome: negative
+  passed: true
+- id: collection-invalid-value
+  outcome: negative
+  passed: true
+- id: scoped-invalid-value
+  outcome: negative
+  passed: true
+bindingModules: 14
+bindingReleaseProfilerDigestsMatch: true
+normalizerSuite: passed
+goEmitterSuite: passed
+pythonEmitterTests: 98
+pythonProfilerTests: 86
+implementationStandardSha256: 5775f27d6c2fe218060cdde374602d7629f74570d10e267a05d12cd25f54a9de
+githubChecksumVariable: pending-command-approval-declined
+fixtureAssembly: /private/tmp/rc-identity-bindings-final-20261005
+consumerInventory: /private/tmp/rc-identity-consumers-final-20261005/inventory.yaml
+platform: darwin/arm64

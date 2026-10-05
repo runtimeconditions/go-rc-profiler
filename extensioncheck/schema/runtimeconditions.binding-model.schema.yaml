@@ -46,6 +46,9 @@ properties:
     items:
       $ref: '#/$defs/normalizedSchema'
 $defs:
+  extensionIdentifier:
+    type: string
+    pattern: '^https://[^/?#@\s]+/[^/:?#%\s]+(?:/[^/:?#%\s]+)?:[^/:?#%\s]+$'
   sha256:
     type: string
     pattern: '^[0-9a-f]{64}$'
@@ -66,10 +69,10 @@ $defs:
       normalizer: {$ref: '#/$defs/toolIdentity'}
   artifactIdentity:
     type: object
-    required: [id, semanticSha256]
+    required: [id, version, semanticSha256]
     additionalProperties: false
     properties:
-      id: {type: string, minLength: 1}
+      id: {$ref: '#/$defs/extensionIdentifier'}
       version: {type: string, minLength: 1}
       semanticSha256: {$ref: '#/$defs/sha256'}
   coreProfileIdentity:
@@ -82,10 +85,10 @@ $defs:
       semanticSha256: {$ref: '#/$defs/sha256'}
   resolvedExtension:
     type: object
-    required: [id, semanticSha256]
+    required: [id, version, semanticSha256]
     additionalProperties: false
     properties:
-      id: {type: string, minLength: 1}
+      id: {$ref: '#/$defs/extensionIdentifier'}
       version: {type: string, minLength: 1}
       semanticSha256: {$ref: '#/$defs/sha256'}
       dependencies:
