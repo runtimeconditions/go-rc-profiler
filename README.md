@@ -14,7 +14,8 @@ or competing project. Start at https://runtimeconditions.github.io/.
 
 - A Go project with a `go.mod` and a working Go toolchain.
 - An installed `go-rc-profiler` executable built with the approved, versioned
-  core profile schema. A general binary installer has not yet been published.
+  core profile schema. Download the archive for your platform from
+  [GitHub Releases](https://github.com/runtimeconditions/go-rc-profiler/releases).
 - A published generated Go binding module available through your normal Go
   package management configuration. Public binding modules are not yet
   published by this project; the modules in the conformance suite are test
@@ -26,6 +27,23 @@ declarations and four resources live together in the resolved package
 directory: `runtimeconditions.bindings.yaml`,
 `runtimeconditions.binding-model.yaml`, `runtimeconditions.extension.yaml`, and
 `runtimeconditions.binding-release.yaml`.
+
+## Install the executable
+
+Release builds support Linux and macOS on `amd64` and `arm64`, and Windows on
+`amd64`. Download the matching archive and `checksums.txt` from the same release,
+verify the archive's SHA-256, and extract it. On Linux and macOS, place
+`go-rc-profiler` in a directory on `PATH`. On Windows, place `go-rc-profiler.exe`
+in a directory on `PATH`. Run `go-rc-profiler --version` to check the release
+version and source commit. Go must also be installed for workload analysis.
+
+The [release workflow](.github/workflows/release.yaml) runs on `vMAJOR.MINOR.PATCH`
+tags, including prereleases. It runs the test workflow, builds and checks each
+executable on its native platform, and publishes archives plus `checksums.txt`
+only after all jobs pass. The core schema is downloaded from the pinned `spec`
+release `v0.1.0`, checked against the digest in
+[the build script](scripts/build-with-core-schema.sh), and embedded in each
+binary. A manual workflow run builds artifacts without publishing a release.
 
 ## Generate a profile
 

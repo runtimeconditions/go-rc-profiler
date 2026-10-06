@@ -14,9 +14,17 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+var (
+	version = "dev"
+	commit  = "unknown"
+)
+
 func main() {
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
+		case "--version", "version":
+			fmt.Printf("go-rc-profiler %s (%s)\n", version, commit)
+			return
 		case "generate":
 			runGenerate(os.Args[2:])
 			return

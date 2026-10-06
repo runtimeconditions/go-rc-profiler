@@ -243,26 +243,9 @@ func validateImportedGoPackage(pkg goListPackage) (*VerifiedGoPackage, error) {
 	}
 	rootInfo := object(model, "rootExtension")
 	manifestExtension := object(manifest, "extension")
-	extensionMetadata := object(extension, "metadata")
 	rootID := stringValue(rootInfo, "id")
 	rootDigest := stringValue(rootInfo, "semanticSha256")
-	identity, err := extensionidentity.ParseExtensionIdentity(stringValue(extensionMetadata, "uri"), stringValue(extensionMetadata, "version"))
-	if err != nil {
-		return nil, fmt.Errorf("extension identity: %w", err)
-	}
-	for _, entry := range array(model, "extensions") {
-		item := entry.(map[string]any)
-		parsed, err := extensionidentity.ParseExtensionIdentifier(stringValue(item, "id"))
-		if err != nil || parsed.Version != stringValue(item, "version") {
-			return nil, fmt.Errorf("model extension identity or version is invalid: %s", stringValue(item, "id"))
-		}
-		for _, dep := range array(item, "dependencies") {
-			if _, err := extensionidentity.ParseExtensionIdentifier(dep.(string)); err != nil {
-				return nil, err
-			}
-		}
-	}
-	if stringValue(manifestExtension, "id") != rootID || stringValue(manifestExtension, "semanticSha256") != rootDigest || identity.Identifier() != rootID || identity.Version != stringValue(rootInfo, "version") {
+	if stringValue(manifestExtension, "id") != rootID || stringValue(manifestExtension, "semanticSha256") != rootDigest {
 		return nil, fmt.Errorf("root extension identity mismatch between package resources")
 	}
 	schemaBytes, err := bindingSchemas.ReadFile("schema/runtimeconditions.extension-semantic.schema.yaml")

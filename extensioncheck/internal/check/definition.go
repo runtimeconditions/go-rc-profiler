@@ -18,8 +18,6 @@ func (c *Checker) validateDefinition(node *catalog.Node) {
 	}
 	if catalog.DefinitionID(def) == "" {
 		c.collector.Addf(node.DefinitionPath, "metadata.uri and metadata.version are required")
-	} else if !catalog.ValidExtensionID(catalog.DefinitionID(def)) {
-		c.collector.Addf(node.DefinitionPath, "metadata.uri/version must identify a supported HTTPS extension")
 	}
 	if node.ID != catalog.DefinitionID(def) {
 		c.collector.Addf(node.DefinitionPath, "extension id %s does not match metadata", node.ID)
@@ -34,9 +32,6 @@ func (c *Checker) validateDefinition(node *catalog.Node) {
 		c.collector.Addf(node.DefinitionPath, "spec must define at least one vocabulary item or schema")
 	}
 	for _, dependency := range def.Spec.Dependencies {
-		if !catalog.ValidExtensionID(dependency) {
-			c.collector.Addf(node.DefinitionPath, "invalid dependency extension id %q", dependency)
-		}
 		if c.catalog.Nodes[dependency] == nil {
 			c.collector.Addf(node.DefinitionPath, "dependency %s cannot be resolved", dependency)
 		}

@@ -1,6 +1,7 @@
 name: Test
 
 on:
+  workflow_call:
   pull_request:
   push:
     branches:
@@ -34,3 +35,16 @@ jobs:
         cache: true
     - run: go test ./...
       working-directory: go-rc-profiler
+    - run: go vet ./...
+      working-directory: go-rc-profiler
+    - name: Download pinned core profile schema
+      run: |
+        curl --fail --location \
+          https://github.com/runtimeconditions/spec/releases/download/v0.1.0/runtimeconditions.profile.schema.yaml \
+          --output "$RUNNER_TEMP/runtimeconditions.profile.schema.yaml"
+    - name: Build profiler with verified core profile schema
+      working-directory: go-rc-profiler
+      run: |
+        bash scripts/build-with-core-schema.sh \
+          "$RUNNER_TEMP/runtimeconditions.profile.schema.yaml" \
+          "$RUNNER_TEMP/go-rc-profiler"

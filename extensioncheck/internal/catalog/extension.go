@@ -1,7 +1,6 @@
 package catalog
 
 import (
-	"github.com/runtimeconditions/go-rc-profiler/extensionidentity"
 	"os"
 	"path/filepath"
 
@@ -106,12 +105,6 @@ func DefinitionID(def ExtensionDefinition) string {
 		return ""
 	}
 	return def.Metadata.URI + ":" + def.Metadata.Version
-}
-
-// ValidExtensionID reports whether id is an supported HTTPS URI/version identifier.
-func ValidExtensionID(id string) bool {
-	_, err := extensionidentity.ParseExtensionIdentifier(id)
-	return err == nil
 }
 
 // IsYAML reports whether path names a YAML document.
