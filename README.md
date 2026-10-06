@@ -138,11 +138,3 @@ commands are useful when diagnosing a package or dependency problem. Go module
 resolution may contact the configured module proxy while downloading packages;
 after the modules are installed, the profiler can run with dependency retrieval
 disabled.
-
-## Conformance evidence
-
-The [Phase 4 Go conformance report](https://github.com/runtimeconditions/go-rc-profiler/blob/main/CONFORMANCE.md)
-identifies the reviewed fixtures, installed CLI run, exact commands, and
-remaining scope limits. The local fixture proxy and assembled modules in that
-report are acceptance infrastructure, not modules or file paths end users
-should put in their projects.

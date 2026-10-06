@@ -1,1 +1,0 @@
-schema RCB1309 at urn:runtimeconditions:conformance:unsupported-structural-keyword#schema:tuple-values /properties/values/prefixItems: structure-changing keyword "prefixItems" is unsupported by binding-model v1alpha1

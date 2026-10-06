@@ -1,1 +1,0 @@
-runtimeconditions: <workload>/main.go:5:9: Selector (kind:selector): <workload>/main.go:5:40: urn:runtimeconditions:conformance:heterogeneous-union#schema:heterogeneous-target /properties/target: required field id is absent

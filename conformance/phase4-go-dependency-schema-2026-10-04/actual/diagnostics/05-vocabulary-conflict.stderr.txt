@@ -1,1 +1,0 @@
-vocabulary-conflict RCB1221 at kind:shared: defined by both "urn:runtimeconditions:conformance:conflict:first" and "urn:runtimeconditions:conformance:conflict:second"
