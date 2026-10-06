@@ -1,7 +1,6 @@
 package catalog
 
 import (
-	"net/url"
 	"os"
 	"path/filepath"
 
@@ -17,7 +16,8 @@ type ExtensionDefinition struct {
 	APIVersion string `yaml:"apiVersion"`
 	Kind       string `yaml:"kind"`
 	Metadata   struct {
-		ID string `yaml:"id"`
+		URI     string `yaml:"uri"`
+		Version string `yaml:"version"`
 	} `yaml:"metadata"`
 	Spec ExtensionSpec `yaml:"spec"`
 }
@@ -101,16 +101,10 @@ func ReadExtensionDefinition(path string) (ExtensionDefinition, bool, error) {
 
 // DefinitionID returns the identifier def declares.
 func DefinitionID(def ExtensionDefinition) string {
-	return def.Metadata.ID
-}
-
-// ValidExtensionID reports whether id is an absolute HTTP or HTTPS URI.
-func ValidExtensionID(id string) bool {
-	parsed, err := url.Parse(id)
-	if err != nil {
-		return false
+	if def.Metadata.URI == "" || def.Metadata.Version == "" {
+		return ""
 	}
-	return parsed.IsAbs() && parsed.Host != "" && (parsed.Scheme == "http" || parsed.Scheme == "https")
+	return def.Metadata.URI + ":" + def.Metadata.Version
 }
 
 // IsYAML reports whether path names a YAML document.

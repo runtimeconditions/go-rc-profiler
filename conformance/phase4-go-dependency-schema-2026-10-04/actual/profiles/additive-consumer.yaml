@@ -1,0 +1,16 @@
+apiVersion: runtimeconditions.io/v1alpha1
+conditions:
+    - credential:
+        token: sample
+      interface:
+        type: http
+      kind: service
+extensions:
+    - urn:runtimeconditions:conformance:additive-field
+    - urn:runtimeconditions:conformance:additive-field:base
+kind: RuntimeConditionsProfile
+metadata:
+    name: phase4-additive-consumer
+workload:
+    uri: https://example.test/phase4/additive-consumer
+    version: 1.0.0

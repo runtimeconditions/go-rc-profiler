@@ -6,7 +6,7 @@ workload:
     uri: https://github.com/runtimeconditions/sdk-authorship-discovery/tree/main/nats/go/object-store
     version: 0.1.0
 extensions:
-    - https://runtimeconditions.io/extensions/nats-service/0.1.0/runtimeconditions.extension.yaml
+    - https://runtimeconditions.io/nats/nats-service:0.1.0
 conditions:
     - kind: nats
       interface:

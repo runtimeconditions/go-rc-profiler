@@ -1,0 +1,4 @@
+category: vocabulary-conflict
+code: RCB1221
+coordinate: kind:shared
+message: defined by both "urn:runtimeconditions:conformance:conflict:first" and "urn:runtimeconditions:conformance:conflict:second"

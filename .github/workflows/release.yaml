@@ -1,0 +1,175 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  RC_PROFILER_VERSION: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'dev' }}
+  RC_PROFILER_COMMIT: ${{ github.sha }}
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yaml
+
+  build:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+            runner: ubuntu-24.04
+            suffix: ''
+          - goos: linux
+            goarch: arm64
+            runner: ubuntu-24.04-arm
+            suffix: ''
+          - goos: darwin
+            goarch: amd64
+            runner: macos-15-intel
+            suffix: ''
+          - goos: darwin
+            goarch: arm64
+            runner: macos-15
+            suffix: ''
+          - goos: windows
+            goarch: amd64
+            runner: windows-2025
+            suffix: '.exe'
+    runs-on: ${{ matrix.runner }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Check release version and native platform
+        env:
+          EXPECTED_GOOS: ${{ matrix.goos }}
+          EXPECTED_GOARCH: ${{ matrix.goarch }}
+        run: |
+          if [[ "$RC_PROFILER_VERSION" != dev && ! "$RC_PROFILER_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo 'release tags must have the form vMAJOR.MINOR.PATCH, optionally with a prerelease or build suffix' >&2
+            exit 1
+          fi
+          test "$(go env GOHOSTOS)" = "$EXPECTED_GOOS"
+          test "$(go env GOHOSTARCH)" = "$EXPECTED_GOARCH"
+      - name: Download pinned core profile schema
+        run: |
+          schema_file="$RUNNER_TEMP/runtimeconditions.profile.schema.yaml"
+          if [[ "$RUNNER_OS" == Windows ]]; then
+            schema_file=$(cygpath -u "$schema_file")
+          fi
+          curl --fail --location \
+            https://github.com/runtimeconditions/spec/releases/download/v0.1.0/runtimeconditions.profile.schema.yaml \
+            --output "$schema_file"
+      - name: Build profiler with verified core profile schema
+        env:
+          BINARY_SUFFIX: ${{ matrix.suffix }}
+        run: |
+          temp_dir="$RUNNER_TEMP"
+          if [[ "$RUNNER_OS" == Windows ]]; then
+            temp_dir=$(cygpath -u "$temp_dir")
+          fi
+          bash scripts/build-with-core-schema.sh \
+            "$temp_dir/runtimeconditions.profile.schema.yaml" \
+            "$temp_dir/go-rc-profiler$BINARY_SUFFIX"
+      - name: Check the built executable
+        env:
+          RC_GO_PROFILER_BIN: ${{ runner.temp }}/go-rc-profiler${{ matrix.suffix }}
+        run: |
+          binary="$RC_GO_PROFILER_BIN"
+          if [[ "$RUNNER_OS" == Windows ]]; then
+            binary=$(cygpath -u "$binary")
+          fi
+          test "$("$binary" --version)" = "go-rc-profiler $RC_PROFILER_VERSION ($RC_PROFILER_COMMIT)"
+          "$binary" generate -h
+          go test . -count=1
+      - name: Package Unix executable
+        if: matrix.goos != 'windows'
+        env:
+          TARGET_GOOS: ${{ matrix.goos }}
+          TARGET_GOARCH: ${{ matrix.goarch }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/release-assets"
+          cp README.md "$RUNNER_TEMP/README.md"
+          tar -C "$RUNNER_TEMP" -czf "$RUNNER_TEMP/release-assets/go-rc-profiler_${RC_PROFILER_VERSION}_${TARGET_GOOS}_${TARGET_GOARCH}.tar.gz" go-rc-profiler README.md
+      - name: Package Windows executable
+        if: matrix.goos == 'windows'
+        shell: pwsh
+        env:
+          TARGET_GOARCH: ${{ matrix.goarch }}
+        run: |
+          $assetDir = Join-Path $env:RUNNER_TEMP 'release-assets'
+          New-Item -ItemType Directory -Force -Path $assetDir | Out-Null
+          Copy-Item README.md (Join-Path $env:RUNNER_TEMP 'README.md')
+          $archive = Join-Path $assetDir "go-rc-profiler_$($env:RC_PROFILER_VERSION)_windows_$($env:TARGET_GOARCH).zip"
+          Compress-Archive -Path (Join-Path $env:RUNNER_TEMP 'go-rc-profiler.exe'), (Join-Path $env:RUNNER_TEMP 'README.md') -DestinationPath $archive
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: ${{ runner.temp }}/release-assets/*
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: release-*
+          merge-multiple: true
+          path: release-assets
+      - name: Verify archives and create checksums
+        working-directory: release-assets
+        shell: bash
+        run: |
+          for target in linux_amd64 linux_arm64 darwin_amd64 darwin_arm64 windows_amd64; do
+            extension=tar.gz
+            if [[ "$target" == windows_* ]]; then extension=zip; fi
+            test -s "go-rc-profiler_${RC_PROFILER_VERSION}_${target}.${extension}"
+          done
+          sha256sum *.tar.gz *.zip > checksums.txt
+          sha256sum --check checksums.txt
+      - name: Publish tagged release
+        working-directory: release-assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prerelease=false
+          latest=true
+          if [[ "$RC_PROFILER_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+- ]]; then
+            prerelease=true
+            latest=false
+          fi
+          if draft=$(gh release view "$RC_PROFILER_VERSION" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft); then
+            if [[ "$draft" != true ]]; then
+              echo 'refusing to replace an already published release' >&2
+              exit 1
+            fi
+            gh release upload "$RC_PROFILER_VERSION" *.tar.gz *.zip checksums.txt --repo "$GITHUB_REPOSITORY" --clobber
+          else
+            gh release create "$RC_PROFILER_VERSION" *.tar.gz *.zip checksums.txt \
+              --repo "$GITHUB_REPOSITORY" --verify-tag --draft --generate-notes --title "$RC_PROFILER_VERSION"
+          fi
+          gh release edit "$RC_PROFILER_VERSION" --repo "$GITHUB_REPOSITORY" \
+            --draft=false --prerelease="$prerelease" --latest="$latest"

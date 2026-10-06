@@ -1,0 +1,19 @@
+apiVersion: runtimeconditions.io/v1alpha1
+conditions:
+    - interface:
+        type: node
+      kind: tree
+      root:
+        children:
+            - children:
+                - name: ""
+              name: ""
+        name: ""
+extensions:
+    - urn:runtimeconditions:conformance:recursive-reference
+kind: RuntimeConditionsProfile
+metadata:
+    name: phase4-recursive
+workload:
+    uri: https://example.test/phase4/recursive
+    version: 1.0.0

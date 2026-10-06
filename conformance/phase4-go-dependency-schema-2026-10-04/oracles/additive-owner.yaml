@@ -1,0 +1,13 @@
+apiVersion: runtimeconditions.io/v1alpha1
+conditions:
+    - interface:
+        type: http
+      kind: service
+extensions:
+    - urn:runtimeconditions:conformance:additive-field:base
+kind: RuntimeConditionsProfile
+metadata:
+    name: phase4-additive-owner
+workload:
+    uri: https://example.test/phase4/additive-owner
+    version: 1.0.0

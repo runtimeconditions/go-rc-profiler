@@ -1,0 +1,12 @@
+coordinate: urn:runtimeconditions:conformance:object-alternatives#schema:object-alternatives
+conditionPointer: /configuration
+schemaPointer: /properties/configuration/oneOf
+keyword: oneOf
+reason: Neither required alternative is present.
+stage: schema
+exitCode: nonzero
+profileOutput: absent
+stderr: "runtimeconditions: conditions[0] fails extension schema urn:runtimeconditions:conformance:object-alternatives#schema:object-alternatives:\
+  \ jsonschema validation failed with 'urn:runtimeconditions:installed-schema:a02f4d7c7e121759da7c197f2084c56d5c42340173741e6bd2df7f3f1b61facc#'\n\
+  - at '/configuration': 'oneOf' failed, none matched\n  - at '/configuration': missing\
+  \ property 'command'\n  - at '/configuration': missing property 'image'\n"

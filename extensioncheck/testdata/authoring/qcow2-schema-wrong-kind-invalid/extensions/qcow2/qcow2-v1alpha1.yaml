@@ -2,7 +2,8 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/qcow2-schema-wrong-kind/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/qcow2-schema-wrong-kind
+  version: v1alpha1
 
 spec:
   kinds:

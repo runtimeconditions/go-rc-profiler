@@ -1,0 +1,277 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://runtimeconditions.io/schemas/runtimeconditions.binding-release.v1alpha1.schema.yaml
+title: Runtime Conditions binding release manifest
+description: >-
+  Shared release-provenance contract for Go and Python binding packages.
+  A test-fixture manifest identifies actual Phase 4 assembly; a production
+  manifest identifies the Phase 5 orchestrator and committed release target.
+  Consumers must also compare package identity with native package metadata,
+  recompute model and extension digests, and compare every dependency-lock entry
+  with the resolved model closure and source bytes. JSON Schema alone cannot
+  establish those cross-document or artifact-content equalities.
+type: object
+additionalProperties: false
+required:
+  - apiVersion
+  - kind
+  - package
+  - model
+  - rootExtension
+  - dependencyLock
+  - packageDependencies
+  - provenance
+properties:
+  apiVersion: {const: runtimeconditions.io/binding-release/v1alpha1}
+  kind: {const: RuntimeConditionsBindingRelease}
+  package: {$ref: '#/$defs/package'}
+  model: {$ref: '#/$defs/model'}
+  rootExtension: {$ref: '#/$defs/extensionIdentity'}
+  dependencyLock: {$ref: '#/$defs/dependencyLock'}
+  packageDependencies:
+    description: >-
+      Exact tested direct language-package dependencies. The native package
+      metadata must declare the same dependencies and compatible intervals;
+      transitive packages supply their own release manifests. Consumers must
+      reject duplicate extension or package coordinates.
+    type: array
+    x-runtimeconditions-ordering: set
+    uniqueItems: true
+    items: {$ref: '#/$defs/packageDependency'}
+  provenance:
+    oneOf:
+      - {$ref: '#/$defs/fixtureProvenance'}
+      - {$ref: '#/$defs/productionProvenance'}
+allOf:
+  - if:
+      properties:
+        package:
+          properties:
+            language: {const: go}
+    then:
+      properties:
+        packageDependencies:
+          items:
+            properties:
+              artifact:
+                properties:
+                  kind: {const: go-module-zip}
+        provenance:
+          properties:
+            profiler:
+              properties:
+                name: {const: go-rc-profiler}
+    else:
+      properties:
+        packageDependencies:
+          items:
+            properties:
+              artifact:
+                properties:
+                  kind: {const: python-wheel}
+        provenance:
+          properties:
+            profiler:
+              properties:
+                name: {const: python-rc-profiler}
+  - if:
+      properties:
+        provenance:
+          properties:
+            mode: {const: production}
+    then:
+      properties:
+        dependencyLock:
+          properties:
+            extensions:
+              items:
+                properties:
+                  sourceBackend:
+                    enum: [catalog, package, cache, https]
+$defs:
+  extensionIdentifier:
+    type: string
+    pattern: '^https://[^/?#@\s]+/[^/:?#%\s]+(?:/[^/:?#%\s]+)?:[^/:?#%\s]+$'
+  sha256:
+    type: string
+    pattern: '^[0-9a-f]{64}$'
+  nonEmptyString:
+    type: string
+    minLength: 1
+  toolIdentity:
+    type: object
+    additionalProperties: false
+    required: [name, version, sha256]
+    properties:
+      name: {$ref: '#/$defs/nonEmptyString'}
+      version: {$ref: '#/$defs/nonEmptyString'}
+      sha256: {$ref: '#/$defs/sha256'}
+  package:
+    description: >-
+      Matches the emitter target and runtimeconditions.bindings.yaml package.
+      Go coordinate is the package import path, name is the Go package name,
+      and version is the resolved module version. Python coordinate is the
+      distribution name, name is the import package, and version is the
+      installed distribution version. Publication mode describes the intended
+      target and does not imply a test fixture was published.
+    type: object
+    additionalProperties: false
+    required: [packageKey, language, coordinate, name, version, publicationMode]
+    properties:
+      packageKey:
+        type: string
+        pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+      language: {enum: [go, python]}
+      coordinate: {$ref: '#/$defs/nonEmptyString'}
+      name:
+        type: string
+        pattern: '^[A-Za-z_][A-Za-z0-9_]*$'
+      version: {$ref: '#/$defs/nonEmptyString'}
+      minimumGoVersion:
+        type: string
+        pattern: '^[0-9]+\.[0-9]+$'
+      minimumPythonVersion:
+        type: string
+        pattern: '^[0-9]+\.[0-9]+$'
+      publicationMode: {enum: [github-tag, registry]}
+      registryId: {$ref: '#/$defs/nonEmptyString'}
+    allOf:
+      - if:
+          properties:
+            language: {const: go}
+        then:
+          required: [minimumGoVersion]
+          not:
+            required: [minimumPythonVersion]
+        else:
+          required: [minimumPythonVersion]
+          not:
+            required: [minimumGoVersion]
+      - if:
+          properties:
+            publicationMode: {const: registry}
+        then:
+          required: [registryId]
+        else:
+          not:
+            required: [registryId]
+  model:
+    type: object
+    additionalProperties: false
+    required: [apiVersion, semanticSha256]
+    properties:
+      apiVersion: {const: runtimeconditions.io/binding-model/v1alpha1}
+      semanticSha256: {$ref: '#/$defs/sha256'}
+  extensionIdentity:
+    type: object
+    additionalProperties: false
+    required: [id, version, semanticSha256]
+    properties:
+      id: {$ref: '#/$defs/extensionIdentifier'}
+      version: {$ref: '#/$defs/nonEmptyString'}
+      semanticSha256: {$ref: '#/$defs/sha256'}
+  dependencyLock:
+    description: >-
+      Exact resolver output, separate from the normalized model and its digest.
+      Consumers must require exactly one entry per extension in the model,
+      including the root, and compare identifiers, versions, semantic digests,
+      and direct dependency edges with that model.
+    type: object
+    additionalProperties: false
+    required: [extensions]
+    properties:
+      extensions:
+        type: array
+        x-runtimeconditions-ordering: source
+        minItems: 1
+        items: {$ref: '#/$defs/dependencyLockEntry'}
+  dependencyLockEntry:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - version
+      - sourceSha256
+      - semanticSha256
+      - sourceBackend
+      - sourceLocator
+    properties:
+      id: {$ref: '#/$defs/extensionIdentifier'}
+      version: {$ref: '#/$defs/nonEmptyString'}
+      sourceSha256: {$ref: '#/$defs/sha256'}
+      semanticSha256: {$ref: '#/$defs/sha256'}
+      sourceBackend:
+        enum: [override, catalog, package, cache, https]
+      sourceLocator: {$ref: '#/$defs/nonEmptyString'}
+      dependencies:
+        type: array
+        x-runtimeconditions-ordering: set
+        uniqueItems: true
+        items: {$ref: '#/$defs/nonEmptyString'}
+  packageDependency:
+    type: object
+    additionalProperties: false
+    required:
+      - extension
+      - coordinate
+      - name
+      - testedVersion
+      - compatibleVersionRange
+      - artifact
+    properties:
+      extension: {$ref: '#/$defs/nonEmptyString'}
+      coordinate: {$ref: '#/$defs/nonEmptyString'}
+      name:
+        type: string
+        pattern: '^[A-Za-z_][A-Za-z0-9_]*$'
+      testedVersion: {$ref: '#/$defs/nonEmptyString'}
+      compatibleVersionRange:
+        description: >-
+          The tested lower bound is inclusive and the next breaking version is
+          exclusive. Consumers must derive the language-native requirement and
+          verify that testedVersion lies in this interval.
+        type: object
+        additionalProperties: false
+        required: [minimumInclusive, nextBreakingExclusive]
+        properties:
+          minimumInclusive: {$ref: '#/$defs/nonEmptyString'}
+          nextBreakingExclusive: {$ref: '#/$defs/nonEmptyString'}
+      artifact:
+        description: >-
+          SHA-256 of the exact installed dependency archive used for testing.
+          This is a dependency artifact, not a digest of the current package
+          archive, which would make the embedded manifest self-referential.
+        type: object
+        additionalProperties: false
+        required: [kind, sha256]
+        properties:
+          kind: {enum: [go-module-zip, python-wheel]}
+          sha256: {$ref: '#/$defs/sha256'}
+  fixtureProvenance:
+    description: >-
+      Phase 4 test-package assembly. These packages exercise the final installed
+      resource location but are never promotion or publication evidence.
+    type: object
+    additionalProperties: false
+    required: [mode, fixtureAssembler, profiler]
+    properties:
+      mode: {const: test-fixture}
+      fixtureAssembler: {$ref: '#/$defs/toolIdentity'}
+      profiler: {$ref: '#/$defs/toolIdentity'}
+  productionProvenance:
+    description: >-
+      Phase 5 and later committed package assembly. Source directory and tag
+      must match the package key, language, and declared version; consumers
+      must enforce these cross-field equalities.
+    type: object
+    additionalProperties: false
+    required: [mode, orchestrator, profiler, sourceDirectory, targetReleaseTag]
+    properties:
+      mode: {const: production}
+      orchestrator: {$ref: '#/$defs/toolIdentity'}
+      profiler: {$ref: '#/$defs/toolIdentity'}
+      sourceDirectory:
+        type: string
+        pattern: '^bindings/[a-z0-9]+(?:-[a-z0-9]+)*/(go|python)$'
+      targetReleaseTag:
+        type: string
+        pattern: '^bindings/[a-z0-9]+(?:-[a-z0-9]+)*/(go|python)/v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'

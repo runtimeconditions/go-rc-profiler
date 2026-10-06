@@ -3,7 +3,6 @@ package extensioncheck
 import (
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 
@@ -21,27 +20,9 @@ type authoringFixture struct {
 	WantErrorContains      string   `yaml:"wantErrorContains"`
 }
 
-func TestValidateFirstPartyExtensions(t *testing.T) {
-	extensionsRoot := repoPath(t, "extensions")
-
-	tests := []struct {
-		root     string
-		language string
-		require  bool
-	}{
-		{root: filepath.Join(extensionsRoot, "common-integrations"), language: "go", require: true},
-		{root: filepath.Join(extensionsRoot, "env-configuration"), language: "go", require: true},
-	}
-	for _, test := range tests {
-		t.Run(filepath.Base(test.root)+"/"+test.language, func(t *testing.T) {
-			err := ValidateExtension(test.root, Options{
-				Language:               test.language,
-				RequireLanguagePackage: test.require,
-			})
-			if err != nil {
-				t.Fatal(err)
-			}
-		})
+func TestParseDocumentRejectsCyclicAlias(t *testing.T) {
+	if _, err := parseDocument([]byte("root: &root\n  nested: *root\n")); err == nil || !strings.Contains(err.Error(), "cyclic YAML alias") {
+		t.Fatalf("expected cyclic YAML alias error, got %v", err)
 	}
 }
 
@@ -83,7 +64,8 @@ func TestValidateProfileYAMLAppliesExtensionJSONSchema(t *testing.T) {
 		filepath.Join(root, "nats.yaml"): `apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 metadata:
-  id: https://example.com/runtimeconditions/nats/0.1.0/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/nats
+  version: 0.1.0
 spec:
   kinds:
   - name: nats
@@ -128,7 +110,7 @@ spec:
 	profile := []byte(`apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsProfile
 extensions:
-- https://example.com/runtimeconditions/nats/0.1.0/runtimeconditions.extension.yaml
+- https://example.com/runtimeconditions/nats:0.1.0
 conditions:
 - kind: nats
   interface:
@@ -193,7 +175,8 @@ func TestValidateExtensionResolvesDependenciesBeforeBindings(t *testing.T) {
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/base/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/base
+  version: v1alpha1
 
 spec:
   kinds:
@@ -206,7 +189,7 @@ spec:
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/base/v1alpha1/runtimeconditions.extension.yaml
+  extension: https://example.com/runtimeconditions/base:v1alpha1
   extensionDefinition: ../base-v1alpha1.yaml
   language: go
 
@@ -232,11 +215,12 @@ func Cache(name string) Declaration {
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/child/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/child
+  version: v1alpha1
 
 spec:
   dependencies:
-    - https://example.com/runtimeconditions/base/v1alpha1/runtimeconditions.extension.yaml
+    - https://example.com/runtimeconditions/base:v1alpha1
   conditionFields:
     - name: configuration
       appliesToKinds:
@@ -254,7 +238,7 @@ spec:
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/child/v1alpha1/runtimeconditions.extension.yaml
+  extension: https://example.com/runtimeconditions/child:v1alpha1
   extensionDefinition: ../child-v1alpha1.yaml
   language: go
 
@@ -300,7 +284,8 @@ func TestValidateExtensionRejectsBindingWithoutGoDeclaration(t *testing.T) {
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/broken/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/broken
+  version: v1alpha1
 
 spec:
   kinds:
@@ -310,7 +295,7 @@ spec:
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/broken/v1alpha1/runtimeconditions.extension.yaml
+  extension: https://example.com/runtimeconditions/broken:v1alpha1
   extensionDefinition: ../broken-v1alpha1.yaml
   language: go
 
@@ -353,7 +338,8 @@ func TestValidateExtensionRejectsBindingVocabularyOutsideResolvedGraph(t *testin
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/broken/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/broken
+  version: v1alpha1
 
 spec:
   kinds:
@@ -363,7 +349,7 @@ spec:
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/broken/v1alpha1/runtimeconditions.extension.yaml
+  extension: https://example.com/runtimeconditions/broken:v1alpha1
   extensionDefinition: ../broken-v1alpha1.yaml
   language: go
 
@@ -407,7 +393,8 @@ func TestValidateExtensionRejectsOverlappingConditionFieldDefinitions(t *testing
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/base/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/base
+  version: v1alpha1
 
 spec:
   kinds:
@@ -426,11 +413,12 @@ spec:
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/child/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/child
+  version: v1alpha1
 
 spec:
   dependencies:
-    - https://example.com/runtimeconditions/base/v1alpha1/runtimeconditions.extension.yaml
+    - https://example.com/runtimeconditions/base:v1alpha1
   conditionFields:
     - name: configuration
       appliesToKinds:
@@ -447,22 +435,6 @@ spec:
 	if !strings.Contains(err.Error(), "conditionField:configuration") {
 		t.Fatalf("unexpected error: %v", err)
 	}
-}
-
-func repoPath(t *testing.T, parts ...string) string {
-	t.Helper()
-	_, source, _, ok := runtime.Caller(0)
-	if !ok {
-		t.Fatal("cannot locate extensioncheck test source")
-	}
-	root := filepath.Clean(filepath.Join(filepath.Dir(source), "..", ".."))
-	path := filepath.Join(append([]string{root}, parts...)...)
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		t.Skipf("workspace integration dependency is not checked out at %s", path)
-	} else if err != nil {
-		t.Fatal(err)
-	}
-	return path
 }
 
 func writeFiles(t *testing.T, files map[string]string) {

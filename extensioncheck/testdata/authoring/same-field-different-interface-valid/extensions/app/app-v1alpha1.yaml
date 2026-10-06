@@ -2,12 +2,13 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/scoped-field-app/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/scoped-field-app
+  version: v1alpha1
 
 spec:
   dependencies:
-    - https://example.com/runtimeconditions/scoped-field-http/v1alpha1/runtimeconditions.extension.yaml
-    - https://example.com/runtimeconditions/scoped-field-queue/v1alpha1/runtimeconditions.extension.yaml
+    - https://example.com/runtimeconditions/scoped-field-http:v1alpha1
+    - https://example.com/runtimeconditions/scoped-field-queue:v1alpha1
   schemas:
     - id: scoped-field-policy
       description: Scoped field policy.

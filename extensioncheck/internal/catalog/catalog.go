@@ -89,7 +89,7 @@ func (c *Catalog) add(path string, language string, collector *diag.Collector) {
 	}
 	id := DefinitionID(definition)
 	if id == "" {
-		collector.Addf(path, "metadata.id is required")
+		collector.Addf(path, "metadata.uri and metadata.version are required")
 		return
 	}
 	if existing := c.Nodes[id]; existing != nil {

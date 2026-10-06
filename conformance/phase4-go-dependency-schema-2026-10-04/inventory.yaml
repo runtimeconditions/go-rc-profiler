@@ -1,0 +1,2232 @@
+apiVersion: runtimeconditions.io/fixture-results/v1alpha1
+kind: RuntimeConditionsFixtureResults
+status: prepared-awaiting-installed-cli-acceptance
+catalogSha256: 971e27588cf3e5e22710dd35f9fec70569b70e61cf681c1eeb302212c40ffb61
+preparerSha256: af5a76a2e5f889301f858a0839d3212825d859445c23aa8ba93a44d864a6220a
+coreSchemaSha256: ad101336b676b468ec975aff45c21749df22fddf422371156c586ed62abf3223
+languages:
+  go:
+    positiveDeclarations: 19
+    negativeDeclarations: 6
+    emittedCalls: 11
+    completedDeferredDeclarations: 1
+    packages:
+    - packageKey: conformance-additive-field
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/additive-field/@v/v1.0.0.zip
+      sha256: 175b3aad2b0c7371c21cde66773ad4904277e97591e035c42ef811a54366728b
+      modelSemanticSha256: ad09d775e2061c1edf8928990d258472cf85a575ad488986880d9f940e52145d
+      resources:
+        runtimeconditions.bindings.yaml: 73e201ccc1fb13390b59bba104f8aa097614d9511a1799355be54dcf7402a8e6
+        runtimeconditions.binding-model.yaml: 515cce1923234ef352da72b636d9ef1d92f2c80e1d4b8eddbdf8fb090a19658d
+        runtimeconditions.extension.yaml: a8f9d8878fe06a98cb7442028ee74ea5ba5b54cf843a2938af4bdbcb8ee4cdfd
+        runtimeconditions.binding-release.yaml: 5d791b87e89f01a724e0eb8f6b988bae3a1f5b464a908f236a91b8359af8307d
+    - packageKey: conformance-additive-field-base
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/additive-field-base/@v/v1.0.0.zip
+      sha256: dd4b1f4a6a97428b1c9af90b678bdaa8b5a80dab0cb50a34e1ece11e8ed060db
+      modelSemanticSha256: bdd95d0cc4b8bbeb04c233144cf798e4cdb879eee44bef10c3f42c86cdcb60ac
+      resources:
+        runtimeconditions.bindings.yaml: ad4fcbc699af0033a434645cbb04eb2c5c1c60f9654c89f0b28a45adbb8a26ce
+        runtimeconditions.binding-model.yaml: 6fb28d30866857fd48b82649d1c89803924b229c280820e220d842fde54315d9
+        runtimeconditions.extension.yaml: d5d0ba225a3f135f40c3d63d2752226e8e3887879863203102ebfbd3aa75a119
+        runtimeconditions.binding-release.yaml: 9b1e3dddbddb2caef4f0c4fa007e8e12e6ad7e5bc32ad93a6aac92fdfb7edc06
+    - packageKey: conformance-collections-and-maps
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/collections-and-maps/@v/v1.0.0.zip
+      sha256: 4efa094c51e82f08224a3c4570e78f6a68322e9b056956bbaf10b43543ffdf4e
+      modelSemanticSha256: 155a5cc55110f6fb758a58c2cbfebda939da79b73666598dcdb5f68044227259
+      resources:
+        runtimeconditions.bindings.yaml: af581b6ba415eee66c23749e35c535225fa807c1dfeb00fc53ade7be84adb2c4
+        runtimeconditions.binding-model.yaml: 4f5fc3014afa83276ef2339bae7c67cc5b04982046247f777bf7d9735b363fe1
+        runtimeconditions.extension.yaml: 3af26e18a85f8d8045e0cfe29ec5b01de3dc7ec7c1ee5ecc6fe31f79d24a973d
+        runtimeconditions.binding-release.yaml: ad6a9fbc4f55605be81475816b12b65b42d85e95c9d42402825800e6baba0b7f
+    - packageKey: conformance-dependency-schema-only-dependency
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/dependency-schema-only-dependency/@v/v1.0.0.zip
+      sha256: d64fbc1195ba851b6fda5b162c4362913efa6bb722ce34c96c4dee67a5edd63d
+      modelSemanticSha256: f5157fd49ee5e27b2353ebc3371d7732225a4fb88839718489dd58efcccba108
+      resources:
+        runtimeconditions.bindings.yaml: 96002a6805df8057c16db626d6268075d4f69968745e61815ac09a22e0dc53e3
+        runtimeconditions.binding-model.yaml: 7de525342294321d3ae12da4bf0dfcad6ff6b353871f5a0d5435eb355c1b58f0
+        runtimeconditions.extension.yaml: a28b19eeb95c23948521ecd4e5faad6525ce4e04e75b921ccfe8727afef4c243
+        runtimeconditions.binding-release.yaml: 07083c4c24fa87c021725efe956bca75eda429768f1b055cdf2b6d505d5497a2
+    - packageKey: conformance-dependency-schema-only-root
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/dependency-schema-only-root/@v/v1.0.0.zip
+      sha256: feca98707c067536882c30819c4d6c864c1a65423e5a17805a11d0f56943d96a
+      modelSemanticSha256: 2cdb2e1fb8fe9c0fae3128a2c982cc4d8fea86b5bdb73acd49d932fb60db5b8b
+      resources:
+        runtimeconditions.bindings.yaml: be01d95f0a6c6a88dc493f2dc8d50f89601df1294de4ddcb3f3bd40d0272da16
+        runtimeconditions.binding-model.yaml: e7765d044ae584e320fdcae25f0fb7e7571b3f46302d780f0d8ecc415960f7a3
+        runtimeconditions.extension.yaml: d2b8cf0eda27b6678d240bbf6e791c3269397461442527f558dfedaa449ec75e
+        runtimeconditions.binding-release.yaml: 887c2065ddcffa722902a618cf6143d7f8241d894c24efadbd87ed70725e1f0e
+    - packageKey: conformance-heterogeneous-union
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/heterogeneous-union/@v/v1.0.0.zip
+      sha256: 2e51d733b500b9da18f7354374912d6f0c415c08361e003a389f3432e8fd0856
+      modelSemanticSha256: 51acbb8f6955872f32d0d497c713da1a63bfd79d5aaefd2e6d3b281b1d75f1b3
+      resources:
+        runtimeconditions.bindings.yaml: eae225b5e25bb12c0dcc33d9c71038aab729f48fde77c627162732d04b5be9c4
+        runtimeconditions.binding-model.yaml: e3425b696f52e1e5fb808c0cce06fb962d0217087c6121d6d1df259f384c2a3e
+        runtimeconditions.extension.yaml: 49c2669df7fcc4465e39dbb452cc5f926932b899dc4adf5ce9aac80c13b58c11
+        runtimeconditions.binding-release.yaml: 9e8b770b05508a86d3180f56b911b72f847c1079e724cc85e1f52326fae250cb
+    - packageKey: conformance-object-alternatives
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/object-alternatives/@v/v1.0.0.zip
+      sha256: 7611dc3357d91d4cdf1e0690e7bbf47a0b7ad7a4368ca604a76b131374d5200a
+      modelSemanticSha256: a0b9dca25ee21a648882147c253fdcd8e958a72664edb239fc227fb4704d3aa0
+      resources:
+        runtimeconditions.bindings.yaml: f64083468c760a506749d06a02bb71facc874c448ed245d6704b6c141d873d28
+        runtimeconditions.binding-model.yaml: 35f010e479b74271803e7c3d2d58fc363dadb5ad2c96d86fc86dd3b49e220ac4
+        runtimeconditions.extension.yaml: 41a787d91afacffd523eac0d7016c013fcfe4ecf9e0ee4969e62e1ce23946c40
+        runtimeconditions.binding-release.yaml: 4d8b5f88cbc104c93eb21ae7432af7683e9a06106e9efc9e426ea9326fe33db5
+    - packageKey: conformance-owned-kind-interface
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/owned-kind-interface/@v/v1.0.0.zip
+      sha256: 218e87a366da16de178500353000b559eaeccf1827e33094b6cb3566fb06fcb2
+      modelSemanticSha256: ed14b88946cddce6fea8912175ea80800c63197053c735b5c501b6bf51e1ef88
+      resources:
+        runtimeconditions.bindings.yaml: 60c9c2aaf4ab43b677e077bb66baca046debf3c4cd82b75c7ad9d93989a2ee7b
+        runtimeconditions.binding-model.yaml: 136e406881d60cd01cf0edceba73a0e099be923d29a01291862223ba9a1d4a41
+        runtimeconditions.extension.yaml: 3f5aee725f21969bdd4ff9bb9e644f9e6cb9eb5d1e7cd14103b46c98f6eaa9ef
+        runtimeconditions.binding-release.yaml: de831b70303ba01f564d90f5613a350c02bde59be9551bba74c13db77ed3b934
+    - packageKey: conformance-recursive-reference
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/recursive-reference/@v/v1.0.0.zip
+      sha256: 6c850398e048c2dc0692208fe7403667e1c39f1a07534b78ad3a98a8f9c3baa7
+      modelSemanticSha256: f5b2d31acf5bb01d2ad684e2e1d44609584816b75ad37b953421abf4fd1c092e
+      resources:
+        runtimeconditions.bindings.yaml: 52cac6e385f2b77a26516d4d343375761786968920ed340cd791022726799ce2
+        runtimeconditions.binding-model.yaml: 808f9acb9898139fff7b9df5002e1bf38f527b09d1aa24527fb5f9f6f1c50b59
+        runtimeconditions.extension.yaml: 483db1d37f224593183d60f4b08faea18ab031e2cb5ff14e624086523c488450
+        runtimeconditions.binding-release.yaml: 1f90ddaef91ce2f96d3be7380d8c05a34b2f844bb2711f6e469215ebe790baf8
+    - packageKey: conformance-scoped-domains-collisions
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/scoped-domains-collisions/@v/v1.0.0.zip
+      sha256: 0ba5b96b83ec241277e8c01b74db60f784ccdc779fbb7013c1b91c6b237c3770
+      modelSemanticSha256: 44a67cccd117f1f71b4e01dd81bee4d95cc6d2812e662ed7928c1acf828e2642
+      resources:
+        runtimeconditions.bindings.yaml: 195219d3419f8a67cbf8bc193f665760b0924c27265acc8e34317a8bd3332f98
+        runtimeconditions.binding-model.yaml: 358636e88a40983f4cb49ee919df6054d41a6432f3e1fbe7306446ad91f3c8ca
+        runtimeconditions.extension.yaml: 0a51f8e0a1ef50cd5394768450158a5763a41a55f661bb952fff0e4b3094ece7
+        runtimeconditions.binding-release.yaml: 56bb1852dc81c94629b5e700384fcbd4a79a8e4dafd3891a125bf7601bc8c9ed
+    - packageKey: conformance-source-name-preservation
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/source-name-preservation/@v/v1.0.0.zip
+      sha256: 313898b64891349ea1934e0a8ae088f2ddcce70606d9fe0bf24f64f54e690210
+      modelSemanticSha256: 14f9d6e3e947c3c4c5063d304a301f1ef04932afe93afb2491d0be06084d1e5d
+      resources:
+        runtimeconditions.bindings.yaml: 11819abc2b7f5581b399af7631472e517e9bffd541f4f4d8016ca32470fa33e7
+        runtimeconditions.binding-model.yaml: 45f16ff9d0b030e985f6388305a531be39754748e0621a54ada31a2b0e2dc116
+        runtimeconditions.extension.yaml: 6941867e7918169fe393b75fc7a39e7a9fa1477fb25e7dfc5dfdf86b7cc35aa7
+        runtimeconditions.binding-release.yaml: 1b0194da234abb0c0c40547420b66f5435f6a4c050a92d59ef943f21569aefad
+    - packageKey: conformance-transitive-leaf
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/transitive-leaf/@v/v1.0.0.zip
+      sha256: 598c2de48d29940e4bc649be5516729c26f482c729f0496b141db89b1d04b33c
+      modelSemanticSha256: 443cdb324eca3738d7ddcbc7494639192bc7b8e33810ae1c83f97c59ac81c37f
+      resources:
+        runtimeconditions.bindings.yaml: 17e87f8fb260677dddfb9f72b7c40f1c4cf09ec8dc0e3737dc8812889c992679
+        runtimeconditions.binding-model.yaml: 63aeb85c80a650021b37cef259d23047e4002efaefce6d004f52e7b63a7030b6
+        runtimeconditions.extension.yaml: 254ea2dceab63b753aed1c75e6402871c18e716ec263fad27511e6406bf43992
+        runtimeconditions.binding-release.yaml: 06204cf878e879470e844d83486c708fcca26af600ea27c67cfc46a8eabb0763
+    - packageKey: conformance-transitive-middle
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/transitive-middle/@v/v1.0.0.zip
+      sha256: d2085b00cd1f34dc3aa4e366ddaf822237be9945383c3cef9580581c0692ae81
+      modelSemanticSha256: 9c2e258e7a6f2446395a325b2499f8c51ec24a2cc2a57a2a9ca6998b3ac572f4
+      resources:
+        runtimeconditions.bindings.yaml: da8e3d9e07e8217734a843e3f633fff72750a5134da6a35a59588743763b7357
+        runtimeconditions.binding-model.yaml: ac845f420fbd7e2cf666b14fb190d57726f7d99e67d0d64ee4c1dfd762e40fd1
+        runtimeconditions.extension.yaml: bf8331112b3fece59362ee8041528fae58d03855a3b136ed869a7f80577b3e56
+        runtimeconditions.binding-release.yaml: 6fca68d95294e1343732601d7a19ce76fc3ae8a34a2bc44ece67168d6eaf1ff0
+    - packageKey: conformance-transitive-root
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy/example.com/runtimeconditions/conformance/transitive-root/@v/v1.0.0.zip
+      sha256: c876d878d81d60d3f94f7d05d1c92497e15cf6338120c83ce8655e64f99e5985
+      modelSemanticSha256: ba56ab87160f44f264e275f8a22e3a95df4adc71905edc009be477530e7c2d98
+      resources:
+        runtimeconditions.bindings.yaml: a41c256491cef011cea2be8b9e1f396d106fe4c90c33c6815b9d4813b546447f
+        runtimeconditions.binding-model.yaml: 10739f50f2031a0beea29240de6aad4a860221a3d0921f7aed5ef5bf9eb00b04
+        runtimeconditions.extension.yaml: 8ccd7ff2429e212ffa6faf8c8fcdc6b594e7afc0f21f02296eb60786d2223679
+        runtimeconditions.binding-release.yaml: 364dc92e72dbd85b189a1f53edc12dfbe9ad4c4d2e3871dd45098bb563cf5d59
+    declarations:
+    - id: owned
+      case: 01-owned-kind-interface
+      outcome: positive
+      workload: go/workloads/owned
+      sourceSha256: 12c6b53291e548e19a7d6e7726c0bef30295541ba43e20d64031d254d6d3c742
+      expected: go/expected/owned.yaml
+      expectedSha256: dd3c7c48f284d6251d6742bb659c35e83f0741f4057be6822132e774478645ca
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-owned
+      - -workload-uri
+      - https://example.test/phase4/owned
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:owned-kind-interface
+      directContributors:
+      - urn:runtimeconditions:conformance:owned-kind-interface
+      emittedDeclaration:
+        package: conformance-owned-kind-interface
+        index: 0
+        function: Service
+    - id: additive-owner
+      case: 02-additive-field
+      outcome: positive
+      workload: go/workloads/additive-owner
+      sourceSha256: 5391e98328d185ef674811bfd71739e901963ecb1dc994c62f0578f1ecf14d9a
+      expected: go/expected/additive-owner.yaml
+      expectedSha256: f3f2ab80bb909ba53495a0528deb87836b7d5a3e1d6145cfc4e995342fb6cd62
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-additive-owner
+      - -workload-uri
+      - https://example.test/phase4/additive-owner
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:additive-field:base
+      directContributors:
+      - urn:runtimeconditions:conformance:additive-field:base
+      emittedDeclaration:
+        package: conformance-additive-field-base
+        index: 0
+        function: Service
+    - id: additive-consumer
+      case: 02-additive-field
+      outcome: positive
+      workload: go/workloads/additive-consumer
+      sourceSha256: bd6a9a44fd97182add3633fd4f07f6e9521dfeb1447c0ebb17d9d507c56059c9
+      expected: go/expected/additive-consumer.yaml
+      expectedSha256: 24a1f33314c52192e3e2512bdf730e988a2d983f69da16e49aa9b0a8eb7eb6c3
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-additive-consumer
+      - -workload-uri
+      - https://example.test/phase4/additive-consumer
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:additive-field
+      - urn:runtimeconditions:conformance:additive-field:base
+      directContributors:
+      - urn:runtimeconditions:conformance:additive-field
+      - urn:runtimeconditions:conformance:additive-field:base
+    - id: transitive-leaf-consumer
+      case: 03-transitive-closure
+      outcome: positive
+      workload: go/workloads/transitive-leaf-consumer
+      sourceSha256: 5bb4c69df4c5ecda503a005d003c2051efb4b62ef433c19a1f760774f9d8bde8
+      expected: go/expected/transitive-leaf-consumer.yaml
+      expectedSha256: 548051b5c9fcf584b0eb7c56a783bbb78982de3c4a201c25a0aef621d66e4161
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-transitive-leaf-consumer
+      - -workload-uri
+      - https://example.test/phase4/transitive-leaf-consumer
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+      directContributors:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+      coversDeferred:
+      - package: conformance-transitive-leaf
+        function: Worker
+    - id: transitive-middle-consumer
+      case: 03-transitive-closure
+      outcome: positive
+      workload: go/workloads/transitive-middle-consumer
+      sourceSha256: 5bb4c69df4c5ecda503a005d003c2051efb4b62ef433c19a1f760774f9d8bde8
+      expected: go/expected/transitive-middle-consumer.yaml
+      expectedSha256: be1a74a567d5fd56aeb45c9e9079e148ef54bae783ef5e3cda5422a724669a6c
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-transitive-middle-consumer
+      - -workload-uri
+      - https://example.test/phase4/transitive-middle-consumer
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+      directContributors:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+    - id: transitive-root-consumer
+      case: 03-transitive-closure
+      outcome: positive
+      workload: go/workloads/transitive-root-consumer
+      sourceSha256: 5bb4c69df4c5ecda503a005d003c2051efb4b62ef433c19a1f760774f9d8bde8
+      expected: go/expected/transitive-root-consumer.yaml
+      expectedSha256: fbc12e3c60dbbc75c8443f28f9f6855e81f2952f4e2f9b238a9b2f4fe62427e4
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-transitive-root-consumer
+      - -workload-uri
+      - https://example.test/phase4/transitive-root-consumer
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+      directContributors:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+    - id: recursive
+      case: 06-recursive-reference
+      outcome: positive
+      workload: go/workloads/recursive
+      sourceSha256: 38ba195a2a9fd95961d330c73c5148daafc3f3d9a8588495056c4c6b93b2920d
+      expected: go/expected/recursive.yaml
+      expectedSha256: 2b81a149d0a44887c4716a60e3a41c9e1302d23c4f521105a20e944fd8592853
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-recursive
+      - -workload-uri
+      - https://example.test/phase4/recursive
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:recursive-reference
+      directContributors:
+      - urn:runtimeconditions:conformance:recursive-reference
+      emittedDeclaration:
+        package: conformance-recursive-reference
+        index: 0
+        function: Tree
+    - id: alternatives-command
+      case: 07-object-alternatives
+      outcome: positive
+      workload: go/workloads/alternatives-command
+      sourceSha256: 893b7a348834808d4d51a6c487d4c8d6c961f6be82fcb4a4070735e2d0d41d27
+      expected: go/expected/alternatives-command.yaml
+      expectedSha256: 106ab524ea2487cf51a9d228a1b25f1d3c0e67c775feac3a6a5bdec1cc36e14f
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-alternatives-command
+      - -workload-uri
+      - https://example.test/phase4/alternatives-command
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:object-alternatives
+      directContributors:
+      - urn:runtimeconditions:conformance:object-alternatives
+      emittedDeclaration:
+        package: conformance-object-alternatives
+        index: 0
+        function: Deployment
+    - id: alternatives-image
+      case: 07-object-alternatives
+      outcome: positive
+      workload: go/workloads/alternatives-image
+      sourceSha256: 29251ee9307f8deb37488265cbe29599f2e1b35afd2d96ef153aa49fae447375
+      expected: go/expected/alternatives-image.yaml
+      expectedSha256: 404cd3b81f622a71e831f358be4e81e0db7638c61b2e83995374afd5ec30b0d7
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-alternatives-image
+      - -workload-uri
+      - https://example.test/phase4/alternatives-image
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:object-alternatives
+      directContributors:
+      - urn:runtimeconditions:conformance:object-alternatives
+      emittedDeclaration:
+        package: conformance-object-alternatives
+        index: 1
+        function: Deployment
+    - id: union-object
+      case: 08-heterogeneous-union
+      outcome: positive
+      workload: go/workloads/union-object
+      sourceSha256: ff68465fc6807a593c7d3ce950cda67154d4c05649d4f9141193d8e38882854a
+      expected: go/expected/union-object.yaml
+      expectedSha256: 7f45d7c752c9bb512b5885c181e1696680e2adf61c0914f1ac5b7383f8820632
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-union-object
+      - -workload-uri
+      - https://example.test/phase4/union-object
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+      directContributors:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+      emittedDeclaration:
+        package: conformance-heterogeneous-union
+        index: 0
+        function: Selector
+    - id: union-string
+      case: 08-heterogeneous-union
+      outcome: positive
+      workload: go/workloads/union-string
+      sourceSha256: 3a62659989d8d223b9ae0fe8ac9bd525d14994dbaa05fb745c469385a98b4224
+      expected: go/expected/union-string.yaml
+      expectedSha256: ea961246209200fae8ca2704df442276808b13993f56c1a7e57e8957311524e3
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-union-string
+      - -workload-uri
+      - https://example.test/phase4/union-string
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+      directContributors:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+    - id: collections
+      case: 09-collections-and-maps
+      outcome: positive
+      workload: go/workloads/collections
+      sourceSha256: 7dbbe602d21650da4ea94002e7861b9d01d7d61d5757004ec454d3a3efc20f51
+      expected: go/expected/collections.yaml
+      expectedSha256: 263946994f8856824a8f35f6ef1d7570a5741f4bd3f497767414274468db407c
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-collections
+      - -workload-uri
+      - https://example.test/phase4/collections
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:collections-and-maps
+      directContributors:
+      - urn:runtimeconditions:conformance:collections-and-maps
+      emittedDeclaration:
+        package: conformance-collections-and-maps
+        index: 0
+        function: Collection
+    - id: collection-second-value
+      case: 09-collections-and-maps
+      outcome: positive
+      workload: go/workloads/collection-second-value
+      sourceSha256: 20c1a575e4dea5587fa2fc6219dea62a8cead957301ec819a764bc0a254b5906
+      expected: go/expected/collection-second-value.yaml
+      expectedSha256: 9dc9624eaba4bbaaae3dd5b96d9058014521bdeb5af62312e160d56e1b072469
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-collection-second-value
+      - -workload-uri
+      - https://example.test/phase4/collection-second-value
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:collections-and-maps
+      directContributors:
+      - urn:runtimeconditions:conformance:collections-and-maps
+    - id: scoped-grpc
+      case: 10-scoped-domains-collisions
+      outcome: positive
+      workload: go/workloads/scoped-grpc
+      sourceSha256: a6cd635f468f4cc1c491e18ba17c1a17a2d6603c2207f25ab23c7caa3f6a4036
+      expected: go/expected/scoped-grpc.yaml
+      expectedSha256: 7644e5e2c6159eb5ba56623ce6675c7fcf3bddfd1277761db8a408a8eeff8653
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-scoped-grpc
+      - -workload-uri
+      - https://example.test/phase4/scoped-grpc
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      directContributors:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      emittedDeclaration:
+        package: conformance-scoped-domains-collisions
+        index: 0
+        function: Service
+    - id: scoped-http
+      case: 10-scoped-domains-collisions
+      outcome: positive
+      workload: go/workloads/scoped-http
+      sourceSha256: 8d19e295995f85c7e0d60d6795f5fb6cd6d37fdaeed294d73f1e77a76862fd85
+      expected: go/expected/scoped-http.yaml
+      expectedSha256: b131409505a9e6b5478aaff79e0eedf80b238930ab79248c7a844a8f24b696c1
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-scoped-http
+      - -workload-uri
+      - https://example.test/phase4/scoped-http
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      directContributors:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      emittedDeclaration:
+        package: conformance-scoped-domains-collisions
+        index: 1
+        function: Service
+    - id: scoped-http-proxy
+      case: 10-scoped-domains-collisions
+      outcome: positive
+      workload: go/workloads/scoped-http-proxy
+      sourceSha256: 851f8a69855cf922bac2a9748ccc5c2dd6069c601736e1f1280228ae7f8776ec
+      expected: go/expected/scoped-http-proxy.yaml
+      expectedSha256: 3f27b0c2047e0f775407aac9ec3d4dfdc3a8f2e0cce33660173c8a7795ece681
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-scoped-http-proxy
+      - -workload-uri
+      - https://example.test/phase4/scoped-http-proxy
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      directContributors:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+    - id: scoped-optional-omitted
+      case: 10-scoped-domains-collisions
+      outcome: positive
+      workload: go/workloads/scoped-optional-omitted
+      sourceSha256: 7b3a1e1ec489034ba78b62c0175d5f09275b4722cc40a6754b8f59df5a439d13
+      expected: go/expected/scoped-optional-omitted.yaml
+      expectedSha256: 92ac0da33ecb1ba2a64755f3f1ab476f44f7758ae050054775c8b9dde02343c0
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-scoped-optional-omitted
+      - -workload-uri
+      - https://example.test/phase4/scoped-optional-omitted
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      directContributors:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+    - id: source-names
+      case: 11-source-name-preservation
+      outcome: positive
+      workload: go/workloads/source-names
+      sourceSha256: d2d22382c8b627165b951b2662120512a79f20db6320ea87382c9eecc0478827
+      expected: go/expected/source-names.yaml
+      expectedSha256: 2f0c24d954c016bfd1cbefce242042ed8ff6b513acaf1b1291546977c5f3e811
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-source-names
+      - -workload-uri
+      - https://example.test/phase4/source-names
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:source-name-preservation
+      directContributors:
+      - urn:runtimeconditions:conformance:source-name-preservation
+      emittedDeclaration:
+        package: conformance-source-name-preservation
+        index: 0
+        function: Class
+    - id: dependency-schema-only
+      case: 13-dependency-schema-only
+      outcome: positive
+      workload: go/workloads/dependency-schema-only
+      sourceSha256: 8838291677416f56d6226e6b7810be4596ca3156b8b1094f62f3e0b6841e8732
+      expected: go/expected/dependency-schema-only.yaml
+      expectedSha256: cb8dcf8cd24eb010a8a93daf7514a3c107f91572fea46d1212d49a3a598aef0e
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-dependency-schema-only
+      - -workload-uri
+      - https://example.test/phase4/dependency-schema-only
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:dependency-schema-only:dependency
+      - urn:runtimeconditions:conformance:dependency-schema-only:root
+      directContributors:
+      - urn:runtimeconditions:conformance:dependency-schema-only:root
+      emittedDeclaration:
+        package: conformance-dependency-schema-only-root
+        index: 0
+        function: Job
+      dependencySchema: urn:runtimeconditions:conformance:dependency-schema-only:dependency#schema:command-limit
+    - id: dependency-schema-invalid
+      case: 13-dependency-schema-only
+      outcome: negative
+      workload: go/workloads/dependency-schema-invalid
+      sourceSha256: d13fc3e8ab9d1d276ae0f7cabba52fe30e7e28ea1489e88078aa0cf175d437d6
+      expected: go/expected/dependency-schema-invalid.error.yaml
+      expectedSha256: 1246d88263a467cc3bb8cec4a9fb4bb7f16fe5b390fc3b4b53428c132fbdd244
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-dependency-schema-invalid
+      - -workload-uri
+      - https://example.test/phase4/dependency-schema-invalid
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:dependency-schema-only:dependency
+      - urn:runtimeconditions:conformance:dependency-schema-only:root
+      directContributors:
+      - urn:runtimeconditions:conformance:dependency-schema-only:root
+      dependencySchema: urn:runtimeconditions:conformance:dependency-schema-only:dependency#schema:command-limit
+    - id: alternatives-missing
+      case: 07-object-alternatives
+      outcome: negative
+      workload: go/workloads/alternatives-missing
+      sourceSha256: 6865a92161b4eda184f6393a6448c3f9ed3360c8caf2e42cc7120a1471f7db7f
+      expected: go/expected/alternatives-missing.error.yaml
+      expectedSha256: dec53b8aab8f212fb77ac274a2b7fbfb8bbd7e520d46c2b2350f78523cd62868
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-alternatives-missing
+      - -workload-uri
+      - https://example.test/phase4/alternatives-missing
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:object-alternatives
+      directContributors:
+      - urn:runtimeconditions:conformance:object-alternatives
+    - id: alternatives-both
+      case: 07-object-alternatives
+      outcome: negative
+      workload: go/workloads/alternatives-both
+      sourceSha256: 1df404e4709a40dd405e0b0d3bbf9f0463ac80f87bd8cf78022844f42f3d3367
+      expected: go/expected/alternatives-both.error.yaml
+      expectedSha256: 7ed1bc106477ece15f149d4ae505877e2c3f3b032848c4cb50b75403c1ab5459
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-alternatives-both
+      - -workload-uri
+      - https://example.test/phase4/alternatives-both
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:object-alternatives
+      directContributors:
+      - urn:runtimeconditions:conformance:object-alternatives
+    - id: union-missing-id
+      case: 08-heterogeneous-union
+      outcome: negative
+      workload: go/workloads/union-missing-id
+      sourceSha256: 37ed7454a4d2da9e0219fd20741c5052a0509f76380e9c98e3370b318f9022af
+      expected: go/expected/union-missing-id.error.yaml
+      expectedSha256: 8f4e0529d8fb7ea72961e1adfcc8148dc2618cb239507d0f43f75978279fa113
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-union-missing-id
+      - -workload-uri
+      - https://example.test/phase4/union-missing-id
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+      directContributors:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+    - id: collection-invalid-value
+      case: 09-collections-and-maps
+      outcome: negative
+      workload: go/workloads/collection-invalid-value
+      sourceSha256: 586b5b95dc533f232c185e106cb5491943b7c76982e4f858948f7207549abdd5
+      expected: go/expected/collection-invalid-value.error.yaml
+      expectedSha256: 7fb79c6e6cfcdc7ae6d76a1f7d2cd53a90a84fe0ed5bc17a198f70ae57e14a35
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-collection-invalid-value
+      - -workload-uri
+      - https://example.test/phase4/collection-invalid-value
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:collections-and-maps
+      directContributors:
+      - urn:runtimeconditions:conformance:collections-and-maps
+    - id: scoped-invalid-value
+      case: 10-scoped-domains-collisions
+      outcome: negative
+      workload: go/workloads/scoped-invalid-value
+      sourceSha256: 6d6cfff27d5e9cba665442c8f47f524e2cba75f9e8ee8c18e995f8aee2187b20
+      expected: go/expected/scoped-invalid-value.error.yaml
+      expectedSha256: 69baa9eab3bec4faff3f84fc49808c6784ce5cf57c29168173fba1e11d000dd0
+      install:
+      - go
+      - mod
+      - download
+      - all
+      profileCommand:
+      - <installed-go-profiler>
+      - generate
+      - -dir
+      - .
+      - -name
+      - phase4-scoped-invalid-value
+      - -workload-uri
+      - https://example.test/phase4/scoped-invalid-value
+      - -workload-version
+      - 1.0.0
+      - -out
+      - profile.yaml
+      environment:
+        GOWORK: 'off'
+        GOSUMDB: 'off'
+        GOPROXY: file:///Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/go/proxy
+      extensionClosure:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      directContributors:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+  python:
+    positiveDeclarations: 19
+    negativeDeclarations: 6
+    emittedCalls: 13
+    completedDeferredDeclarations: 2
+    packages:
+    - packageKey: conformance-additive-field
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_additive_field-1.0.0-py3-none-any.whl
+      sha256: 711324a4b85fcaf7161273909d821c8ca2e1722573bbf12b163b07cc7bac1696
+      modelSemanticSha256: ad09d775e2061c1edf8928990d258472cf85a575ad488986880d9f940e52145d
+      resources:
+        runtimeconditions.bindings.yaml: dfeac5fe2529b49fdd83ca0d7ed3ea3cd9730f07cc43cded0f2dc55f0edde4bd
+        runtimeconditions.binding-model.yaml: 515cce1923234ef352da72b636d9ef1d92f2c80e1d4b8eddbdf8fb090a19658d
+        runtimeconditions.extension.yaml: a8f9d8878fe06a98cb7442028ee74ea5ba5b54cf843a2938af4bdbcb8ee4cdfd
+        runtimeconditions.binding-release.yaml: 996737eabe19de21bb6fc30dd4a671b279eebe290e10f3e6526a1034b292df7b
+    - packageKey: conformance-additive-field-base
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_additive_field_base-1.0.0-py3-none-any.whl
+      sha256: ee35acfef71a3ca584781e691f6e8130e5ffb3acb0e5da098bdb7527c326792d
+      modelSemanticSha256: bdd95d0cc4b8bbeb04c233144cf798e4cdb879eee44bef10c3f42c86cdcb60ac
+      resources:
+        runtimeconditions.bindings.yaml: df7e8972b7dfcee68b2f95de857238aa21198428a2c51c252afb253f5105639b
+        runtimeconditions.binding-model.yaml: 6fb28d30866857fd48b82649d1c89803924b229c280820e220d842fde54315d9
+        runtimeconditions.extension.yaml: d5d0ba225a3f135f40c3d63d2752226e8e3887879863203102ebfbd3aa75a119
+        runtimeconditions.binding-release.yaml: 2638a019f7aa6eb7c98899cd559597a6b463c8aaeee49e15068b16eee82a9cc7
+    - packageKey: conformance-collections-and-maps
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_collections_and_maps-1.0.0-py3-none-any.whl
+      sha256: 5f8a5dccb7862a867a9998e3ba8dad38e562d0de0860be42def8359ab3cb6553
+      modelSemanticSha256: 155a5cc55110f6fb758a58c2cbfebda939da79b73666598dcdb5f68044227259
+      resources:
+        runtimeconditions.bindings.yaml: 80ba8b3d68f56ccc3e861defff136c3e9ccd1a3380eba2edbe16674f6f3545e5
+        runtimeconditions.binding-model.yaml: 4f5fc3014afa83276ef2339bae7c67cc5b04982046247f777bf7d9735b363fe1
+        runtimeconditions.extension.yaml: 3af26e18a85f8d8045e0cfe29ec5b01de3dc7ec7c1ee5ecc6fe31f79d24a973d
+        runtimeconditions.binding-release.yaml: ae06e1bfaf79e7ed7feddfb5d79787aee6a13dab2f907f1adbd3e82403f043ba
+    - packageKey: conformance-dependency-schema-only-dependency
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_dependency_schema_only_dependency-1.0.0-py3-none-any.whl
+      sha256: 2607a89b7c362234882baa463c374a494b412f9da8df764b4f77dbcb6c9e9a14
+      modelSemanticSha256: f5157fd49ee5e27b2353ebc3371d7732225a4fb88839718489dd58efcccba108
+      resources:
+        runtimeconditions.bindings.yaml: 21ad71ea4e3f333950b19f6c96a314a5e8411d001f8989d2c928d962c3ed0c3e
+        runtimeconditions.binding-model.yaml: 7de525342294321d3ae12da4bf0dfcad6ff6b353871f5a0d5435eb355c1b58f0
+        runtimeconditions.extension.yaml: a28b19eeb95c23948521ecd4e5faad6525ce4e04e75b921ccfe8727afef4c243
+        runtimeconditions.binding-release.yaml: d1e27699c41dc578b72d7188675dc603ca8e5a9d9bf08f26679a93dc612d6e80
+    - packageKey: conformance-dependency-schema-only-root
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_dependency_schema_only_root-1.0.0-py3-none-any.whl
+      sha256: 97bdb39881cb849958b1c834db58cd905e30294aa7b527c95862e7443aad12d6
+      modelSemanticSha256: 2cdb2e1fb8fe9c0fae3128a2c982cc4d8fea86b5bdb73acd49d932fb60db5b8b
+      resources:
+        runtimeconditions.bindings.yaml: 505fc57860e5c7908b2dcb48cecfe967c3bab5335dec3195eab94b57ced94647
+        runtimeconditions.binding-model.yaml: e7765d044ae584e320fdcae25f0fb7e7571b3f46302d780f0d8ecc415960f7a3
+        runtimeconditions.extension.yaml: d2b8cf0eda27b6678d240bbf6e791c3269397461442527f558dfedaa449ec75e
+        runtimeconditions.binding-release.yaml: 6305a7fc8b34c3ac3ba9d17582db4b7eb2170c609dce255518e075a2914c0b09
+    - packageKey: conformance-heterogeneous-union
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_heterogeneous_union-1.0.0-py3-none-any.whl
+      sha256: 89602b8dbee739b27be591611e6475577da3560f69ebc343f663628ca6bd0bb0
+      modelSemanticSha256: 51acbb8f6955872f32d0d497c713da1a63bfd79d5aaefd2e6d3b281b1d75f1b3
+      resources:
+        runtimeconditions.bindings.yaml: 36ede9a40dd2ff31fd1f99c391c4febf08eed9d4c15143979237833f4da4ca32
+        runtimeconditions.binding-model.yaml: e3425b696f52e1e5fb808c0cce06fb962d0217087c6121d6d1df259f384c2a3e
+        runtimeconditions.extension.yaml: 49c2669df7fcc4465e39dbb452cc5f926932b899dc4adf5ce9aac80c13b58c11
+        runtimeconditions.binding-release.yaml: 2394a6a9a472baf5b052c241ed6ded4db448c6e7021d29382a0d1db33eb050e9
+    - packageKey: conformance-object-alternatives
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_object_alternatives-1.0.0-py3-none-any.whl
+      sha256: 1e0e35f705fb208dccc4ee744c889cde1d634a164df89c8c9b67615d2f705127
+      modelSemanticSha256: a0b9dca25ee21a648882147c253fdcd8e958a72664edb239fc227fb4704d3aa0
+      resources:
+        runtimeconditions.bindings.yaml: 3baafe277066c5f1fc7c6ebce6f0c1c58be5de51a7686bd6b91b233c982c505c
+        runtimeconditions.binding-model.yaml: 35f010e479b74271803e7c3d2d58fc363dadb5ad2c96d86fc86dd3b49e220ac4
+        runtimeconditions.extension.yaml: 41a787d91afacffd523eac0d7016c013fcfe4ecf9e0ee4969e62e1ce23946c40
+        runtimeconditions.binding-release.yaml: eea1fa4310f8416bab1cf9fe6a6f9a4c36160425237e16c348fc2c33f048a1c4
+    - packageKey: conformance-owned-kind-interface
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_owned_kind_interface-1.0.0-py3-none-any.whl
+      sha256: d2902bf2ee182b277605e565b5f05290786c48c0f49d55e4fa3515aba408960f
+      modelSemanticSha256: ed14b88946cddce6fea8912175ea80800c63197053c735b5c501b6bf51e1ef88
+      resources:
+        runtimeconditions.bindings.yaml: 5806d54ffea28c5999dc016a6616a13ec8e904424d085021330dde8a7815f50c
+        runtimeconditions.binding-model.yaml: 136e406881d60cd01cf0edceba73a0e099be923d29a01291862223ba9a1d4a41
+        runtimeconditions.extension.yaml: 3f5aee725f21969bdd4ff9bb9e644f9e6cb9eb5d1e7cd14103b46c98f6eaa9ef
+        runtimeconditions.binding-release.yaml: 004a87c35c7ca6f76532735b30a8fbb9f2649cc8dc757db0536b3e69483eba19
+    - packageKey: conformance-recursive-reference
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_recursive_reference-1.0.0-py3-none-any.whl
+      sha256: 4b4958a6a66e20cd613d21c4d30a310a4e7c9949d03f2ecf325213c497bca338
+      modelSemanticSha256: f5b2d31acf5bb01d2ad684e2e1d44609584816b75ad37b953421abf4fd1c092e
+      resources:
+        runtimeconditions.bindings.yaml: 3636d9b167babce846c9dd69ed4871b99d1e311bcbe14b7671b9990950162d7c
+        runtimeconditions.binding-model.yaml: 808f9acb9898139fff7b9df5002e1bf38f527b09d1aa24527fb5f9f6f1c50b59
+        runtimeconditions.extension.yaml: 483db1d37f224593183d60f4b08faea18ab031e2cb5ff14e624086523c488450
+        runtimeconditions.binding-release.yaml: c69acc768cbc3fe45d95a405074dc53c5c9046f64462c9a0d4fc1562f4604705
+    - packageKey: conformance-scoped-domains-collisions
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_scoped_domains_collisions-1.0.0-py3-none-any.whl
+      sha256: 1670c5daa0a4f66cf9a16c4b03a579e75839436983808243812fed6d2f39c391
+      modelSemanticSha256: 44a67cccd117f1f71b4e01dd81bee4d95cc6d2812e662ed7928c1acf828e2642
+      resources:
+        runtimeconditions.bindings.yaml: 30ea4e275c2a46398b829d39dcb4b3b03c38200c420c99b78e0d5f935058590c
+        runtimeconditions.binding-model.yaml: 358636e88a40983f4cb49ee919df6054d41a6432f3e1fbe7306446ad91f3c8ca
+        runtimeconditions.extension.yaml: 0a51f8e0a1ef50cd5394768450158a5763a41a55f661bb952fff0e4b3094ece7
+        runtimeconditions.binding-release.yaml: 7939357b7a3944f3f8a9bbf86d26717561371890a36b6c099b4eb981c6eb3454
+    - packageKey: conformance-source-name-preservation
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_source_name_preservation-1.0.0-py3-none-any.whl
+      sha256: 9de447b4a44bc953acabb99cfb103d833de1c5732187f5db22a1461e87c092cc
+      modelSemanticSha256: 14f9d6e3e947c3c4c5063d304a301f1ef04932afe93afb2491d0be06084d1e5d
+      resources:
+        runtimeconditions.bindings.yaml: 41ea41d1cded675d731026b36e041174b30b259fee6a4d2bcaddd5ce387a496c
+        runtimeconditions.binding-model.yaml: 45f16ff9d0b030e985f6388305a531be39754748e0621a54ada31a2b0e2dc116
+        runtimeconditions.extension.yaml: 6941867e7918169fe393b75fc7a39e7a9fa1477fb25e7dfc5dfdf86b7cc35aa7
+        runtimeconditions.binding-release.yaml: 2d10daa306a98a0a2e153f834c2b3e35a4273e32bc233e48853f6b0ccd46f6b3
+    - packageKey: conformance-transitive-leaf
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_transitive_leaf-1.0.0-py3-none-any.whl
+      sha256: b8b0716235b2a4adf9f1ae5e1e5f408e023e82f87a64d044b2f8017426563a2e
+      modelSemanticSha256: 443cdb324eca3738d7ddcbc7494639192bc7b8e33810ae1c83f97c59ac81c37f
+      resources:
+        runtimeconditions.bindings.yaml: 3aab9b3b15580f7e54a533e15a6db5e2ac97094621bd74048c9e82e7592901f3
+        runtimeconditions.binding-model.yaml: 63aeb85c80a650021b37cef259d23047e4002efaefce6d004f52e7b63a7030b6
+        runtimeconditions.extension.yaml: 254ea2dceab63b753aed1c75e6402871c18e716ec263fad27511e6406bf43992
+        runtimeconditions.binding-release.yaml: 67c648684897d7a75d91e8e16e15f85448121b2f9114fc189bb498a6bbdff4de
+    - packageKey: conformance-transitive-middle
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_transitive_middle-1.0.0-py3-none-any.whl
+      sha256: 1191cf3c23e740e612bc5681b319ccf18d41c6bb2f8b8affb0ee6dc35e3924bf
+      modelSemanticSha256: 9c2e258e7a6f2446395a325b2499f8c51ec24a2cc2a57a2a9ca6998b3ac572f4
+      resources:
+        runtimeconditions.bindings.yaml: 870c73781a1cbe2699f680ea15befc214ebc68ea0685af28081a26a21c28163f
+        runtimeconditions.binding-model.yaml: ac845f420fbd7e2cf666b14fb190d57726f7d99e67d0d64ee4c1dfd762e40fd1
+        runtimeconditions.extension.yaml: bf8331112b3fece59362ee8041528fae58d03855a3b136ed869a7f80577b3e56
+        runtimeconditions.binding-release.yaml: d04d2ab55410fe85c12e0ae7c65cbf838df46f3c5464dfaf8c3c5e9f3d1374e6
+    - packageKey: conformance-transitive-root
+      archive: /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels/runtimeconditions_conformance_transitive_root-1.0.0-py3-none-any.whl
+      sha256: ad83cabf3b75f036d78d5b51cb5e86e9f524700b5588e2c35da21450088308b6
+      modelSemanticSha256: ba56ab87160f44f264e275f8a22e3a95df4adc71905edc009be477530e7c2d98
+      resources:
+        runtimeconditions.bindings.yaml: 26137439082f671b6dd7591973587a54f95c842e83d7780cb1d319b373c6c7b9
+        runtimeconditions.binding-model.yaml: 10739f50f2031a0beea29240de6aad4a860221a3d0921f7aed5ef5bf9eb00b04
+        runtimeconditions.extension.yaml: 8ccd7ff2429e212ffa6faf8c8fcdc6b594e7afc0f21f02296eb60786d2223679
+        runtimeconditions.binding-release.yaml: 310c25a95f186e82caebc8a437737272ff3aa8662c8e1a974112db2ae932cbd4
+    declarations:
+    - id: owned
+      case: 01-owned-kind-interface
+      outcome: positive
+      workload: python/workloads/owned
+      sourceSha256: d231609dcfedd9acac658bdd2623d3ade3779b4245a914bca6f153ffcab0ab11
+      expected: python/expected/owned.yaml
+      expectedSha256: f59d76c0296bd6ef440abf1050f9345299dca3c036e5e79247b28a5ed03bbef6
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-owned
+      - --workload-uri
+      - https://example.test/phase4/owned
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:owned-kind-interface
+      directContributors:
+      - urn:runtimeconditions:conformance:owned-kind-interface
+      emittedDeclaration:
+        package: conformance-owned-kind-interface
+        index: 0
+        function: service
+    - id: additive-owner
+      case: 02-additive-field
+      outcome: positive
+      workload: python/workloads/additive-owner
+      sourceSha256: b10a6ab46dac56431e750cb050c17a0ab81eb2cc905e09ffd0a1efabcde72e33
+      expected: python/expected/additive-owner.yaml
+      expectedSha256: 0fa33a84afc1622b9e10bb4fc45033641c5def0ce159808d96f4fb1319628586
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-additive-owner
+      - --workload-uri
+      - https://example.test/phase4/additive-owner
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:additive-field:base
+      directContributors:
+      - urn:runtimeconditions:conformance:additive-field:base
+      emittedDeclaration:
+        package: conformance-additive-field-base
+        index: 0
+        function: service
+    - id: additive-consumer
+      case: 02-additive-field
+      outcome: positive
+      workload: python/workloads/additive-consumer
+      sourceSha256: cc3224c8bb2101c474ce54700b41df83fd968a088db327f2854cb8b5ab0e8ef9
+      expected: python/expected/additive-consumer.yaml
+      expectedSha256: 4f06c7c54808bc41fb51548ee501958df1c8150394e0212b61770399b22dc046
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-additive-consumer
+      - --workload-uri
+      - https://example.test/phase4/additive-consumer
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:additive-field
+      - urn:runtimeconditions:conformance:additive-field:base
+      directContributors:
+      - urn:runtimeconditions:conformance:additive-field
+      - urn:runtimeconditions:conformance:additive-field:base
+      emittedDeclaration:
+        package: conformance-additive-field
+        index: 0
+        function: service
+    - id: transitive-leaf-consumer
+      case: 03-transitive-closure
+      outcome: positive
+      workload: python/workloads/transitive-leaf-consumer
+      sourceSha256: bc7da6ef1da37988048f5dd4f61d49569bb489c24b898dfff3e878fd330c2628
+      expected: python/expected/transitive-leaf-consumer.yaml
+      expectedSha256: 7b3b3fb927fb10f46abc71e91351b850e4558e8c3ca5ec6b34ff6bf310c080a2
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-transitive-leaf-consumer
+      - --workload-uri
+      - https://example.test/phase4/transitive-leaf-consumer
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+      directContributors:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+      coversDeferred:
+      - package: conformance-transitive-leaf
+        function: worker
+    - id: transitive-middle-consumer
+      case: 03-transitive-closure
+      outcome: positive
+      workload: python/workloads/transitive-middle-consumer
+      sourceSha256: 641ec5f589a18f72d58acc0baea684bec13b2db38ada9253ccea1d86b6a21059
+      expected: python/expected/transitive-middle-consumer.yaml
+      expectedSha256: dc8e4196649e6957dff58cdbc7b790c5910c5d1e616c092a04acfadc7547a78d
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-transitive-middle-consumer
+      - --workload-uri
+      - https://example.test/phase4/transitive-middle-consumer
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+      directContributors:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+      coversDeferred:
+      - package: conformance-transitive-middle
+        function: worker
+    - id: transitive-root-consumer
+      case: 03-transitive-closure
+      outcome: positive
+      workload: python/workloads/transitive-root-consumer
+      sourceSha256: 55a5cdfeff8306e9a8175cf67d236637370ecc2d2c424231515db1b72e36a33a
+      expected: python/expected/transitive-root-consumer.yaml
+      expectedSha256: e5b554e85cef0b8be367ddb613253d88a440db30aff6076a8398d59f838cb7d8
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-transitive-root-consumer
+      - --workload-uri
+      - https://example.test/phase4/transitive-root-consumer
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+      directContributors:
+      - urn:runtimeconditions:conformance:transitive:leaf
+      - urn:runtimeconditions:conformance:transitive:middle
+      - urn:runtimeconditions:conformance:transitive:root
+      emittedDeclaration:
+        package: conformance-transitive-root
+        index: 0
+        function: worker
+    - id: recursive
+      case: 06-recursive-reference
+      outcome: positive
+      workload: python/workloads/recursive
+      sourceSha256: baed6f1ab149d9b5ba9eb1604642d83f65bc9f0d7e360fc6adac050851424d86
+      expected: python/expected/recursive.yaml
+      expectedSha256: ee147e6cd5bb4c9ab3a6e9f33903d3b34bc15b2ba26dcc065094c4aa621c7ddd
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-recursive
+      - --workload-uri
+      - https://example.test/phase4/recursive
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:recursive-reference
+      directContributors:
+      - urn:runtimeconditions:conformance:recursive-reference
+      emittedDeclaration:
+        package: conformance-recursive-reference
+        index: 0
+        function: tree
+    - id: alternatives-command
+      case: 07-object-alternatives
+      outcome: positive
+      workload: python/workloads/alternatives-command
+      sourceSha256: d1447bf99e4e70651b28e8b3c7754147f0dc217601e5d58ec74b25226ad28663
+      expected: python/expected/alternatives-command.yaml
+      expectedSha256: e712d4468e646e90295a31dfe6de03848967826b886255586746c5d3a7aab238
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-alternatives-command
+      - --workload-uri
+      - https://example.test/phase4/alternatives-command
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:object-alternatives
+      directContributors:
+      - urn:runtimeconditions:conformance:object-alternatives
+      emittedDeclaration:
+        package: conformance-object-alternatives
+        index: 0
+        function: deployment
+    - id: alternatives-image
+      case: 07-object-alternatives
+      outcome: positive
+      workload: python/workloads/alternatives-image
+      sourceSha256: 8c0fe8b6a03dfd74a051e4f91b873771fcb35dcf59f6ddfbe4138a0e71a05869
+      expected: python/expected/alternatives-image.yaml
+      expectedSha256: bdf2b46ab336d3728091cc4dfc46ec62e67afb130ce464de1160482683ee9ae7
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-alternatives-image
+      - --workload-uri
+      - https://example.test/phase4/alternatives-image
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:object-alternatives
+      directContributors:
+      - urn:runtimeconditions:conformance:object-alternatives
+      emittedDeclaration:
+        package: conformance-object-alternatives
+        index: 1
+        function: deployment
+    - id: union-object
+      case: 08-heterogeneous-union
+      outcome: positive
+      workload: python/workloads/union-object
+      sourceSha256: d42791bf6ef8625a98ff703135709c0656f133efe8a631f07a671f185b38d954
+      expected: python/expected/union-object.yaml
+      expectedSha256: 5bc6cdb34293d664d14d2e00494f78095da75eb2593142a08dcdbe0020eeab2e
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-union-object
+      - --workload-uri
+      - https://example.test/phase4/union-object
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+      directContributors:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+      emittedDeclaration:
+        package: conformance-heterogeneous-union
+        index: 0
+        function: selector
+    - id: union-string
+      case: 08-heterogeneous-union
+      outcome: positive
+      workload: python/workloads/union-string
+      sourceSha256: 6d15d9ed9cc8401f541fb58479803f1ec69d791562610664211d78f7e185bc57
+      expected: python/expected/union-string.yaml
+      expectedSha256: 28f79dbfced34afbed4612476dcfb8131562216bad24b3ead42b39447d4962b8
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-union-string
+      - --workload-uri
+      - https://example.test/phase4/union-string
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+      directContributors:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+    - id: collections
+      case: 09-collections-and-maps
+      outcome: positive
+      workload: python/workloads/collections
+      sourceSha256: dd923242257faa7a798224ac5a0abf43debff6316a7718349bd4986df1a25b61
+      expected: python/expected/collections.yaml
+      expectedSha256: fad56b7a640e2572ef2311af3821caf9da97d3c93b608ceca1670699291d03b1
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-collections
+      - --workload-uri
+      - https://example.test/phase4/collections
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:collections-and-maps
+      directContributors:
+      - urn:runtimeconditions:conformance:collections-and-maps
+      emittedDeclaration:
+        package: conformance-collections-and-maps
+        index: 0
+        function: collection
+    - id: collection-second-value
+      case: 09-collections-and-maps
+      outcome: positive
+      workload: python/workloads/collection-second-value
+      sourceSha256: c938ac6b28e6d06f1c7b5c2007ba380c8018b7c7cd785e5d7bdad7c07ccc1b22
+      expected: python/expected/collection-second-value.yaml
+      expectedSha256: cbe8c6950795019cbe7928412c9abc5bb4e12a3e52b1cbb118f151e271274057
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-collection-second-value
+      - --workload-uri
+      - https://example.test/phase4/collection-second-value
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:collections-and-maps
+      directContributors:
+      - urn:runtimeconditions:conformance:collections-and-maps
+    - id: scoped-grpc
+      case: 10-scoped-domains-collisions
+      outcome: positive
+      workload: python/workloads/scoped-grpc
+      sourceSha256: 33fa46763c92b18cdb65a4741798d60286ef6b136c9520ea467534d434cd5e75
+      expected: python/expected/scoped-grpc.yaml
+      expectedSha256: 23e182f110f762c5cdeb2fb2f6b5af8f7363536fc2c6cc6288aa6fe9d4f79bb9
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-scoped-grpc
+      - --workload-uri
+      - https://example.test/phase4/scoped-grpc
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      directContributors:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      emittedDeclaration:
+        package: conformance-scoped-domains-collisions
+        index: 0
+        function: service
+    - id: scoped-http
+      case: 10-scoped-domains-collisions
+      outcome: positive
+      workload: python/workloads/scoped-http
+      sourceSha256: 1d0848db7b6d587fa6fa02c809b6f2c10ddedc8e9f21b4cbbfde638fe7e696fc
+      expected: python/expected/scoped-http.yaml
+      expectedSha256: 6981e6e89f434f7c40129b31cdc3772723bc626f2cdd7ba2b91c86ccae099524
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-scoped-http
+      - --workload-uri
+      - https://example.test/phase4/scoped-http
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      directContributors:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      emittedDeclaration:
+        package: conformance-scoped-domains-collisions
+        index: 1
+        function: service
+    - id: scoped-http-proxy
+      case: 10-scoped-domains-collisions
+      outcome: positive
+      workload: python/workloads/scoped-http-proxy
+      sourceSha256: ad3def0f9f64cb584e385e23636123d4ed00e61daf27d11d06c65ad85ef4a5ab
+      expected: python/expected/scoped-http-proxy.yaml
+      expectedSha256: 99f5fd963d97d2c3dbcd5671dd0815d2c09aa4a0ced4cbd42b2ddb90dd5c47ad
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-scoped-http-proxy
+      - --workload-uri
+      - https://example.test/phase4/scoped-http-proxy
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      directContributors:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+    - id: scoped-optional-omitted
+      case: 10-scoped-domains-collisions
+      outcome: positive
+      workload: python/workloads/scoped-optional-omitted
+      sourceSha256: f0ac2e18f7ae7a16523789ccb7b6dc64cabe744d344968f182ee392d6e64cace
+      expected: python/expected/scoped-optional-omitted.yaml
+      expectedSha256: f3ff2a93415dde7cd51e12cbee7a931477614bdaef3b0b2ea8b77de99990a9c6
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-scoped-optional-omitted
+      - --workload-uri
+      - https://example.test/phase4/scoped-optional-omitted
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      directContributors:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+    - id: source-names
+      case: 11-source-name-preservation
+      outcome: positive
+      workload: python/workloads/source-names
+      sourceSha256: 00a69367b09206e7dbb542194cf7a9be83d1758aacda1bcd664bf141ce32f3f0
+      expected: python/expected/source-names.yaml
+      expectedSha256: cfa151a75978cee0e95074fcfcda294e5d66aaa780d021c7846759d8bb5532c2
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-source-names
+      - --workload-uri
+      - https://example.test/phase4/source-names
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:source-name-preservation
+      directContributors:
+      - urn:runtimeconditions:conformance:source-name-preservation
+      emittedDeclaration:
+        package: conformance-source-name-preservation
+        index: 0
+        function: class_
+    - id: dependency-schema-only
+      case: 13-dependency-schema-only
+      outcome: positive
+      workload: python/workloads/dependency-schema-only
+      sourceSha256: d13a7350748e5df562bb6fd40ddff35f6c38e1f8cfa7d1c30ae927b947969e71
+      expected: python/expected/dependency-schema-only.yaml
+      expectedSha256: 959293e04d2e072269a8f5cc857c6f54b44dba35dfb75aaaecebfc6d6b174dd2
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-dependency-schema-only
+      - --workload-uri
+      - https://example.test/phase4/dependency-schema-only
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:dependency-schema-only:dependency
+      - urn:runtimeconditions:conformance:dependency-schema-only:root
+      directContributors:
+      - urn:runtimeconditions:conformance:dependency-schema-only:root
+      emittedDeclaration:
+        package: conformance-dependency-schema-only-root
+        index: 0
+        function: job
+      dependencySchema: urn:runtimeconditions:conformance:dependency-schema-only:dependency#schema:command-limit
+    - id: dependency-schema-invalid
+      case: 13-dependency-schema-only
+      outcome: negative
+      workload: python/workloads/dependency-schema-invalid
+      sourceSha256: bfdc3b9205e3e6df086ae5854eab439649d39ba948af9a13be87ecb44e7f13f5
+      expected: python/expected/dependency-schema-invalid.error.yaml
+      expectedSha256: ec1babc3800b13dc3300dc4bcca09c36285dbf8b9acb30a73809a40b194221b6
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-dependency-schema-invalid
+      - --workload-uri
+      - https://example.test/phase4/dependency-schema-invalid
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:dependency-schema-only:dependency
+      - urn:runtimeconditions:conformance:dependency-schema-only:root
+      directContributors:
+      - urn:runtimeconditions:conformance:dependency-schema-only:root
+      dependencySchema: urn:runtimeconditions:conformance:dependency-schema-only:dependency#schema:command-limit
+    - id: alternatives-missing
+      case: 07-object-alternatives
+      outcome: negative
+      workload: python/workloads/alternatives-missing
+      sourceSha256: 3d366602a3245161598a561cae30487c852552c4d8eda7fd1a09188985fae4ba
+      expected: python/expected/alternatives-missing.error.yaml
+      expectedSha256: 3032026bf2b62dbe083a69421cb5c788fcd03c563d5aa93a7d171660686d2157
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-alternatives-missing
+      - --workload-uri
+      - https://example.test/phase4/alternatives-missing
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:object-alternatives
+      directContributors:
+      - urn:runtimeconditions:conformance:object-alternatives
+    - id: alternatives-both
+      case: 07-object-alternatives
+      outcome: negative
+      workload: python/workloads/alternatives-both
+      sourceSha256: 2f4fba0ad77989c22605f4555eef0f30a206546319a9d7f24455f388242a0d12
+      expected: python/expected/alternatives-both.error.yaml
+      expectedSha256: 7ab2bf8248114473b2b494f5bcfb8b60c795122231603efe0eff35c7a973bd17
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-alternatives-both
+      - --workload-uri
+      - https://example.test/phase4/alternatives-both
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:object-alternatives
+      directContributors:
+      - urn:runtimeconditions:conformance:object-alternatives
+    - id: union-missing-id
+      case: 08-heterogeneous-union
+      outcome: negative
+      workload: python/workloads/union-missing-id
+      sourceSha256: aa00c160760143af2b2fe4692efdca5f0d77ef2e811da87c1ea589dd2199e095
+      expected: python/expected/union-missing-id.error.yaml
+      expectedSha256: 613a64a446cbe25bc73b42e8e0f60fc560b7fdda3225cb3c86cba0b19b5fc5fc
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-union-missing-id
+      - --workload-uri
+      - https://example.test/phase4/union-missing-id
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+      directContributors:
+      - urn:runtimeconditions:conformance:heterogeneous-union
+    - id: collection-invalid-value
+      case: 09-collections-and-maps
+      outcome: negative
+      workload: python/workloads/collection-invalid-value
+      sourceSha256: 1e49a470a4762a3ca95b2bc6abe3d32a4244fca6a6c9c60d8e527f790201ffba
+      expected: python/expected/collection-invalid-value.error.yaml
+      expectedSha256: 9949f7522c849ef9fe0574d3dfb311da9384def69c1c1069b731a18d65305c5f
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-collection-invalid-value
+      - --workload-uri
+      - https://example.test/phase4/collection-invalid-value
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:collections-and-maps
+      directContributors:
+      - urn:runtimeconditions:conformance:collections-and-maps
+    - id: scoped-invalid-value
+      case: 10-scoped-domains-collisions
+      outcome: negative
+      workload: python/workloads/scoped-invalid-value
+      sourceSha256: 1b4394f12c65812dd1c3b8ea6bae344b32dc306feef72e03549378ad4362adfc
+      expected: python/expected/scoped-invalid-value.error.yaml
+      expectedSha256: 77106f997587cff6a144eca064653836e9578111f7403cb3e7dd41d9af351e99
+      install:
+      - <workload-python>
+      - -m
+      - pip
+      - install
+      - --no-index
+      - --find-links
+      - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-fixtures-v3-20261004/python/wheels
+      - -r
+      - requirements.txt
+      profileCommand:
+      - <installed-python-profiler>
+      - profile
+      - generate
+      - --project
+      - .
+      - --name
+      - phase4-scoped-invalid-value
+      - --workload-uri
+      - https://example.test/phase4/scoped-invalid-value
+      - --workload-version
+      - 1.0.0
+      - --out
+      - profile.yaml
+      environment: {}
+      extensionClosure:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+      directContributors:
+      - urn:runtimeconditions:conformance:scoped-domains-collisions
+normalizerNegatives:
+- case: 04-dependency-cycle
+  inputs: normalizer/04-dependency-cycle
+  expected: normalizer/04-dependency-cycle.diagnostic.yaml
+  expectedSha256: a8f8da69158400b3bfa7f3e8588a6aaff86f02ee960c704eb66e5bc74b4852eb
+  exitCode: nonzero
+  modelOutput: absent
+  stderr: 'extension-dependency RCB1204 at urn:runtimeconditions:conformance:cycle:root:
+    dependency cycle: urn:runtimeconditions:conformance:cycle:root -> urn:runtimeconditions:conformance:cycle:dependency
+    -> urn:runtimeconditions:conformance:cycle:root
+
+    '
+  command:
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/rc-binding-model
+  - --root
+  - urn:runtimeconditions:conformance:cycle:root
+  - --extension-root
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/04-dependency-cycle
+  - --semantic-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.extension-semantic.schema.yaml
+  - --model-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.binding-model.schema.yaml
+  - --core-profile-id
+  - https://runtimeconditions.io/schemas/profile/0.1.0/runtimeconditions.profile.schema.yaml
+  - --core-profile-version
+  - 0.1.0
+  - --core-profile-semantic-sha256
+  - 49890a0f3e7276d1e480d654176672d977df9c63094f3a24983b0a8102e1a3e3
+  - --normalizer-sha256
+  - b07ec6fda47dd7f227ff79fd13d6a1f87b9ff4d2ba7ed290154f6d63c7621526
+  - --output
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/04-dependency-cycle.model.yaml
+- case: 05-vocabulary-conflict
+  inputs: normalizer/05-vocabulary-conflict
+  expected: normalizer/05-vocabulary-conflict.diagnostic.yaml
+  expectedSha256: daf633b36a1139cd5a91cb15b010d9ab2c1bada290641c76c18e74aebaa2087d
+  exitCode: nonzero
+  modelOutput: absent
+  stderr: 'vocabulary-conflict RCB1221 at kind:shared: defined by both "urn:runtimeconditions:conformance:conflict:first"
+    and "urn:runtimeconditions:conformance:conflict:second"
+
+    '
+  command:
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/rc-binding-model
+  - --root
+  - urn:runtimeconditions:conformance:conflict:root
+  - --extension-root
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/05-vocabulary-conflict
+  - --semantic-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.extension-semantic.schema.yaml
+  - --model-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.binding-model.schema.yaml
+  - --core-profile-id
+  - https://runtimeconditions.io/schemas/profile/0.1.0/runtimeconditions.profile.schema.yaml
+  - --core-profile-version
+  - 0.1.0
+  - --core-profile-semantic-sha256
+  - 49890a0f3e7276d1e480d654176672d977df9c63094f3a24983b0a8102e1a3e3
+  - --normalizer-sha256
+  - b07ec6fda47dd7f227ff79fd13d6a1f87b9ff4d2ba7ed290154f6d63c7621526
+  - --output
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/05-vocabulary-conflict.model.yaml
+- case: 12-unsupported-structural-keyword
+  inputs: normalizer/12-unsupported-structural-keyword
+  expected: normalizer/12-unsupported-structural-keyword.diagnostic.yaml
+  expectedSha256: 42927ecc0e40063daf875fd73f8403431dcd9523ed3c5547e0b5849f4a97fcb2
+  exitCode: nonzero
+  modelOutput: absent
+  stderr: 'schema RCB1309 at urn:runtimeconditions:conformance:unsupported-structural-keyword#schema:tuple-values
+    /properties/values/prefixItems: structure-changing keyword "prefixItems" is unsupported
+    by binding-model v1alpha1
+
+    '
+  command:
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/rc-binding-model
+  - --root
+  - urn:runtimeconditions:conformance:unsupported-structural-keyword
+  - --extension-root
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/12-unsupported-structural-keyword
+  - --semantic-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.extension-semantic.schema.yaml
+  - --model-schema
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/runtimeconditions.binding-model.schema.yaml
+  - --core-profile-id
+  - https://runtimeconditions.io/schemas/profile/0.1.0/runtimeconditions.profile.schema.yaml
+  - --core-profile-version
+  - 0.1.0
+  - --core-profile-semantic-sha256
+  - 49890a0f3e7276d1e480d654176672d977df9c63094f3a24983b0a8102e1a3e3
+  - --normalizer-sha256
+  - b07ec6fda47dd7f227ff79fd13d6a1f87b9ff4d2ba7ed290154f6d63c7621526
+  - --output
+  - /Users/colacy/code/github.com/runtimeconditions/phase4-dependency-schema-results-20261004/normalizer/12-unsupported-structural-keyword.model.yaml

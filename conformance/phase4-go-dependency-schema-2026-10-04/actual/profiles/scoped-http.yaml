@@ -1,0 +1,15 @@
+apiVersion: runtimeconditions.io/v1alpha1
+conditions:
+    - base_url: ""
+      interface:
+        type: http
+      kind: service
+      mode: direct
+extensions:
+    - urn:runtimeconditions:conformance:scoped-domains-collisions
+kind: RuntimeConditionsProfile
+metadata:
+    name: phase4-scoped-http
+workload:
+    uri: https://example.test/phase4/scoped-http
+    version: 1.0.0

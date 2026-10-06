@@ -1,0 +1,15 @@
+apiVersion: runtimeconditions.io/v1alpha1
+conditions:
+    - interface:
+        endpoint: ""
+        type: http
+      kind: service
+      region: ""
+extensions:
+    - urn:runtimeconditions:conformance:owned-kind-interface
+kind: RuntimeConditionsProfile
+metadata:
+    name: phase4-owned
+workload:
+    uri: https://example.test/phase4/owned
+    version: 1.0.0

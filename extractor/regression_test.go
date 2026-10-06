@@ -34,7 +34,7 @@ const (
 	natsMappingName     = "nats.go.service"
 	natsMappingRelative = "runtimeconditions/mappings/nats-service.yaml"
 	natsIndexRelative   = "runtimeconditions/index.yaml"
-	natsExtensionID     = "https://runtimeconditions.io/extensions/nats-service/0.1.0/runtimeconditions.extension.yaml"
+	natsExtensionID     = "https://runtimeconditions.io/nats/nats-service:0.1.0"
 )
 
 var natsWorkloads = []string{
@@ -114,6 +114,7 @@ func TestNATSSDKWorkloadProfilesMatchGolden(t *testing.T) {
 				WorkloadURI:       "https://github.com/runtimeconditions/sdk-authorship-discovery/tree/main/nats/go/" + workload,
 				WorkloadVersion:   "0.1.0",
 				ExtensionRoots:    []string{extensionsRoot},
+				EnableSDKMappings: true,
 				RequireGoPackages: true,
 			})
 			if err != nil {
@@ -156,6 +157,7 @@ func TestNATSSDKRepeatedOperationsAreDeduplicated(t *testing.T) {
 		WorkloadURI:       "github.com/runtimeconditions/go-rc-profiler/regression/nats-repeated-operations",
 		WorkloadVersion:   "v1.0.0",
 		ExtensionRoots:    []string{regressionPath(t, "extensions")},
+		EnableSDKMappings: true,
 		RequireGoPackages: true,
 	})
 	if err != nil {
@@ -235,7 +237,7 @@ func TestNATSSDKMappingFailsClosed(t *testing.T) {
 				})
 				return []string{extensionsRoot}
 			},
-			wantError: "extension " + natsExtensionID + " version or semantic SHA-256 does not match installed definition",
+			wantError: "extension " + natsExtensionID + " is not available in the configured extension roots",
 		},
 	}
 
@@ -252,6 +254,7 @@ func TestNATSSDKMappingFailsClosed(t *testing.T) {
 				WorkloadURI:       "https://github.com/runtimeconditions/sdk-authorship-discovery/tree/main/nats/go/core-messaging",
 				WorkloadVersion:   "0.1.0",
 				ExtensionRoots:    extensionRoots,
+				EnableSDKMappings: true,
 				RequireGoPackages: true,
 			})
 			requireErrorContains(t, err, test.wantError)
@@ -324,16 +327,38 @@ func TestSDKMappingIsIgnoredForUnimportedModules(t *testing.T) {
 	writeFile(t, filepath.Join(workloadDir, "main.go"), "package main\n\nfunc main() {}\n")
 
 	profile, err := extractor.ExtractDir(workloadDir, extractor.Options{
-		Name:            "unimported-sdk",
-		WorkloadURI:     "github.com/example/unimported",
-		WorkloadVersion: "v0.1.0",
-		ExtensionRoots:  []string{regressionPath(t, "extensions")},
+		Name:              "unimported-sdk",
+		WorkloadURI:       "github.com/example/unimported",
+		WorkloadVersion:   "v0.1.0",
+		ExtensionRoots:    []string{regressionPath(t, "extensions")},
+		EnableSDKMappings: true,
 	})
 	if err != nil {
 		t.Fatalf("malformed metadata in an unimported module must not fail profiling: %v", err)
 	}
 	if len(profile.Conditions) != 0 || len(profile.Extensions) != 0 {
 		t.Fatalf("expected an empty profile, got %#v", profile)
+	}
+}
+
+func TestSDKMappingsAreNotDiscoveredWithoutOptIn(t *testing.T) {
+	isolateGoEnvironment(t)
+	sdkDir := stageNATSSDK(t, func(t *testing.T, sdkDir string) {
+		rewriteFile(t, filepath.Join(sdkDir, natsIndexRelative), func(index string) string {
+			return strings.Replace(index, "runtimeconditions.io/sdk-mapping/v1alpha1", "runtimeconditions.io/sdk-mapping/v1beta1", 1)
+		})
+	})
+
+	profile, err := extractor.ExtractDir(stageNATSWorkload(t, "core-messaging", sdkDir), extractor.Options{
+		Name:            "unmapped-sdk",
+		WorkloadURI:     "github.com/example/unmapped",
+		WorkloadVersion: "v0.1.0",
+	})
+	if err != nil {
+		t.Fatalf("SDK metadata should be ignored without opt-in: %v", err)
+	}
+	if len(profile.Conditions) != 0 || len(profile.Extensions) != 0 {
+		t.Fatalf("expected an empty profile without SDK mappings, got %#v", profile)
 	}
 }
 
@@ -353,6 +378,7 @@ func TestWorkloadWithoutRuntimeConditionsMetadataProfilesEmpty(t *testing.T) {
 		WorkloadURI:       "github.com/example/unmapped",
 		WorkloadVersion:   "v0.1.0",
 		ExtensionRoots:    []string{regressionPath(t, "extensions")},
+		EnableSDKMappings: true,
 		RequireGoPackages: true,
 	})
 	if err != nil {

@@ -1,7 +1,5 @@
-// The command-line surface is part of the profiler contract: rc-demos, the spec
-// guides, and the NATS authorship harness all drive the profiler through these
-// flags. These tests build the real binary and lock its subcommands, flag
-// defaults, output destinations, diagnostics, and exit codes.
+// These tests build the real binary and lock its commands, diagnostics, and
+// failure behavior.
 package main
 
 import (
@@ -12,13 +10,15 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
-
-	"gopkg.in/yaml.v3"
 )
 
 var profilerBinary string
 
 func TestMain(m *testing.M) {
+	if installed := os.Getenv("RC_GO_PROFILER_BIN"); installed != "" {
+		profilerBinary = installed
+		os.Exit(m.Run())
+	}
 	buildRoot, err := os.MkdirTemp("", "runtimeconditions-cli-")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot create build directory: %v\n", err)
@@ -37,87 +37,67 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func TestGenerateWritesProfileToStdout(t *testing.T) {
-	result := runProfiler(t,
-		"-dir", regressionPath("workloads", "request-logger-http"),
-		"-name", "request-logger-http",
-		"-workload-uri", "github.com/runtimeconditions/rc-demos/apps/request-logger-http",
-		"-workload-version", "dev",
-	)
-	requireExitCode(t, result, 0)
-	if result.stdout != goldenProfile(t, "request-logger-http.golden.yaml") {
-		t.Fatalf("stdout profile differs from the golden profile\n--- got ---\n%s", result.stdout)
+func TestGeneratedEntryPointRequiresInstalledBindingsWithoutWritingProfile(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module example.com/workload\n\ngo 1.25.0\n"), 0o644); err != nil {
+		t.Fatal(err)
 	}
-}
-
-func TestGenerateWritesProfileToOutFile(t *testing.T) {
+	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte("package main\n\nfunc main() {}\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
 	outPath := filepath.Join(t.TempDir(), "profile.yaml")
-	result := runProfiler(t,
-		"-dir", regressionPath("workloads", "request-logger-http"),
-		"-name", "request-logger-http",
-		"-workload-uri", "github.com/runtimeconditions/rc-demos/apps/request-logger-http",
-		"-workload-version", "dev",
-		"-out", outPath,
-	)
-	requireExitCode(t, result, 0)
-	if result.stdout != "" {
-		t.Fatalf("-out must keep stdout empty, got: %s", result.stdout)
+	result := runProfiler(t, "generate", "-dir", dir, "-out", outPath)
+	requireExitCode(t, result, 1)
+	if result.stdout != "" || !strings.Contains(result.stderr, "no imported generated Go binding packages") {
+		t.Fatalf("expected missing installed binding failure without profile output, got stdout %q, stderr %q", result.stdout, result.stderr)
 	}
-	written, err := os.ReadFile(outPath)
-	if err != nil {
+	if _, err := os.Stat(outPath); !os.IsNotExist(err) {
+		t.Fatalf("failed generation created output file: %v", err)
+	}
+}
+
+func TestGeneratedEntryPointRejectsLegacyBypassFlags(t *testing.T) {
+	result := runProfiler(t, "generate", "-skip-validation")
+	requireExitCode(t, result, 2)
+	if result.stdout != "" || !strings.Contains(result.stderr, "flag provided but not defined") {
+		t.Fatalf("unexpected bypass result: stdout %q, stderr %q", result.stdout, result.stderr)
+	}
+}
+
+func TestLegacyCommandIsUnavailable(t *testing.T) {
+	result := runProfiler(t, "generate-legacy")
+	requireExitCode(t, result, 1)
+	if result.stdout != "" || !strings.Contains(result.stderr, `unknown command "generate-legacy"`) {
+		t.Fatalf("unexpected command result: stdout %q, stderr %q", result.stdout, result.stderr)
+	}
+}
+
+func TestGeneratedEntryPointRequiresTypeCheckedSource(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module example.com/workload\n\ngo 1.25.0\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if string(written) != goldenProfile(t, "request-logger-http.golden.yaml") {
-		t.Fatalf("written profile differs from the golden profile\n--- got ---\n%s", written)
-	}
-}
-
-// TestGenerateDerivesMetadataDefaults locks the documented defaults: the profile
-// name falls back to the source directory, the workload URI to the enclosing Go
-// module path, and the workload version to dev.
-func TestGenerateDerivesMetadataDefaults(t *testing.T) {
-	result := runProfiler(t, "-dir", regressionPath("workloads", "request-logger-http"))
-	requireExitCode(t, result, 0)
-
-	var profile struct {
-		Metadata struct {
-			Name string `yaml:"name"`
-		} `yaml:"metadata"`
-		Workload struct {
-			URI     string `yaml:"uri"`
-			Version string `yaml:"version"`
-		} `yaml:"workload"`
-	}
-	if err := yaml.Unmarshal([]byte(result.stdout), &profile); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte("package main\n\nvar _ = missingSymbol\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if profile.Metadata.Name != "request-logger-http" {
-		t.Fatalf("unexpected default name: %q", profile.Metadata.Name)
-	}
-	if profile.Workload.URI != "github.com/runtimeconditions/rc-demos/apps/request-logger-http" {
-		t.Fatalf("unexpected default workload URI: %q", profile.Workload.URI)
-	}
-	if profile.Workload.Version != "dev" {
-		t.Fatalf("unexpected default workload version: %q", profile.Workload.Version)
+	result := runProfiler(t, "generate", "-dir", dir)
+	requireExitCode(t, result, 1)
+	if result.stdout != "" || !strings.Contains(result.stderr, "missingSymbol") || strings.Contains(result.stderr, "not yet implemented") {
+		t.Fatalf("expected Go type-checking error before extraction, got stdout %q, stderr %q", result.stdout, result.stderr)
 	}
 }
 
-func TestValidateExtensionsAcceptsFirstPartyCatalog(t *testing.T) {
-	result := runProfiler(t, "validate-extensions", "-root", regressionPath("extensions"))
-	requireExitCode(t, result, 0)
-	if strings.TrimSpace(result.stderr) != "runtimeconditions: extensions validation passed" {
-		t.Fatalf("unexpected stderr: %q", result.stderr)
+func TestValidateExtensionsRejectsWorkloadWithoutBindings(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module example.com/workload\n\ngo 1.25.0\n"), 0o644); err != nil {
+		t.Fatal(err)
 	}
-}
-
-func TestValidateExtensionAcceptsSingleExtension(t *testing.T) {
-	result := runProfiler(t,
-		"validate-extension",
-		"-root", regressionPath("extensions", "common-integrations"),
-		"-catalog-root", regressionPath("extensions"),
-	)
-	requireExitCode(t, result, 0)
-	if strings.TrimSpace(result.stderr) != "runtimeconditions: extension validation passed" {
+	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte("package main\nfunc main() {}\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	result := runProfiler(t, "validate-extensions", "-dir", dir)
+	requireExitCode(t, result, 1)
+	if !strings.Contains(result.stderr, "no imported generated Go binding packages") {
 		t.Fatalf("unexpected stderr: %q", result.stderr)
 	}
 }
@@ -133,8 +113,8 @@ func TestFailuresReportDiagnosticsAndExitNonZero(t *testing.T) {
 		args []string
 	}{
 		{name: "generate", args: []string{"-dir", missing}},
-		{name: "validate-extension", args: []string{"validate-extension", "-root", missing}},
-		{name: "validate-extensions", args: []string{"validate-extensions", "-root", missing}},
+		{name: "validate-extension", args: []string{"validate-extension", "-dir", missing, "-package", "example.com/missing"}},
+		{name: "validate-extensions", args: []string{"validate-extensions", "-dir", missing}},
 	}
 
 	for _, test := range tests {
@@ -187,13 +167,4 @@ func requireExitCode(t *testing.T, result profilerResult, want int) {
 
 func regressionPath(parts ...string) string {
 	return filepath.Join(append([]string{"extractor", "testdata", "regression"}, parts...)...)
-}
-
-func goldenProfile(t *testing.T, name string) string {
-	t.Helper()
-	data, err := os.ReadFile(regressionPath("golden", name))
-	if err != nil {
-		t.Fatal(err)
-	}
-	return string(data)
 }

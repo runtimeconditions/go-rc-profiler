@@ -1,0 +1,16 @@
+apiVersion: runtimeconditions.io/v1alpha1
+conditions:
+    - entries:
+        - key: sample
+          value: 2
+      interface:
+        type: items
+      kind: collection
+extensions:
+    - urn:runtimeconditions:conformance:collections-and-maps
+kind: RuntimeConditionsProfile
+metadata:
+    name: phase4-collection-second-value
+workload:
+    uri: https://example.test/phase4/collection-second-value
+    version: 1.0.0

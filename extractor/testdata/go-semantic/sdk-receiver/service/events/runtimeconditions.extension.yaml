@@ -2,7 +2,8 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  id: https://example.com/runtimeconditions/event-sink/v1alpha1/runtimeconditions.extension.yaml
+  uri: https://example.com/runtimeconditions/event-sink
+  version: v1alpha1
 
 spec:
   kinds:

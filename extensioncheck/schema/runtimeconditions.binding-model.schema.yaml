@@ -1,0 +1,305 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://runtimeconditions.io/schemas/binding-model.v1alpha1.schema.yaml
+title: Runtime Conditions normalized binding model
+type: object
+required:
+  - apiVersion
+  - kind
+  - metadata
+  - coreProfileSchema
+  - rootExtension
+  - extensions
+  - vocabulary
+additionalProperties: false
+properties:
+  apiVersion:
+    const: runtimeconditions.io/binding-model/v1alpha1
+  kind:
+    const: RuntimeConditionsBindingModel
+  metadata:
+    $ref: '#/$defs/modelMetadata'
+  coreProfileSchema:
+    $ref: '#/$defs/coreProfileIdentity'
+  rootExtension:
+    $ref: '#/$defs/artifactIdentity'
+  extensions:
+    type: array
+    x-runtimeconditions-ordering: source
+    minItems: 1
+    items:
+      $ref: '#/$defs/resolvedExtension'
+  dependencyEdges:
+    type: array
+    x-runtimeconditions-ordering: set
+    items:
+      $ref: '#/$defs/dependencyEdge'
+  vocabulary:
+    $ref: '#/$defs/vocabulary'
+  scopes:
+    type: array
+    x-runtimeconditions-ordering: set
+    items:
+      $ref: '#/$defs/scope'
+  schemas:
+    type: array
+    x-runtimeconditions-ordering: set
+    items:
+      $ref: '#/$defs/normalizedSchema'
+$defs:
+  extensionIdentifier:
+    type: string
+    pattern: '^https://[^/?#@\s]+/[^/:?#%\s]+(?:/[^/:?#%\s]+)?:[^/:?#%\s]+$'
+  sha256:
+    type: string
+    pattern: '^[0-9a-f]{64}$'
+  toolIdentity:
+    type: object
+    required: [name, version, sha256]
+    additionalProperties: false
+    properties:
+      name: {type: string, minLength: 1}
+      version: {type: string, minLength: 1}
+      sha256: {$ref: '#/$defs/sha256'}
+  modelMetadata:
+    type: object
+    required: [semanticSha256, normalizer]
+    additionalProperties: false
+    properties:
+      semanticSha256: {$ref: '#/$defs/sha256'}
+      normalizer: {$ref: '#/$defs/toolIdentity'}
+  artifactIdentity:
+    type: object
+    required: [id, version, semanticSha256]
+    additionalProperties: false
+    properties:
+      id: {$ref: '#/$defs/extensionIdentifier'}
+      version: {type: string, minLength: 1}
+      semanticSha256: {$ref: '#/$defs/sha256'}
+  coreProfileIdentity:
+    type: object
+    required: [id, version, semanticSha256]
+    additionalProperties: false
+    properties:
+      id: {type: string, minLength: 1}
+      version: {type: string, minLength: 1}
+      semanticSha256: {$ref: '#/$defs/sha256'}
+  resolvedExtension:
+    type: object
+    required: [id, version, semanticSha256]
+    additionalProperties: false
+    properties:
+      id: {$ref: '#/$defs/extensionIdentifier'}
+      version: {type: string, minLength: 1}
+      semanticSha256: {$ref: '#/$defs/sha256'}
+      dependencies:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {type: string, minLength: 1}
+  dependencyEdge:
+    type: object
+    required: [from, to]
+    additionalProperties: false
+    properties:
+      from: {type: string, minLength: 1}
+      to: {type: string, minLength: 1}
+  vocabulary:
+    type: object
+    additionalProperties: false
+    properties:
+      owners:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {$ref: '#/$defs/vocabularyOwner'}
+      ownedDeclarations:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {$ref: '#/$defs/declaration'}
+      importedDeclarations:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {$ref: '#/$defs/declaration'}
+      interfaces:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {$ref: '#/$defs/interface'}
+      conditionFields:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {$ref: '#/$defs/field'}
+      interfaceFields:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {$ref: '#/$defs/field'}
+      valueDomains:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {$ref: '#/$defs/valueDomain'}
+  vocabularyOwner:
+    type: object
+    required: [coordinate, category, owner]
+    additionalProperties: false
+    properties:
+      coordinate: {type: string, minLength: 1}
+      category: {type: string, minLength: 1}
+      owner: {type: string, minLength: 1}
+      kind: {type: string, minLength: 1}
+      interfaceType: {type: string, minLength: 1}
+      path: {type: string, minLength: 1}
+      value: {}
+  provenance:
+    type: object
+    required: [owner, extensionSha256, coordinate]
+    additionalProperties: false
+    properties:
+      owner: {type: string, minLength: 1}
+      extensionSha256: {$ref: '#/$defs/sha256'}
+      coordinate: {type: string, minLength: 1}
+      jsonPointer: {type: string}
+  declaration:
+    type: object
+    required: [coordinate, owner, kind, provenance]
+    additionalProperties: false
+    properties:
+      coordinate: {type: string, minLength: 1}
+      owner: {type: string, minLength: 1}
+      kind: {type: string, minLength: 1}
+      provenance: {$ref: '#/$defs/provenance'}
+  interface:
+    type: object
+    required: [coordinate, owner, kind, type, provenance]
+    additionalProperties: false
+    properties:
+      coordinate: {type: string, minLength: 1}
+      owner: {type: string, minLength: 1}
+      kind: {type: string, minLength: 1}
+      type: {type: string, minLength: 1}
+      provenance: {$ref: '#/$defs/provenance'}
+  pathSegment:
+    type: object
+    required: [name]
+    additionalProperties: false
+    properties:
+      name: {type: string, minLength: 1}
+      array: {type: boolean}
+  field:
+    type: object
+    required: [coordinate, owner, kind, path, segments, provenance]
+    additionalProperties: false
+    properties:
+      coordinate: {type: string, minLength: 1}
+      owner: {type: string, minLength: 1}
+      kind: {type: string, minLength: 1}
+      interfaceType: {type: string, minLength: 1}
+      path: {type: string, minLength: 1}
+      segments:
+        type: array
+        x-runtimeconditions-ordering: source
+        minItems: 1
+        items: {$ref: '#/$defs/pathSegment'}
+      provenance: {$ref: '#/$defs/provenance'}
+  valueDomain:
+    type: object
+    required: [coordinate, owner, kind, path, segments, values, provenance]
+    additionalProperties: false
+    properties:
+      coordinate: {type: string, minLength: 1}
+      owner: {type: string, minLength: 1}
+      kind: {type: string, minLength: 1}
+      interfaceType: {type: string, minLength: 1}
+      path: {type: string, minLength: 1}
+      segments:
+        type: array
+        x-runtimeconditions-ordering: source
+        minItems: 1
+        items: {$ref: '#/$defs/pathSegment'}
+      values:
+        type: array
+        x-runtimeconditions-ordering: set
+        minItems: 1
+        items: {$ref: '#/$defs/normalizedValue'}
+      provenance: {$ref: '#/$defs/provenance'}
+  normalizedValue:
+    type: object
+    required: [value]
+    additionalProperties: false
+    properties:
+      value:
+        type: [string, number, integer, boolean, 'null']
+  scope:
+    type: object
+    required: [coordinate, kind]
+    additionalProperties: false
+    properties:
+      coordinate: {type: string, minLength: 1}
+      kind: {type: string, minLength: 1}
+      interfaceType: {type: string, minLength: 1}
+      applicableSchemas:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {type: string, minLength: 1}
+      projection: {$ref: '#/$defs/shape'}
+  normalizedSchema:
+    type: object
+    required: [coordinate, owner, id, exact, projection, provenance]
+    additionalProperties: false
+    properties:
+      coordinate: {type: string, minLength: 1}
+      owner: {type: string, minLength: 1}
+      id: {type: string, minLength: 1}
+      kind: {type: string, minLength: 1}
+      interfaceType: {type: string, minLength: 1}
+      exact: {type: object}
+      projection: {$ref: '#/$defs/shape'}
+      definitions:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {$ref: '#/$defs/namedShape'}
+      provenance: {$ref: '#/$defs/provenance'}
+  namedShape:
+    type: object
+    required: [name, jsonPointer, shape, provenance]
+    additionalProperties: false
+    properties:
+      name: {type: string, minLength: 1}
+      jsonPointer: {type: string, minLength: 1}
+      shape: {$ref: '#/$defs/shape'}
+      provenance: {$ref: '#/$defs/provenance'}
+  propertyShape:
+    type: object
+    required: [name, shape, provenance]
+    additionalProperties: false
+    properties:
+      name: {type: string, minLength: 1}
+      required: {type: boolean}
+      shape: {$ref: '#/$defs/shape'}
+      provenance: {$ref: '#/$defs/provenance'}
+  shape:
+    type: object
+    required: [kind, provenance]
+    additionalProperties: false
+    properties:
+      kind:
+        enum: [scalar, object, array, map, union, ref, any]
+      scalar:
+        enum: [string, boolean, integer, number, 'null']
+      ref: {type: string, minLength: 1}
+      required:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {type: string, minLength: 1}
+      properties:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {$ref: '#/$defs/propertyShape'}
+      items: {$ref: '#/$defs/shape'}
+      mapValues: {$ref: '#/$defs/shape'}
+      variants:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {$ref: '#/$defs/shape'}
+      values:
+        type: array
+        x-runtimeconditions-ordering: set
+        items: {$ref: '#/$defs/normalizedValue'}
+      constraints: {type: object}
+      provenance: {$ref: '#/$defs/provenance'}
