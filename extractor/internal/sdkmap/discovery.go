@@ -192,7 +192,7 @@ func verifyExtensionReference(reference ExtensionReference, roots []string) erro
 			var probe struct {
 				Kind     string `yaml:"kind"`
 				Metadata struct {
-					URI            string `yaml:"uri"`
+					ID             string `yaml:"id"`
 					Version        string `yaml:"version"`
 					SemanticSHA256 string `yaml:"semanticSha256"`
 				} `yaml:"metadata"`
@@ -200,7 +200,7 @@ func verifyExtensionReference(reference ExtensionReference, roots []string) erro
 			if err := yaml.Unmarshal(data, &probe); err != nil {
 				return err
 			}
-			if probe.Kind == "RuntimeConditionsExtensionDefinition" && probe.Metadata.URI+":"+probe.Metadata.Version == reference.ID {
+			if probe.Kind == "RuntimeConditionsExtensionDefinition" && probe.Metadata.ID == reference.ID {
 				matched = true
 				if probe.Metadata.Version != reference.Version || probe.Metadata.SemanticSHA256 != reference.SemanticSHA256 {
 					mismatch = fmt.Errorf("extension %s version or semantic SHA-256 does not match installed definition", reference.ID)

@@ -25,11 +25,12 @@ const (
 // ImportedGoPackage is a generated declaration package found in a workload's
 // native Go dependency graph. Dir is the exact directory reported by go list.
 type ImportedGoPackage struct {
-	ImportPath  string
-	Dir         string
-	Version     string
-	ExtensionID string
-	ModelSHA256 string
+	ImportPath       string
+	Dir              string
+	Version          string
+	ExtensionID      string
+	ExtensionVersion string
+	ModelSHA256      string
 }
 
 // VerifiedGoPackage retains the exact installed resources after their schema,
@@ -245,7 +246,7 @@ func validateImportedGoPackage(pkg goListPackage) (*VerifiedGoPackage, error) {
 	manifestExtension := object(manifest, "extension")
 	rootID := stringValue(rootInfo, "id")
 	rootDigest := stringValue(rootInfo, "semanticSha256")
-	if stringValue(manifestExtension, "id") != rootID || stringValue(manifestExtension, "semanticSha256") != rootDigest {
+	if extensionReference(manifestExtension) != extensionReference(rootInfo) || stringValue(manifestExtension, "semanticSha256") != rootDigest {
 		return nil, fmt.Errorf("root extension identity mismatch between package resources")
 	}
 	schemaBytes, err := bindingSchemas.ReadFile("schema/runtimeconditions.extension-semantic.schema.yaml")
@@ -274,9 +275,17 @@ func validateImportedGoPackage(pkg goListPackage) (*VerifiedGoPackage, error) {
 		return nil, err
 	}
 	return &VerifiedGoPackage{
-		ImportedGoPackage: ImportedGoPackage{ImportPath: pkg.ImportPath, Dir: pkg.Dir, Version: pkg.Module.Version, ExtensionID: rootID, ModelSHA256: claimedModelDigest},
+		ImportedGoPackage: ImportedGoPackage{ImportPath: pkg.ImportPath, Dir: pkg.Dir, Version: pkg.Module.Version, ExtensionID: rootID, ExtensionVersion: stringValue(rootInfo, "version"), ModelSHA256: claimedModelDigest},
 		Manifest:          manifest, Model: model, Extension: extension, Release: files[releaseFile], module: pkg.Module, name: pkg.Name,
 	}, nil
+}
+
+func extensionReference(value map[string]any) ExtensionReference {
+	return ExtensionReference{ID: stringValue(value, "id"), Version: stringValue(value, "version")}
+}
+
+func (p ImportedGoPackage) ExtensionReference() ExtensionReference {
+	return ExtensionReference{ID: p.ExtensionID, Version: p.ExtensionVersion}
 }
 
 func object(value map[string]any, key string) map[string]any {

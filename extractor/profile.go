@@ -9,6 +9,7 @@ import "github.com/runtimeconditions/go-rc-profiler/extractor/internal/profile"
 type (
 	// RuntimeConditionsProfile is the YAML shape emitted by the profiler.
 	RuntimeConditionsProfile = profile.Profile
+	ExtensionReference       = profile.ExtensionReference
 
 	Metadata                 = profile.Metadata
 	Workload                 = profile.Workload

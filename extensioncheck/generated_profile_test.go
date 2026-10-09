@@ -10,7 +10,7 @@ import (
 func TestGeneratedVocabularyEmitsDirectOwners(t *testing.T) {
 	const base = "example:base"
 	const additive = "example:additive"
-	model := map[string]any{"vocabulary": map[string]any{
+	model := map[string]any{"extensions": []any{map[string]any{"id": base, "version": "1"}, map[string]any{"id": additive, "version": "1"}}, "vocabulary": map[string]any{
 		"owners": []any{
 			map[string]any{"coordinate": "kind:service", "category": "kind", "kind": "service", "owner": base},
 			map[string]any{"coordinate": "interface:service:http", "category": "interface", "kind": "service", "interfaceType": "http", "owner": base},
@@ -28,7 +28,7 @@ func TestGeneratedVocabularyEmitsDirectOwners(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if want := []string{additive, base}; !reflect.DeepEqual(got, want) {
+	if want := []ExtensionReference{{ID: additive, Version: "1"}, {ID: base, Version: "1"}}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("direct contributors: got %v, want %v", got, want)
 	}
 	condition["region"] = "unknown"
@@ -44,7 +44,7 @@ func TestGeneratedVocabularyEmitsDirectOwners(t *testing.T) {
 
 func TestGeneratedVocabularyClaimsSchemaRootFields(t *testing.T) {
 	const owner = "urn:example:schema-owner"
-	model := map[string]any{"vocabulary": map[string]any{"owners": []any{
+	model := map[string]any{"extensions": []any{map[string]any{"id": owner, "version": "1"}}, "vocabulary": map[string]any{"owners": []any{
 		map[string]any{"coordinate": "kind:deployment", "category": "kind", "kind": "deployment", "owner": owner},
 		map[string]any{"coordinate": "interface:deployment:process", "category": "interface", "kind": "deployment", "interfaceType": "process", "owner": owner},
 	}}}
@@ -54,11 +54,11 @@ func TestGeneratedVocabularyClaimsSchemaRootFields(t *testing.T) {
 		"path":  []any{map[string]any{"name": "configuration"}},
 	}}}
 	packages := map[string]*VerifiedGoPackage{"example.com/binding": {
-		ImportedGoPackage: ImportedGoPackage{ExtensionID: owner}, Model: model, Manifest: manifest,
+		ImportedGoPackage: ImportedGoPackage{ExtensionID: owner, ExtensionVersion: "1"}, Model: model, Manifest: manifest,
 	}}
 	condition := map[string]any{"kind": "deployment", "interface": map[string]any{"type": "process"}, "configuration": map[string]any{"image": "fixture"}}
 	got, err := validateGeneratedVocabulary([]any{condition}, [][]string{{"example.com/binding"}}, packages)
-	if err != nil || !reflect.DeepEqual(got, []string{owner}) {
+	if err != nil || !reflect.DeepEqual(got, []ExtensionReference{{ID: owner, Version: "1"}}) {
 		t.Fatalf("schema-field contributor: got %v, error %v", got, err)
 	}
 }
@@ -72,16 +72,16 @@ func TestGeneratedSchemaValidationIncludesUnscopedDependencies(t *testing.T) {
 	rootSchema := map[string]any{"coordinate": "root#schema", "owner": root, "kind": "service", "interfaceType": "http", "exact": map[string]any{
 		"type": "object", "required": []any{"region"}, "properties": map[string]any{"region": map[string]any{"const": "eu"}},
 	}}
-	packages := map[string]*VerifiedGoPackage{
-		base: {Model: map[string]any{"schemas": []any{baseSchema}}},
-		root: {Model: map[string]any{"schemas": []any{rootSchema}}},
+	packages := map[ExtensionReference]*VerifiedGoPackage{
+		{ID: base, Version: "1"}: {Model: map[string]any{"extensions": []any{map[string]any{"id": base, "version": "1"}}, "schemas": []any{baseSchema}}},
+		{ID: root, Version: "1"}: {Model: map[string]any{"extensions": []any{map[string]any{"id": root, "version": "1"}}, "schemas": []any{rootSchema}}},
 	}
 	condition := map[string]any{"kind": "service", "interface": map[string]any{"type": "http"}, "region": "eu"}
-	if err := validateGeneratedSchemas([]any{condition}, map[string]bool{base: true, root: true}, packages); err != nil {
+	if err := validateGeneratedSchemas([]any{condition}, map[ExtensionReference]bool{{ID: base, Version: "1"}: true, {ID: root, Version: "1"}: true}, packages); err != nil {
 		t.Fatal(err)
 	}
 	condition["kind"] = "other"
-	if err := validateGeneratedSchemas([]any{condition}, map[string]bool{base: true, root: true}, packages); err == nil || !strings.Contains(err.Error(), "base#schema") {
+	if err := validateGeneratedSchemas([]any{condition}, map[ExtensionReference]bool{{ID: base, Version: "1"}: true, {ID: root, Version: "1"}: true}, packages); err == nil || !strings.Contains(err.Error(), "base#schema") {
 		t.Fatalf("expected unscoped dependency schema rejection, got %v", err)
 	}
 }
@@ -130,9 +130,9 @@ func TestReleaseCoreSchemaMatchesVersionedSpec(t *testing.T) {
 		t.Skip("plain go test has no release core schema")
 	}
 	model := map[string]any{"coreProfileSchema": map[string]any{
-		"id":             "https://runtimeconditions.io/schemas/profile/0.2.0/runtimeconditions.profile.schema.yaml",
-		"version":        "0.2.0",
-		"semanticSha256": "a090a8016d045f9c3fa872a67f8df293b77ca2809a1bea5ae9fa31a27a06109a",
+		"id":             "https://runtimeconditions.io/schemas/profile/0.4.0/runtimeconditions.profile.schema.yaml",
+		"version":        "0.4.0",
+		"semanticSha256": "ed447dccefd7507d905b0b6177b1386d8ee96a1d053b731939a9a7ae973d5af1",
 	}}
 	if _, err := loadCoreProfileSchema([]*VerifiedGoPackage{{Model: model}}); err != nil {
 		t.Fatalf("installed release core schema does not match the versioned spec: %v", err)
@@ -141,7 +141,8 @@ func TestReleaseCoreSchemaMatchesVersionedSpec(t *testing.T) {
 
 func TestGeneratedVocabularyRejectsConflictingClosureOwnership(t *testing.T) {
 	makePackage := func(id string) *VerifiedGoPackage {
-		return &VerifiedGoPackage{ImportedGoPackage: ImportedGoPackage{ExtensionID: id}, Model: map[string]any{
+		return &VerifiedGoPackage{ImportedGoPackage: ImportedGoPackage{ExtensionID: id, ExtensionVersion: "1"}, Model: map[string]any{
+			"extensions": []any{map[string]any{"id": id, "version": "1"}},
 			"vocabulary": map[string]any{"owners": []any{map[string]any{
 				"coordinate": "kind:service", "category": "kind", "kind": "service", "owner": id,
 			}}},

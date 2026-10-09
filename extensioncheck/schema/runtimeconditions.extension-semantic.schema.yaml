@@ -24,21 +24,27 @@ $defs:
   metadata:
     type: object
     required:
-      - uri
+      - id
       - version
     additionalProperties: false
     properties:
-      uri:
+      id:
+        description: IDs SHOULD use a resolver-supported format; URI syntax is not required.
         type: string
         minLength: 1
-        format: uri
-        pattern: '^https://[^/?#@\s]+/[^/:?#%\s]+(?:/[^/:?#%\s]+)?$'
       version:
         type: string
         minLength: 1
       semanticSha256:
         type: string
         pattern: '^[0-9a-f]{64}$'
+  extensionReference:
+    type: object
+    additionalProperties: false
+    required: [id, version]
+    properties:
+      id: {$ref: '#/$defs/nonEmptyString'}
+      version: {$ref: '#/$defs/nonEmptyString'}
   spec:
     type: object
     minProperties: 1
@@ -49,10 +55,7 @@ $defs:
         x-runtimeconditions-ordering: set
         uniqueItems: true
         items:
-          type: string
-          minLength: 1
-          format: uri
-          pattern: '^https://[^/?#@\s]+/[^/:?#%\s]+(?:/[^/:?#%\s]+)?:[^/:?#%\s]+$'
+          $ref: '#/$defs/extensionReference'
       kinds:
         type: array
         x-runtimeconditions-ordering: set

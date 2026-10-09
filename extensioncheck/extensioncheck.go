@@ -18,6 +18,9 @@ import (
 )
 
 // Options configures static extension validation.
+// ExtensionReference identifies an exact extension release.
+type ExtensionReference = catalog.ExtensionReference
+
 type Options struct {
 	Language               string
 	CatalogRoots           []string
@@ -124,23 +127,23 @@ func ValidateBindingManifests(paths []string, opts Options) error {
 
 // ResolveExtensionClosure returns ids plus all transitive extension
 // dependencies, sorted for stable profile output.
-func ResolveExtensionClosure(ids []string, opts ProfileOptions) ([]string, error) {
+func ResolveExtensionClosure(ids []ExtensionReference, opts ProfileOptions) ([]ExtensionReference, error) {
 	collector := &diag.Collector{}
 	loaded, err := catalog.Load(opts.CatalogRoots, "", collector)
 	if err != nil {
 		return nil, err
 	}
 	checker := check.New(loaded, check.Options{}, collector)
-	seen := make(map[string]bool)
-	var visit func(string)
-	visit = func(id string) {
+	seen := make(map[ExtensionReference]bool)
+	var visit func(ExtensionReference)
+	visit = func(id ExtensionReference) {
 		if seen[id] {
 			return
 		}
 		seen[id] = true
 		node := loaded.Nodes[id]
 		if node == nil {
-			collector.Addf(id, "missing extension definition for %s", id)
+			collector.Addf(id.String(), "missing extension definition for %s", id)
 			return
 		}
 		checker.ValidateNode(id)
@@ -154,11 +157,11 @@ func ResolveExtensionClosure(ids []string, opts ProfileOptions) ([]string, error
 	if err := collector.Err(); err != nil {
 		return nil, err
 	}
-	result := make([]string, 0, len(seen))
+	result := make([]ExtensionReference, 0, len(seen))
 	for id := range seen {
 		result = append(result, id)
 	}
-	slices.Sort(result)
+	slices.SortFunc(result, ExtensionReference.Compare)
 	return result, nil
 }
 

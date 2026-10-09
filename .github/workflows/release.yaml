@@ -75,7 +75,7 @@ jobs:
             schema_file=$(cygpath -u "$schema_file")
           fi
           curl --fail --location \
-            https://github.com/runtimeconditions/spec/releases/download/v0.1.0/runtimeconditions.profile.schema.yaml \
+            https://github.com/runtimeconditions/spec/releases/download/v0.4.0/runtimeconditions.profile.schema.yaml \
             --output "$schema_file"
       - name: Build profiler with verified core profile schema
         env:

@@ -2,7 +2,7 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://runtimeconditions.io/common-integrations
+  id: https://runtimeconditions.io/common-integrations
   version: v1alpha1
 
 spec:

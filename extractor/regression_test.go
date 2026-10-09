@@ -34,7 +34,7 @@ const (
 	natsMappingName     = "nats.go.service"
 	natsMappingRelative = "runtimeconditions/mappings/nats-service.yaml"
 	natsIndexRelative   = "runtimeconditions/index.yaml"
-	natsExtensionID     = "https://runtimeconditions.io/nats/nats-service:0.1.0"
+	natsExtensionID     = "https://runtimeconditions.io/nats/nats-service"
 )
 
 var natsWorkloads = []string{
@@ -237,7 +237,7 @@ func TestNATSSDKMappingFailsClosed(t *testing.T) {
 				})
 				return []string{extensionsRoot}
 			},
-			wantError: "extension " + natsExtensionID + " is not available in the configured extension roots",
+			wantError: "extension " + natsExtensionID + " version or semantic SHA-256 does not match installed definition",
 		},
 	}
 

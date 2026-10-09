@@ -91,7 +91,7 @@ func ExtractDir(dir string, opts Options) (*RuntimeConditionsProfile, error) {
 	// SDK conditions come first so a profile reads dependency-inward: what the
 	// workload was observed doing, then what it declares about itself.
 	var sdkConditions []Condition
-	var sdkExtensions []string
+	var sdkExtensions []ExtensionReference
 	if opts.EnableSDKMappings {
 		sdkConditions, sdkExtensions, err = sdkmap.ExtractConditions(files, scope.Semantic, mappings)
 		if err != nil {
@@ -200,9 +200,9 @@ func validate(result *RuntimeConditionsProfile, catalogRoots []string) error {
 
 // sortedExtensions returns the deduplicated union of the extension IDs each
 // extraction path reported, in a stable order.
-func sortedExtensions(lists ...[]string) []string {
-	seen := make(map[string]bool)
-	result := make([]string, 0)
+func sortedExtensions(lists ...[]ExtensionReference) []ExtensionReference {
+	seen := make(map[ExtensionReference]bool)
+	result := make([]ExtensionReference, 0)
 	for _, list := range lists {
 		for _, id := range list {
 			if seen[id] {
@@ -212,6 +212,6 @@ func sortedExtensions(lists ...[]string) []string {
 			result = append(result, id)
 		}
 	}
-	slices.Sort(result)
+	slices.SortFunc(result, ExtensionReference.Compare)
 	return result
 }

@@ -47,8 +47,16 @@ properties:
       $ref: '#/$defs/normalizedSchema'
 $defs:
   extensionIdentifier:
+    description: IDs SHOULD use a resolver-supported format; URI syntax is not required.
     type: string
-    pattern: '^https://[^/?#@\s]+/[^/:?#%\s]+(?:/[^/:?#%\s]+)?:[^/:?#%\s]+$'
+    minLength: 1
+  extensionReference:
+    type: object
+    additionalProperties: false
+    required: [id, version]
+    properties:
+      id: {$ref: '#/$defs/extensionIdentifier'}
+      version: {type: string, minLength: 1}
   sha256:
     type: string
     pattern: '^[0-9a-f]{64}$'
@@ -94,14 +102,14 @@ $defs:
       dependencies:
         type: array
         x-runtimeconditions-ordering: set
-        items: {type: string, minLength: 1}
+        items: {$ref: '#/$defs/extensionReference'}
   dependencyEdge:
     type: object
     required: [from, to]
     additionalProperties: false
     properties:
-      from: {type: string, minLength: 1}
-      to: {type: string, minLength: 1}
+      from: {$ref: '#/$defs/extensionReference'}
+      to: {$ref: '#/$defs/extensionReference'}
   vocabulary:
     type: object
     additionalProperties: false

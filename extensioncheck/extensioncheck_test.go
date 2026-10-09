@@ -64,7 +64,7 @@ func TestValidateProfileYAMLAppliesExtensionJSONSchema(t *testing.T) {
 		filepath.Join(root, "nats.yaml"): `apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 metadata:
-  uri: https://example.com/runtimeconditions/nats
+  id: https://example.com/runtimeconditions/nats
   version: 0.1.0
 spec:
   kinds:
@@ -110,7 +110,7 @@ spec:
 	profile := []byte(`apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsProfile
 extensions:
-- https://example.com/runtimeconditions/nats:0.1.0
+- {id: https://example.com/runtimeconditions/nats, version: 0.1.0}
 conditions:
 - kind: nats
   interface:
@@ -175,7 +175,7 @@ func TestValidateExtensionResolvesDependenciesBeforeBindings(t *testing.T) {
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/base
+  id: https://example.com/runtimeconditions/base
   version: v1alpha1
 
 spec:
@@ -189,7 +189,7 @@ spec:
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/base:v1alpha1
+  extension: {id: https://example.com/runtimeconditions/base, version: v1alpha1}
   extensionDefinition: ../base-v1alpha1.yaml
   language: go
 
@@ -215,12 +215,12 @@ func Cache(name string) Declaration {
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/child
+  id: https://example.com/runtimeconditions/child
   version: v1alpha1
 
 spec:
   dependencies:
-    - https://example.com/runtimeconditions/base:v1alpha1
+    - {id: https://example.com/runtimeconditions/base, version: v1alpha1}
   conditionFields:
     - name: configuration
       appliesToKinds:
@@ -238,7 +238,7 @@ spec:
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/child:v1alpha1
+  extension: {id: https://example.com/runtimeconditions/child, version: v1alpha1}
   extensionDefinition: ../child-v1alpha1.yaml
   language: go
 
@@ -284,7 +284,7 @@ func TestValidateExtensionRejectsBindingWithoutGoDeclaration(t *testing.T) {
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/broken
+  id: https://example.com/runtimeconditions/broken
   version: v1alpha1
 
 spec:
@@ -295,7 +295,7 @@ spec:
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/broken:v1alpha1
+  extension: {id: https://example.com/runtimeconditions/broken, version: v1alpha1}
   extensionDefinition: ../broken-v1alpha1.yaml
   language: go
 
@@ -338,7 +338,7 @@ func TestValidateExtensionRejectsBindingVocabularyOutsideResolvedGraph(t *testin
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/broken
+  id: https://example.com/runtimeconditions/broken
   version: v1alpha1
 
 spec:
@@ -349,7 +349,7 @@ spec:
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/broken:v1alpha1
+  extension: {id: https://example.com/runtimeconditions/broken, version: v1alpha1}
   extensionDefinition: ../broken-v1alpha1.yaml
   language: go
 
@@ -393,7 +393,7 @@ func TestValidateExtensionRejectsOverlappingConditionFieldDefinitions(t *testing
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/base
+  id: https://example.com/runtimeconditions/base
   version: v1alpha1
 
 spec:
@@ -413,12 +413,12 @@ spec:
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/child
+  id: https://example.com/runtimeconditions/child
   version: v1alpha1
 
 spec:
   dependencies:
-    - https://example.com/runtimeconditions/base:v1alpha1
+    - {id: https://example.com/runtimeconditions/base, version: v1alpha1}
   conditionFields:
     - name: configuration
       appliesToKinds:

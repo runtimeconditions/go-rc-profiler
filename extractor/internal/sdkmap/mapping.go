@@ -10,6 +10,8 @@
 // check out. Anything short of that stops profiling instead of narrowing it.
 package sdkmap
 
+import "github.com/runtimeconditions/go-rc-profiler/extractor/internal/profile"
+
 // indexPath is where a module publishes the index of its mappings.
 const indexPath = "runtimeconditions/index.yaml"
 
@@ -34,14 +36,14 @@ type ExtensionReference struct {
 // connection. A call that requires state performs an operation on one. Requiring
 // state is what keeps operations attached to the dependency they belong to.
 type Call struct {
-	ExtensionID       string                 `yaml:"-"`
-	ID                string                 `yaml:"id"`
-	Symbol            Symbol                 `yaml:"symbol"`
-	ReceiverState     string                 `yaml:"receiverState"`
-	ArgumentState     *ArgumentState         `yaml:"argumentState"`
-	ConditionTemplate ConditionTemplate      `yaml:"conditionTemplate"`
-	OperationBindings map[string]ValueSource `yaml:"operationBindings"`
-	Produces          *StateProduction       `yaml:"produces"`
+	ExtensionID       profile.ExtensionReference `yaml:"-"`
+	ID                string                     `yaml:"id"`
+	Symbol            Symbol                     `yaml:"symbol"`
+	ReceiverState     string                     `yaml:"receiverState"`
+	ArgumentState     *ArgumentState             `yaml:"argumentState"`
+	ConditionTemplate ConditionTemplate          `yaml:"conditionTemplate"`
+	OperationBindings map[string]ValueSource     `yaml:"operationBindings"`
+	Produces          *StateProduction           `yaml:"produces"`
 }
 
 // Symbol identifies the SDK function or method a call refers to. Exactly one of

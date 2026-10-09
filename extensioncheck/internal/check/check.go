@@ -27,7 +27,7 @@ const (
 type Checker struct {
 	catalog   *catalog.Catalog
 	opts      Options
-	states    map[string]visit
+	states    map[catalog.ExtensionReference]visit
 	collector *diag.Collector
 }
 
@@ -36,7 +36,7 @@ func New(cat *catalog.Catalog, opts Options, collector *diag.Collector) *Checker
 	return &Checker{
 		catalog:   cat,
 		opts:      opts,
-		states:    make(map[string]visit),
+		states:    make(map[catalog.ExtensionReference]visit),
 		collector: collector,
 	}
 }
@@ -44,17 +44,17 @@ func New(cat *catalog.Catalog, opts Options, collector *diag.Collector) *Checker
 // ValidateNode validates the extension id and every extension it depends on.
 // Dependencies are validated first, so that a definition is only checked against
 // vocabulary that has itself been checked.
-func (c *Checker) ValidateNode(id string) {
+func (c *Checker) ValidateNode(id catalog.ExtensionReference) {
 	switch c.states[id] {
 	case inProgress:
-		c.collector.Addf(id, "extension dependency cycle includes %s", id)
+		c.collector.Addf(id.String(), "extension dependency cycle includes %s", id)
 		return
 	case done:
 		return
 	}
 	node := c.catalog.Nodes[id]
 	if node == nil {
-		c.collector.Addf(id, "missing extension definition for dependency %s", id)
+		c.collector.Addf(id.String(), "missing extension definition for dependency %s", id)
 		return
 	}
 	c.states[id] = inProgress

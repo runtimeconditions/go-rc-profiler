@@ -34,7 +34,8 @@ func checkReleaseIdentity(release, manifest, model, extension map[string]any, pk
 			return fmt.Errorf("binding release rootExtension.%s does not match normalized model", key)
 		}
 	}
-	if stringValue(root, "id") != stringValue(object(extension, "metadata"), "uri")+":"+stringValue(object(extension, "metadata"), "version") {
+	if stringValue(root, "id") != stringValue(object(extension, "metadata"), "id") ||
+		stringValue(root, "version") != stringValue(object(extension, "metadata"), "version") {
 		return fmt.Errorf("binding release root extension does not match packaged definition")
 	}
 	provenance := object(release, "provenance")
@@ -54,20 +55,20 @@ func checkReleaseIdentity(release, manifest, model, extension map[string]any, pk
 }
 
 func checkDependencyLock(release, model map[string]any, dir string) error {
-	modelExtensions := map[string]map[string]any{}
+	modelExtensions := map[ExtensionReference]map[string]any{}
 	for _, entry := range array(model, "extensions") {
 		extension := entry.(map[string]any)
-		id := stringValue(extension, "id")
+		id := extensionReference(extension)
 		if modelExtensions[id] != nil {
 			return fmt.Errorf("duplicate normalized model extension %s", id)
 		}
 		modelExtensions[id] = extension
 	}
-	locked := map[string]bool{}
-	rootID := stringValue(object(model, "rootExtension"), "id")
+	locked := map[ExtensionReference]bool{}
+	rootID := extensionReference(object(model, "rootExtension"))
 	for _, entry := range array(object(release, "dependencyLock"), "extensions") {
 		item := entry.(map[string]any)
-		id := stringValue(item, "id")
+		id := extensionReference(item)
 		if locked[id] {
 			return fmt.Errorf("duplicate binding release dependency lock extension %s", id)
 		}
@@ -81,7 +82,7 @@ func checkDependencyLock(release, model map[string]any, dir string) error {
 				return fmt.Errorf("binding release dependency lock %s %s differs from normalized model", id, key)
 			}
 		}
-		if !equalStringSets(array(item, "dependencies"), array(modelExtension, "dependencies")) {
+		if !equalReferenceSets(array(item, "dependencies"), array(modelExtension, "dependencies")) {
 			return fmt.Errorf("binding release dependency lock %s dependencies differ from normalized model", id)
 		}
 		if id == rootID {
@@ -101,18 +102,18 @@ func checkDependencyLock(release, model map[string]any, dir string) error {
 	return nil
 }
 
-func equalStringSets(a, b []any) bool {
+func equalReferenceSets(a, b []any) bool {
 	if len(a) != len(b) {
 		return false
 	}
-	left, right := make([]string, len(a)), make([]string, len(b))
+	left, right := make([]ExtensionReference, len(a)), make([]ExtensionReference, len(b))
 	for i := range a {
-		left[i], _ = a[i].(string)
+		left[i] = extensionReference(a[i].(map[string]any))
 	}
 	for i := range b {
-		right[i], _ = b[i].(string)
+		right[i] = extensionReference(b[i].(map[string]any))
 	}
-	slices.Sort(left)
-	slices.Sort(right)
+	slices.SortFunc(left, ExtensionReference.Compare)
+	slices.SortFunc(right, ExtensionReference.Compare)
 	return slices.Equal(left, right)
 }

@@ -42,7 +42,7 @@ func (c *Checker) validateBinding(node *catalog.Node, resolved catalog.Vocabular
 		c.collector.Addf(node.BindingPath, "metadata.language must be %s", c.opts.Language)
 	}
 	bindingID := binding.ExtensionID()
-	if bindingID == "" {
+	if !bindingID.Valid() {
 		c.collector.Addf(node.BindingPath, "extension id is required")
 	} else if bindingID != node.ID {
 		c.collector.Addf(node.BindingPath, "binding extension id %s does not match extension definition %s", bindingID, node.ID)

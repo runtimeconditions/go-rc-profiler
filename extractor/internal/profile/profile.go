@@ -7,14 +7,18 @@
 // profile.
 package profile
 
+import "github.com/runtimeconditions/go-rc-profiler/extensioncheck"
+
+type ExtensionReference = extensioncheck.ExtensionReference
+
 // Profile is the complete document emitted for one workload.
 type Profile struct {
-	APIVersion string      `yaml:"apiVersion"`
-	Kind       string      `yaml:"kind"`
-	Metadata   Metadata    `yaml:"metadata"`
-	Workload   Workload    `yaml:"workload"`
-	Extensions []string    `yaml:"extensions,omitempty"`
-	Conditions []Condition `yaml:"conditions"`
+	APIVersion string               `yaml:"apiVersion"`
+	Kind       string               `yaml:"kind"`
+	Metadata   Metadata             `yaml:"metadata"`
+	Workload   Workload             `yaml:"workload"`
+	Extensions []ExtensionReference `yaml:"extensions,omitempty"`
+	Conditions []Condition          `yaml:"conditions"`
 }
 
 // Metadata names the profile itself.

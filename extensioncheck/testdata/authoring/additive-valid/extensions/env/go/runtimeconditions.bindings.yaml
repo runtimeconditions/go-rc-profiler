@@ -2,7 +2,7 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/env:v1alpha1
+  extension: {id: https://example.com/runtimeconditions/env, version: v1alpha1}
   extensionDefinition: ../env-v1alpha1.yaml
   language: go
 

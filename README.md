@@ -97,31 +97,20 @@ Omit `-out` to print YAML to stdout. If you omit the identity flags, the
 defaults are the project directory name for `-name`, its Go module path for
 `-workload-uri`, and `dev` for `-workload-version`.
 
-The Go import path identifies the **binding package**. The profile's
-`extensions` entries identify **extension definitions**. Under
-[specification §5.1](https://github.com/runtimeconditions/spec/blob/main/docs/fifth-draft.md#51-extension-identifiers),
-an extension ID has the form `<https-uri>:<version>`, for
-example `https://extensions.example.com/provider/service:v1alpha1`.
-Extension definitions carry `metadata.uri` and `metadata.version`, and their
-combined identifier is `<uri>:<version>`. A URI of `https://example.com/aws/aws-s3`
-at version `0.2.0` resolves to
-`https://example.com/extensions/aws/aws-s3/0.2.0/runtimeconditions.extension.yaml`.
-A providerless URI such as `https://example.com/env-configuration` resolves under
-`/extensions/rc/env-configuration/<version>/runtimeconditions.extension.yaml`.
-A missing definition at that URL is not found; alternate providers or paths are
-not tried. Only HTTPS is supported; `file:` and `oci:` are deferred.
+The Go import path identifies the **binding package**. Profile `extensions`
+entries are strings formed from the extension definition's `metadata.id`, with
+`:metadata.version` appended only when a version is declared:
 
-The profiler emits the exact IDs from the validated binding resources for
-extensions that directly contribute vocabulary. It checks their full
-dependency closure, including dependencies that contribute only a validation
-schema. In the intended end-user flow, a consumer or Adapter resolves those
-IDs and their transitive dependencies remotely when using the profile. The
-developer supplies no local path to an `extensions` checkout. The identity
-migration uses core schema `0.2.0`. Integrating this HTTPS
-retrieval contract into the installed profiler is the next production-readiness
-step. The current Go profiler obtains definitions for *generation-time
-validation* from downloaded
-Go binding modules; it does not fetch definitions over HTTP by URI ID.
+```yaml
+extensions:
+  - https://extensions.example.com/provider/service:v1alpha1
+```
+
+`metadata.id` is required and `metadata.version` is optional. Profile identifiers
+may be bare IDs or append any version string after a colon. The profiler checks
+the full dependency closure, including validation-only dependencies, using the
+installed binding resources. Profiles use core schema `0.4.0`. Profile consumers
+resolve the declared references through their configured extension resolver.
 
 To inspect installed binding packages before generation, use their Go import
 paths:

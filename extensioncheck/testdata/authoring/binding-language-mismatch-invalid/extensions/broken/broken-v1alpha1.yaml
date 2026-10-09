@@ -2,7 +2,7 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/binding-language-mismatch
+  id: https://example.com/runtimeconditions/binding-language-mismatch
   version: v1alpha1
 
 spec:

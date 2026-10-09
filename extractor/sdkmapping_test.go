@@ -94,7 +94,7 @@ func main() {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(profile.Extensions) != 1 || profile.Extensions[0] != testNATSExtensionID {
+	if len(profile.Extensions) != 1 || profile.Extensions[0] != (ExtensionReference{ID: testNATSExtensionID, Version: "0.1.0"}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
 	if len(profile.Conditions) != 2 {
@@ -212,12 +212,12 @@ func equalJSONValue(left any, right any) bool {
 	return string(leftData) == string(rightData)
 }
 
-const testNATSExtensionID = "https://example.com/runtimeconditions/nats:0.1.0"
+const testNATSExtensionID = "https://example.com/runtimeconditions/nats"
 
 const testNATSExtension = `apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 metadata:
-  uri: https://example.com/runtimeconditions/nats
+  id: https://example.com/runtimeconditions/nats
   version: 0.1.0
   semanticSha256: test-extension-digest
 spec:

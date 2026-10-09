@@ -2,7 +2,7 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/non-string-name-arg:v1alpha1
+  extension: {id: https://example.com/runtimeconditions/non-string-name-arg, version: v1alpha1}
   extensionDefinition: ../broken-v1alpha1.yaml
   language: go
 

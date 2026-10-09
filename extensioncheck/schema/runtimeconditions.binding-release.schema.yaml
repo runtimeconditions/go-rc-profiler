@@ -89,8 +89,16 @@ allOf:
                     enum: [catalog, package, cache, https]
 $defs:
   extensionIdentifier:
+    description: IDs SHOULD use a resolver-supported format; URI syntax is not required.
     type: string
-    pattern: '^https://[^/?#@\s]+/[^/:?#%\s]+(?:/[^/:?#%\s]+)?:[^/:?#%\s]+$'
+    minLength: 1
+  extensionReference:
+    type: object
+    additionalProperties: false
+    required: [id, version]
+    properties:
+      id: {$ref: '#/$defs/extensionIdentifier'}
+      version: {type: string, minLength: 1}
   sha256:
     type: string
     pattern: '^[0-9a-f]{64}$'
@@ -206,7 +214,7 @@ $defs:
         type: array
         x-runtimeconditions-ordering: set
         uniqueItems: true
-        items: {$ref: '#/$defs/nonEmptyString'}
+        items: {$ref: '#/$defs/extensionReference'}
   packageDependency:
     type: object
     additionalProperties: false
@@ -218,7 +226,7 @@ $defs:
       - compatibleVersionRange
       - artifact
     properties:
-      extension: {$ref: '#/$defs/nonEmptyString'}
+      extension: {$ref: '#/$defs/extensionReference'}
       coordinate: {$ref: '#/$defs/nonEmptyString'}
       name:
         type: string

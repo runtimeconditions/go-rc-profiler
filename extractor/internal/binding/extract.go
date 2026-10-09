@@ -19,9 +19,9 @@ func ExtractConditions(
 	scope *gosource.PackageScope,
 	files []gosource.File,
 	bindings []*Binding,
-) ([]profile.Condition, []string, error) {
+) ([]profile.Condition, []profile.ExtensionReference, error) {
 	compiler := newCompiler(scope)
-	extensions := make(map[string]bool)
+	extensions := make(map[profile.ExtensionReference]bool)
 	var conditions []profile.Condition
 
 	for _, file := range files {
@@ -60,10 +60,10 @@ func ExtractConditions(
 		}
 	}
 
-	ids := make([]string, 0, len(extensions))
+	ids := make([]profile.ExtensionReference, 0, len(extensions))
 	for id := range extensions {
 		ids = append(ids, id)
 	}
-	slices.Sort(ids)
+	slices.SortFunc(ids, profile.ExtensionReference.Compare)
 	return conditions, ids, nil
 }

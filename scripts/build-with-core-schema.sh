@@ -8,7 +8,7 @@ fi
 
 schema_file=$1
 output_binary=$2
-expected_source_sha256=342bf20bce479f5012b9fc2c6238dc1fb0935e327ecb0fbca6e647362563c73c
+expected_source_sha256=96d430c7936fcf7334aa9613f63bb306592e07cf56fe4154af57933d2c1480e6
 if command -v sha256sum >/dev/null 2>&1; then
   actual_source_sha256=$(sha256sum "$schema_file" | awk '{print $1}')
 else

@@ -2,7 +2,7 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/scoped-field-http
+  id: https://example.com/runtimeconditions/scoped-field-http
   version: v1alpha1
 
 spec:

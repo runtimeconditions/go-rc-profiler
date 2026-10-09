@@ -2,7 +2,7 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/package-name-mismatch
+  id: https://example.com/runtimeconditions/package-name-mismatch
   version: v1alpha1
 
 spec:

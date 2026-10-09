@@ -1,8 +1,11 @@
 package catalog
 
 import (
+	"cmp"
+	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -10,13 +13,53 @@ import (
 // DefaultExtensionFile is the conventional file name for an extension definition.
 const DefaultExtensionFile = "runtimeconditions.extension.yaml"
 
+// ExtensionReference is the parsed form of an extension identifier string.
+type ExtensionReference struct {
+	ID      string `yaml:"id" json:"id"`
+	Version string `yaml:"version" json:"version"`
+}
+
+func (r ExtensionReference) Valid() bool    { return r.ID != "" }
+func (r ExtensionReference) String() string { return r.ID + "@" + r.Version }
+func (r ExtensionReference) Compare(other ExtensionReference) int {
+	if order := cmp.Compare(r.ID, other.ID); order != 0 {
+		return order
+	}
+	return cmp.Compare(r.Version, other.Version)
+}
+
+func (r *ExtensionReference) UnmarshalYAML(node *yaml.Node) error {
+	if node.Kind != yaml.ScalarNode || node.Tag != "!!str" || node.Value == "" {
+		return fmt.Errorf("extension reference must be a non-empty string")
+	}
+	value := node.Value
+	separator := strings.LastIndex(value, ":")
+	schemeEnd := strings.Index(value, "://")
+	if separator > 0 && separator > schemeEnd+2 && separator > strings.LastIndex(value, "/") {
+		if separator == len(value)-1 {
+			return fmt.Errorf("extension reference version suffix must be non-empty")
+		}
+		r.ID, r.Version = value[:separator], value[separator+1:]
+	} else {
+		r.ID, r.Version = value, ""
+	}
+	return nil
+}
+
+func (r ExtensionReference) MarshalYAML() (any, error) {
+	if r.Version == "" {
+		return r.ID, nil
+	}
+	return r.ID + ":" + r.Version, nil
+}
+
 // ExtensionDefinition is a RuntimeConditionsExtensionDefinition document. It
 // declares the vocabulary an extension contributes and the extensions it builds on.
 type ExtensionDefinition struct {
 	APIVersion string `yaml:"apiVersion"`
 	Kind       string `yaml:"kind"`
 	Metadata   struct {
-		URI     string `yaml:"uri"`
+		ID      string `yaml:"id"`
 		Version string `yaml:"version"`
 	} `yaml:"metadata"`
 	Spec ExtensionSpec `yaml:"spec"`
@@ -24,13 +67,13 @@ type ExtensionDefinition struct {
 
 // ExtensionSpec is the vocabulary an extension definition contributes.
 type ExtensionSpec struct {
-	Dependencies    []string           `yaml:"dependencies"`
-	Kinds           []Kind             `yaml:"kinds"`
-	InterfaceTypes  []InterfaceType    `yaml:"interfaceTypes"`
-	ConditionFields []ConditionField   `yaml:"conditionFields"`
-	InterfaceFields []InterfaceField   `yaml:"interfaceFields"`
-	FieldValues     []FieldValue       `yaml:"fieldValues"`
-	Schemas         []ValidationSchema `yaml:"schemas"`
+	Dependencies    []ExtensionReference `yaml:"dependencies"`
+	Kinds           []Kind               `yaml:"kinds"`
+	InterfaceTypes  []InterfaceType      `yaml:"interfaceTypes"`
+	ConditionFields []ConditionField     `yaml:"conditionFields"`
+	InterfaceFields []InterfaceField     `yaml:"interfaceFields"`
+	FieldValues     []FieldValue         `yaml:"fieldValues"`
+	Schemas         []ValidationSchema   `yaml:"schemas"`
 }
 
 // Kind declares a condition kind.
@@ -84,13 +127,21 @@ func ReadExtensionDefinition(path string) (ExtensionDefinition, bool, error) {
 		return ExtensionDefinition{}, false, err
 	}
 	var probe struct {
-		Kind string `yaml:"kind"`
+		Kind     string         `yaml:"kind"`
+		Metadata map[string]any `yaml:"metadata"`
 	}
 	if err := yaml.Unmarshal(data, &probe); err != nil {
 		return ExtensionDefinition{}, false, err
 	}
 	if probe.Kind != "RuntimeConditionsExtensionDefinition" {
 		return ExtensionDefinition{}, false, nil
+	}
+	identifier, idOK := probe.Metadata["id"].(string)
+	version, versionOK := probe.Metadata["version"].(string)
+	_, hasVersion := probe.Metadata["version"]
+	_, hasURI := probe.Metadata["uri"]
+	if !idOK || identifier == "" || (hasVersion && (!versionOK || version == "")) || hasURI {
+		return ExtensionDefinition{}, false, fmt.Errorf("metadata.id is required and metadata.version, when present, must be a non-empty string")
 	}
 	var definition ExtensionDefinition
 	if err := yaml.Unmarshal(data, &definition); err != nil {
@@ -100,11 +151,11 @@ func ReadExtensionDefinition(path string) (ExtensionDefinition, bool, error) {
 }
 
 // DefinitionID returns the identifier def declares.
-func DefinitionID(def ExtensionDefinition) string {
-	if def.Metadata.URI == "" || def.Metadata.Version == "" {
-		return ""
+func DefinitionID(def ExtensionDefinition) ExtensionReference {
+	if def.Metadata.ID == "" {
+		return ExtensionReference{}
 	}
-	return def.Metadata.URI + ":" + def.Metadata.Version
+	return ExtensionReference{ID: def.Metadata.ID, Version: def.Metadata.Version}
 }
 
 // IsYAML reports whether path names a YAML document.

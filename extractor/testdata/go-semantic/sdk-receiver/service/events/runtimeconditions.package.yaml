@@ -6,7 +6,8 @@ metadata:
   language: go
 
 extension:
-  id: https://example.com/runtimeconditions/event-sink:v1alpha1
+  id: https://example.com/runtimeconditions/event-sink
+  version: v1alpha1
 
 go:
   importPath: github.com/example/runtimeconditions/semantic-sdk-receiver/service/events

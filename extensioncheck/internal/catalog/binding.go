@@ -22,13 +22,14 @@ type BindingDocument struct {
 	APIVersion string `yaml:"apiVersion"`
 	Kind       string `yaml:"kind"`
 	Metadata   struct {
-		Extension           string `yaml:"extension"`
-		ExtensionDefinition string `yaml:"extensionDefinition"`
-		Package             string `yaml:"package"`
-		Language            string `yaml:"language"`
+		Extension           ExtensionReference `yaml:"extension"`
+		ExtensionDefinition string             `yaml:"extensionDefinition"`
+		Package             string             `yaml:"package"`
+		Language            string             `yaml:"language"`
 	} `yaml:"metadata"`
 	Extension struct {
 		ID         string `yaml:"id"`
+		Version    string `yaml:"version"`
 		Definition string `yaml:"definition"`
 	} `yaml:"extension"`
 	Go BindingGo `yaml:"go"`
@@ -88,9 +89,9 @@ type Option struct {
 }
 
 // ExtensionID returns the extension the manifest binds to.
-func (b *BindingDocument) ExtensionID() string {
+func (b *BindingDocument) ExtensionID() ExtensionReference {
 	if b.Kind == "RuntimeConditionsPackage" {
-		return b.Extension.ID
+		return ExtensionReference{ID: b.Extension.ID, Version: b.Extension.Version}
 	}
 	return b.Metadata.Extension
 }

@@ -16,8 +16,8 @@ func (c *Checker) validateDefinition(node *catalog.Node) {
 	if def.Kind != "RuntimeConditionsExtensionDefinition" {
 		c.collector.Addf(node.DefinitionPath, "kind must be RuntimeConditionsExtensionDefinition")
 	}
-	if catalog.DefinitionID(def) == "" {
-		c.collector.Addf(node.DefinitionPath, "metadata.uri and metadata.version are required")
+	if !catalog.DefinitionID(def).Valid() {
+		c.collector.Addf(node.DefinitionPath, "metadata.id is required; metadata.version is optional")
 	}
 	if node.ID != catalog.DefinitionID(def) {
 		c.collector.Addf(node.DefinitionPath, "extension id %s does not match metadata", node.ID)

@@ -3,10 +3,10 @@ package catalog
 // ProfileDocument is a generated Runtime Conditions Profile, checked against the
 // vocabulary its declared extensions resolve to.
 type ProfileDocument struct {
-	APIVersion string             `yaml:"apiVersion"`
-	Kind       string             `yaml:"kind"`
-	Extensions []string           `yaml:"extensions"`
-	Conditions []ProfileCondition `yaml:"conditions"`
+	APIVersion string               `yaml:"apiVersion"`
+	Kind       string               `yaml:"kind"`
+	Extensions []ExtensionReference `yaml:"extensions"`
+	Conditions []ProfileCondition   `yaml:"conditions"`
 }
 
 // ProfileCondition is one declared runtime dependency.

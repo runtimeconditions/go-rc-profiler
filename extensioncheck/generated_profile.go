@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"maps"
 	"slices"
 )
 
@@ -41,9 +42,10 @@ func FinalizeGeneratedProfile(ctx context.Context, workloadDir string, profile m
 			return nil, err
 		}
 	}
-	byPath, byID := map[string]*VerifiedGoPackage{}, map[string]*VerifiedGoPackage{}
+	byPath := map[string]*VerifiedGoPackage{}
+	byID := map[ExtensionReference]*VerifiedGoPackage{}
 	for _, pkg := range packages {
-		byPath[pkg.ImportPath], byID[pkg.ExtensionID] = pkg, pkg
+		byPath[pkg.ImportPath], byID[pkg.ExtensionReference()] = pkg, pkg
 	}
 	if err := verifyVocabularyOwnership(packages); err != nil {
 		return nil, err
@@ -58,7 +60,10 @@ func FinalizeGeneratedProfile(ctx context.Context, workloadDir string, profile m
 	}
 	listed := make([]any, len(direct))
 	for i, id := range direct {
-		listed[i] = id
+		listed[i] = id.ID
+		if id.Version != "" {
+			listed[i] = id.ID + ":" + id.Version
+		}
 	}
 	result["extensions"] = listed
 	coreSchema, err := loadCoreProfileSchema(packages)
@@ -84,15 +89,19 @@ func FinalizeGeneratedProfile(ctx context.Context, workloadDir string, profile m
 func verifyVocabularyOwnership(packages []*VerifiedGoPackage) error {
 	byCoordinate := map[string][]byte{}
 	byMeaning := map[string]string{}
-	installed := map[string]bool{}
+	installed := map[ExtensionReference]bool{}
 	for _, pkg := range packages {
-		installed[pkg.ExtensionID] = true
+		installed[pkg.ExtensionReference()] = true
 	}
 	for _, pkg := range packages {
 		for _, entry := range array(object(pkg.Model, "vocabulary"), "owners") {
 			item := entry.(map[string]any)
 			coordinate, owner := stringValue(item, "coordinate"), stringValue(item, "owner")
-			if !installed[owner] {
+			reference, err := vocabularyReference(pkg.Model, item)
+			if err != nil {
+				return err
+			}
+			if !installed[reference] {
 				return fmt.Errorf("vocabulary owner %s has no installed extension package", owner)
 			}
 			encoded, err := canonicalJSON(item)
@@ -117,8 +126,28 @@ func verifyVocabularyOwnership(packages []*VerifiedGoPackage) error {
 	return nil
 }
 
-func validateGeneratedVocabulary(conditions []any, sources [][]string, packages map[string]*VerifiedGoPackage) ([]string, error) {
-	direct := map[string]bool{}
+// Vocabulary provenance supplies the owner ID and semantic digest; the model
+// closure supplies the corresponding exact release.
+func vocabularyReference(model, item map[string]any) (ExtensionReference, error) {
+	reference := ExtensionReference{}
+	for _, entry := range array(model, "extensions") {
+		identity := entry.(map[string]any)
+		if stringValue(identity, "id") != stringValue(item, "owner") || stringValue(identity, "semanticSha256") != stringValue(item, "extensionSha256") {
+			continue
+		}
+		if reference.Valid() {
+			return ExtensionReference{}, fmt.Errorf("ambiguous vocabulary owner %s", item["owner"])
+		}
+		reference = extensionReference(identity)
+	}
+	if !reference.Valid() {
+		return reference, fmt.Errorf("unresolved vocabulary owner %s", item["owner"])
+	}
+	return reference, nil
+}
+
+func validateGeneratedVocabulary(conditions []any, sources [][]string, packages map[string]*VerifiedGoPackage) ([]ExtensionReference, error) {
+	direct := map[ExtensionReference]bool{}
 	for index, raw := range conditions {
 		condition, ok := raw.(map[string]any)
 		if !ok {
@@ -141,7 +170,12 @@ func validateGeneratedVocabulary(conditions []any, sources [][]string, packages 
 			}
 			for _, group := range []string{"owners", "conditionFields", "interfaceFields", "valueDomains"} {
 				for _, entry := range array(object(pkg.Model, "vocabulary"), group) {
-					item := entry.(map[string]any)
+					item := maps.Clone(entry.(map[string]any))
+					reference, err := vocabularyReference(pkg.Model, item)
+					if err != nil {
+						return nil, err
+					}
+					item["_release"] = reference
 					key := group + "\x00" + stringValue(item, "coordinate")
 					if previous := items[key]; previous != nil {
 						left, _ := canonicalJSON(previous)
@@ -163,7 +197,7 @@ func validateGeneratedVocabulary(conditions []any, sources [][]string, packages 
 				key := "schemaFields\x00" + stringValue(ref, "coordinate") + "\x00" + stringValue(ref, "jsonPointer")
 				scope := object(root, "scope")
 				item := map[string]any{
-					"owner": pkg.ExtensionID, "kind": stringValue(scope, "kind"),
+					"owner": pkg.ExtensionID, "_release": pkg.ExtensionReference(), "kind": stringValue(scope, "kind"),
 					"interfaceType": stringValue(scope, "interfaceType"), "segments": array(root, "path"),
 				}
 				if previous := items[key]; previous != nil && previous["owner"] != item["owner"] {
@@ -179,7 +213,7 @@ func validateGeneratedVocabulary(conditions []any, sources [][]string, packages 
 			return nil, fmt.Errorf("conditions[%d]: %w", index, err)
 		}
 		for _, name := range sortedDocumentKeys(condition) {
-			if name == "name" || name == "optional" || name == "kind" || name == "interface" {
+			if name == "name" || name == "optional" || name == "kind" || name == "interface" || name == "extension" {
 				continue
 			}
 			if err := claimField(items, "conditionFields", kind, interfaceType, name, direct); err != nil {
@@ -208,15 +242,15 @@ func validateGeneratedVocabulary(conditions []any, sources [][]string, packages 
 				if !domainContains(domain, value) {
 					return nil, fmt.Errorf("conditions[%d] value %v is outside domain %s", index, value, stringValue(domain, "coordinate"))
 				}
-				direct[stringValue(domain, "owner")] = true
+				direct[domain["_release"].(ExtensionReference)] = true
 			}
 		}
 	}
-	result := make([]string, 0, len(direct))
+	result := make([]ExtensionReference, 0, len(direct))
 	for id := range direct {
 		result = append(result, id)
 	}
-	slices.Sort(result)
+	slices.SortFunc(result, ExtensionReference.Compare)
 	return result, nil
 }
 
@@ -229,8 +263,8 @@ func sortedDocumentKeys(document map[string]any) []string {
 	return keys
 }
 
-func claimExactOwner(items map[string]map[string]any, category, kind, interfaceType, path string, direct map[string]bool) error {
-	match := ""
+func claimExactOwner(items map[string]map[string]any, category, kind, interfaceType, path string, direct map[ExtensionReference]bool) error {
+	match := ExtensionReference{}
 	for key, item := range items {
 		if len(key) < len("owners") || key[:len("owners")] != "owners" || stringValue(item, "category") != category || stringValue(item, "kind") != kind {
 			continue
@@ -241,20 +275,20 @@ func claimExactOwner(items map[string]map[string]any, category, kind, interfaceT
 		if path != "" && stringValue(item, "path") != path {
 			continue
 		}
-		if match != "" {
+		if match.Valid() {
 			return fmt.Errorf("%s %s/%s has multiple owners", category, kind, interfaceType)
 		}
-		match = stringValue(item, "owner")
+		match = item["_release"].(ExtensionReference)
 	}
-	if match == "" {
+	if !match.Valid() {
 		return fmt.Errorf("%s %s/%s has no owner", category, kind, interfaceType)
 	}
 	direct[match] = true
 	return nil
 }
 
-func claimField(items map[string]map[string]any, group, kind, interfaceType, name string, direct map[string]bool) error {
-	match := ""
+func claimField(items map[string]map[string]any, group, kind, interfaceType, name string, direct map[ExtensionReference]bool) error {
+	match := ExtensionReference{}
 	for key, item := range items {
 		if len(key) < len(group) || key[:len(group)] != group || !matchesScope(item, kind, interfaceType) {
 			continue
@@ -270,13 +304,13 @@ func claimField(items map[string]map[string]any, group, kind, interfaceType, nam
 		if len(segments) <= index || stringValue(segments[index].(map[string]any), "name") != name {
 			continue
 		}
-		owner := stringValue(item, "owner")
-		if match != "" && match != owner {
+		owner := item["_release"].(ExtensionReference)
+		if match.Valid() && match != owner {
 			return fmt.Errorf("field has multiple owners")
 		}
 		match = owner
 	}
-	if match == "" {
+	if !match.Valid() {
 		if group == "conditionFields" {
 			return claimField(items, "schemaFields", kind, interfaceType, name, direct)
 		}
@@ -344,10 +378,10 @@ func validateConditionNames(conditions []any) error {
 	return nil
 }
 
-func installedClosure(direct []string, byID map[string]*VerifiedGoPackage) (map[string]bool, error) {
-	closure := map[string]bool{}
-	var visit func(string) error
-	visit = func(id string) error {
+func installedClosure(direct []ExtensionReference, byID map[ExtensionReference]*VerifiedGoPackage) (map[ExtensionReference]bool, error) {
+	closure := map[ExtensionReference]bool{}
+	var visit func(ExtensionReference) error
+	visit = func(id ExtensionReference) error {
 		if closure[id] {
 			return nil
 		}
@@ -357,7 +391,7 @@ func installedClosure(direct []string, byID map[string]*VerifiedGoPackage) (map[
 		}
 		closure[id] = true
 		for _, entry := range array(pkg.Release, "packageDependencies") {
-			if err := visit(stringValue(entry.(map[string]any), "extension")); err != nil {
+			if err := visit(extensionReference(object(entry.(map[string]any), "extension"))); err != nil {
 				return err
 			}
 		}
@@ -371,12 +405,16 @@ func installedClosure(direct []string, byID map[string]*VerifiedGoPackage) (map[
 	return closure, nil
 }
 
-func validateGeneratedSchemas(conditions []any, closure map[string]bool, byID map[string]*VerifiedGoPackage) error {
+func validateGeneratedSchemas(conditions []any, closure map[ExtensionReference]bool, byID map[ExtensionReference]*VerifiedGoPackage) error {
 	schemas := map[string]map[string]any{}
 	for id := range closure {
 		for _, entry := range array(byID[id].Model, "schemas") {
 			item := entry.(map[string]any)
-			if !closure[stringValue(item, "owner")] {
+			owner, err := vocabularyReference(byID[id].Model, item)
+			if err != nil {
+				return err
+			}
+			if !closure[owner] {
 				continue
 			}
 			coordinate := stringValue(item, "coordinate")

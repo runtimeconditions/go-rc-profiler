@@ -40,7 +40,7 @@ jobs:
     - name: Download pinned core profile schema
       run: |
         curl --fail --location \
-          https://github.com/runtimeconditions/spec/releases/download/v0.1.0/runtimeconditions.profile.schema.yaml \
+          https://github.com/runtimeconditions/spec/releases/download/v0.4.0/runtimeconditions.profile.schema.yaml \
           --output "$RUNNER_TEMP/runtimeconditions.profile.schema.yaml"
     - name: Build profiler with verified core profile schema
       working-directory: go-rc-profiler

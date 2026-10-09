@@ -2,7 +2,7 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://runtimeconditions.io/common-integrations:v1alpha1
+  extension: {id: https://runtimeconditions.io/common-integrations, version: v1alpha1}
   extensionDefinition: ../common-integrations-v1alpha1.yaml
   language: go
 

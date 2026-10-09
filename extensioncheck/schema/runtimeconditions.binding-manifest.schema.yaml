@@ -41,9 +41,10 @@ properties:
   extension:
     type: object
     additionalProperties: false
-    required: [id, semanticSha256]
+    required: [id, version, semanticSha256]
     properties:
       id: {$ref: '#/$defs/extensionIdentifier'}
+      version: {type: string, minLength: 1}
       semanticSha256: {$ref: '#/$defs/sha256'}
   package:
     description: >-
@@ -117,8 +118,9 @@ allOf:
               file: {const: bindings.py}
 $defs:
   extensionIdentifier:
+    description: IDs SHOULD use a resolver-supported format; URI syntax is not required.
     type: string
-    pattern: '^https://[^/?#@\s]+/[^/:?#%\s]+(?:/[^/:?#%\s]+)?:[^/:?#%\s]+$'
+    minLength: 1
   sha256:
     type: string
     pattern: '^[0-9a-f]{64}$'

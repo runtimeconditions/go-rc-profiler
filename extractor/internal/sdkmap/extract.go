@@ -14,7 +14,7 @@ import (
 // belongs to until the merge groups them.
 type observation struct {
 	condition          profile.Condition
-	extensionID        string
+	extensionID        profile.ExtensionReference
 	dependencyIdentity string
 }
 
@@ -23,7 +23,7 @@ type observation struct {
 //
 // Type information is required. Without it an SDK call cannot be distinguished
 // from any other call, so no mapping may be applied at all.
-func ExtractConditions(files []gosource.File, semantic *gosource.Semantic, mappings []Mapping) ([]profile.Condition, []string, error) {
+func ExtractConditions(files []gosource.File, semantic *gosource.Semantic, mappings []Mapping) ([]profile.Condition, []profile.ExtensionReference, error) {
 	if len(mappings) == 0 || semantic == nil {
 		return nil, nil, nil
 	}
@@ -31,13 +31,13 @@ func ExtractConditions(files []gosource.File, semantic *gosource.Semantic, mappi
 	var calls []Call
 	for _, mapping := range mappings {
 		for _, call := range mapping.Calls {
-			call.ExtensionID = mapping.Extension.ID
+			call.ExtensionID = profile.ExtensionReference{ID: mapping.Extension.ID, Version: mapping.Extension.Version}
 			calls = append(calls, call)
 		}
 	}
 
 	var observations []observation
-	extensions := make(map[string]bool)
+	extensions := make(map[profile.ExtensionReference]bool)
 	for _, file := range files {
 		// State is per-file: a variable in one file says nothing about a
 		// same-named variable in another.
@@ -63,11 +63,11 @@ func ExtractConditions(files []gosource.File, semantic *gosource.Semantic, mappi
 		})
 	}
 
-	ids := make([]string, 0, len(extensions))
+	ids := make([]profile.ExtensionReference, 0, len(extensions))
 	for id := range extensions {
 		ids = append(ids, id)
 	}
-	slices.Sort(ids)
+	slices.SortFunc(ids, profile.ExtensionReference.Compare)
 	return mergeObservations(observations), ids, nil
 }
 
@@ -120,7 +120,7 @@ func observeCall(call *ast.CallExpr, states *stateTable, calls []Call) (observat
 // proven to share a dependency with anything, so it stands alone.
 func mergeObservations(observations []observation) []profile.Condition {
 	conditions := make([]profile.Condition, 0, len(observations))
-	groupIndexes := make(map[string]int)
+	groupIndexes := make(map[[5]string]int)
 	for _, item := range observations {
 		if item.dependencyIdentity == "" {
 			conditions = append(conditions, item.condition)
@@ -142,11 +142,9 @@ func mergeObservations(observations []observation) []profile.Condition {
 	return conditions
 }
 
-// groupKey identifies the condition an observation merges into. The separator
-// cannot appear in any component, so distinct tuples cannot collide.
-func (o observation) groupKey() string {
-	const separator = "\x00"
-	return o.extensionID + separator + o.dependencyIdentity + separator + o.condition.Kind + separator + o.condition.Interface.Type
+// groupKey preserves the exact extension release and observed dependency.
+func (o observation) groupKey() [5]string {
+	return [5]string{o.extensionID.ID, o.extensionID.Version, o.dependencyIdentity, o.condition.Kind, o.condition.Interface.Type}
 }
 
 // containsOperation reports whether an equivalent operation was already

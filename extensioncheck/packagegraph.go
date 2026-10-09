@@ -20,8 +20,8 @@ import (
 
 func resolvePackageClosure(ctx context.Context, workloadDir string, listed map[string]goListPackage, modules map[string]goListModule, roots []string) ([]*VerifiedGoPackage, error) {
 	byPath := map[string]*VerifiedGoPackage{}
-	byID := map[string]*VerifiedGoPackage{}
-	claimedIDs := map[string]string{}
+	byID := map[ExtensionReference]*VerifiedGoPackage{}
+	claimedIDs := map[ExtensionReference]string{}
 	visiting := map[string]bool{}
 	var visit func(string) (*VerifiedGoPackage, error)
 	visit = func(path string) (*VerifiedGoPackage, error) {
@@ -57,10 +57,10 @@ func resolvePackageClosure(ctx context.Context, workloadDir string, listed map[s
 		if err != nil {
 			return nil, fmt.Errorf("%s: %w", path, err)
 		}
-		if other := claimedIDs[validated.ExtensionID]; other != "" && other != path {
+		if other := claimedIDs[validated.ExtensionReference()]; other != "" && other != path {
 			return nil, fmt.Errorf("extension %s is supplied by both %s and %s", validated.ExtensionID, other, path)
 		}
-		claimedIDs[validated.ExtensionID] = path
+		claimedIDs[validated.ExtensionReference()] = path
 		visiting[path] = true
 		deps := map[string]*VerifiedGoPackage{}
 		for _, entry := range array(validated.Release, "packageDependencies") {
@@ -80,7 +80,7 @@ func resolvePackageClosure(ctx context.Context, workloadDir string, listed map[s
 		}
 		visiting[path] = false
 		byPath[path] = validated
-		byID[validated.ExtensionID] = validated
+		byID[validated.ExtensionReference()] = validated
 		if err := verifyDirectDependencySet(validated, deps); err != nil {
 			return nil, fmt.Errorf("%s: %w", path, err)
 		}
@@ -157,19 +157,19 @@ func listExactPackage(ctx context.Context, path string, module goListModule) (go
 }
 
 func verifyDirectDependencySet(pkg *VerifiedGoPackage, deps map[string]*VerifiedGoPackage) error {
-	direct := map[string]bool{}
+	direct := map[ExtensionReference]bool{}
 	for _, entry := range array(pkg.Model, "extensions") {
 		item := entry.(map[string]any)
-		if stringValue(item, "id") != pkg.ExtensionID {
+		if extensionReference(item) != pkg.ExtensionReference() {
 			continue
 		}
 		for _, value := range array(item, "dependencies") {
-			direct[value.(string)] = true
+			direct[extensionReference(value.(map[string]any))] = true
 		}
 	}
-	defined := map[string]bool{}
+	defined := map[ExtensionReference]bool{}
 	for _, value := range array(object(pkg.Extension, "spec"), "dependencies") {
-		defined[value.(string)] = true
+		defined[extensionReference(value.(map[string]any))] = true
 	}
 	if len(direct) != len(defined) {
 		return fmt.Errorf("normalized model root dependencies differ from packaged extension definition")
@@ -183,21 +183,21 @@ func verifyDirectDependencySet(pkg *VerifiedGoPackage, deps map[string]*Verified
 		return fmt.Errorf("packageDependencies do not match root extension direct dependencies")
 	}
 	for _, dep := range deps {
-		if !direct[dep.ExtensionID] {
+		if !direct[dep.ExtensionReference()] {
 			return fmt.Errorf("package dependency %s does not match a direct extension dependency", dep.ImportPath)
 		}
 	}
 	return nil
 }
 
-func verifyInstalledExtensionClosure(pkg *VerifiedGoPackage, byPath, byID map[string]*VerifiedGoPackage) error {
-	reachable := map[string]bool{}
+func verifyInstalledExtensionClosure(pkg *VerifiedGoPackage, byPath map[string]*VerifiedGoPackage, byID map[ExtensionReference]*VerifiedGoPackage) error {
+	reachable := map[ExtensionReference]bool{}
 	var visit func(*VerifiedGoPackage) error
 	visit = func(current *VerifiedGoPackage) error {
-		if reachable[current.ExtensionID] {
+		if reachable[current.ExtensionReference()] {
 			return nil
 		}
-		reachable[current.ExtensionID] = true
+		reachable[current.ExtensionReference()] = true
 		for _, entry := range array(current.Release, "packageDependencies") {
 			coordinate := stringValue(entry.(map[string]any), "coordinate")
 			dependency := byPath[coordinate]
@@ -213,15 +213,15 @@ func verifyInstalledExtensionClosure(pkg *VerifiedGoPackage, byPath, byID map[st
 	if err := visit(pkg); err != nil {
 		return err
 	}
-	modelExtensions := map[string]map[string]any{}
+	modelExtensions := map[ExtensionReference]map[string]any{}
 	for _, entry := range array(pkg.Model, "extensions") {
 		item := entry.(map[string]any)
-		modelExtensions[stringValue(item, "id")] = item
+		modelExtensions[extensionReference(item)] = item
 	}
-	locked := map[string]bool{}
+	locked := map[ExtensionReference]bool{}
 	for _, entry := range array(object(pkg.Release, "dependencyLock"), "extensions") {
 		item := entry.(map[string]any)
-		id := stringValue(item, "id")
+		id := extensionReference(item)
 		installed := byID[id]
 		if installed == nil || !reachable[id] {
 			return fmt.Errorf("dependency extension %s is absent from Go-resolved binding packages", id)
@@ -246,7 +246,7 @@ func verifyInstalledExtensionClosure(pkg *VerifiedGoPackage, byPath, byID map[st
 }
 
 func verifyGoPackageDependency(ctx context.Context, workloadDir string, parent *VerifiedGoPackage, entry map[string]any, dep *VerifiedGoPackage) error {
-	if stringValue(entry, "extension") != dep.ExtensionID || stringValue(entry, "coordinate") != dep.ImportPath || stringValue(entry, "name") != dep.name {
+	if extensionReference(object(entry, "extension")) != dep.ExtensionReference() || stringValue(entry, "coordinate") != dep.ImportPath || stringValue(entry, "name") != dep.name {
 		return fmt.Errorf("package identity differs from installed package")
 	}
 	tested := stringValue(entry, "testedVersion")

@@ -16,7 +16,7 @@ import (
 // accompanies it. Validation fills in the binding fields, which stay empty when
 // no language package was requested.
 type Node struct {
-	ID             string
+	ID             ExtensionReference
 	Dir            string
 	DefinitionPath string
 	Definition     ExtensionDefinition
@@ -29,7 +29,7 @@ type Node struct {
 // Catalog holds every extension definition discovered beneath a set of roots,
 // indexed by extension id.
 type Catalog struct {
-	Nodes map[string]*Node
+	Nodes map[ExtensionReference]*Node
 }
 
 // Load walks roots and indexes every extension definition it finds. Problems
@@ -41,7 +41,7 @@ type Catalog struct {
 // empty string, leaves every node unbound, which is how profile validation reads
 // a catalog for its vocabulary alone.
 func Load(roots []string, language string, collector *diag.Collector) (*Catalog, error) {
-	catalog := &Catalog{Nodes: make(map[string]*Node)}
+	catalog := &Catalog{Nodes: make(map[ExtensionReference]*Node)}
 	seenRoots := make(map[string]bool)
 	seenFiles := make(map[string]bool)
 	for _, root := range roots {
@@ -88,12 +88,12 @@ func (c *Catalog) add(path string, language string, collector *diag.Collector) {
 		return
 	}
 	id := DefinitionID(definition)
-	if id == "" {
-		collector.Addf(path, "metadata.uri and metadata.version are required")
+	if !id.Valid() {
+		collector.Addf(path, "metadata.id is required; metadata.version is optional")
 		return
 	}
 	if existing := c.Nodes[id]; existing != nil {
-		collector.Addf(path, "duplicate extension id %s already defined by %s", id, existing.DefinitionPath)
+		collector.Addf(path, "duplicate extension release %s already defined by %s", id, existing.DefinitionPath)
 		return
 	}
 	node := &Node{
@@ -147,14 +147,14 @@ func discoverBinding(node *Node, language string, collector *diag.Collector) {
 
 // Targets returns the ids to validate: those defined beneath root when
 // targetOnly is set, and otherwise every id in the catalog.
-func (c *Catalog) Targets(root string, targetOnly bool) []string {
-	var ids []string
+func (c *Catalog) Targets(root string, targetOnly bool) []ExtensionReference {
+	var ids []ExtensionReference
 	for id, node := range c.Nodes {
 		if !targetOnly || pathWithin(root, node.DefinitionPath) {
 			ids = append(ids, id)
 		}
 	}
-	slices.Sort(ids)
+	slices.SortFunc(ids, ExtensionReference.Compare)
 	return ids
 }
 

@@ -72,17 +72,17 @@ var _ = common.Cache("todo-cache",
 		t.Fatal(err)
 	}
 
-	if !slices.Equal(profile.Extensions, []string{
-		"https://runtimeconditions.io/common-integrations:v1alpha1",
-		"https://runtimeconditions.io/env-configuration:v1alpha1",
+	if !slices.Equal(profile.Extensions, []ExtensionReference{
+		ExtensionReference{ID: "https://runtimeconditions.io/common-integrations", Version: "v1alpha1"},
+		ExtensionReference{ID: "https://runtimeconditions.io/env-configuration", Version: "v1alpha1"},
 	}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
-	resolvedExtensions := resolveExtensionsForTest(t, profile.Extensions, map[string]string{
-		"https://runtimeconditions.io/env-configuration:v1alpha1":   filepath.Join(envPath, "..", "env-configuration-v1alpha1.yaml"),
-		"https://runtimeconditions.io/common-integrations:v1alpha1": filepath.Join(envPath, "..", "..", "common-integrations", "common-integrations-v1alpha1.yaml"),
+	resolvedExtensions := resolveExtensionsForTest(t, profile.Extensions, map[ExtensionReference]string{
+		ExtensionReference{ID: "https://runtimeconditions.io/env-configuration", Version: "v1alpha1"}:   filepath.Join(envPath, "..", "env-configuration-v1alpha1.yaml"),
+		ExtensionReference{ID: "https://runtimeconditions.io/common-integrations", Version: "v1alpha1"}: filepath.Join(envPath, "..", "..", "common-integrations", "common-integrations-v1alpha1.yaml"),
 	})
-	if !slices.Contains(resolvedExtensions, "https://runtimeconditions.io/common-integrations:v1alpha1") {
+	if !slices.Contains(resolvedExtensions, ExtensionReference{ID: "https://runtimeconditions.io/common-integrations", Version: "v1alpha1"}) {
 		t.Fatalf("resolved extensions do not include common integrations: %#v", resolvedExtensions)
 	}
 	if len(profile.Conditions) != 3 {
@@ -145,7 +145,7 @@ var _ = common.Cache("todo-cache", common.KeyValue(common.Redis))
 		t.Fatal(err)
 	}
 
-	if !slices.Equal(profile.Extensions, []string{"https://runtimeconditions.io/common-integrations:v1alpha1"}) {
+	if !slices.Equal(profile.Extensions, []ExtensionReference{ExtensionReference{ID: "https://runtimeconditions.io/common-integrations", Version: "v1alpha1"}}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
 	if len(profile.Conditions) != 1 {
@@ -193,7 +193,7 @@ var _ = common.Cache("todo-cache", common.KeyValue(common.Redis))
 		t.Fatal(err)
 	}
 
-	if !slices.Equal(profile.Extensions, []string{"https://runtimeconditions.io/common-integrations:v1alpha1"}) {
+	if !slices.Equal(profile.Extensions, []ExtensionReference{ExtensionReference{ID: "https://runtimeconditions.io/common-integrations", Version: "v1alpha1"}}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
 	if len(profile.Conditions) != 1 {
@@ -214,8 +214,8 @@ func TestCheckedInExtensionBindingsRoundTripProfiles(t *testing.T) {
 		source           string
 		replacements     map[string]string
 		targetBindingDir string
-		wantExtensions   []string
-		wantResolved     []string
+		wantExtensions   []ExtensionReference
+		wantResolved     []ExtensionReference
 	}{
 		{
 			name: "common-integrations",
@@ -242,11 +242,11 @@ var _ = common.Cache("request-cache", common.KeyValue(common.Redis))
 				"github.com/runtimeconditions/extensions/common-integrations/go": commonPath,
 			},
 			targetBindingDir: commonPath,
-			wantExtensions: []string{
-				"https://runtimeconditions.io/common-integrations:v1alpha1",
+			wantExtensions: []ExtensionReference{
+				ExtensionReference{ID: "https://runtimeconditions.io/common-integrations", Version: "v1alpha1"},
 			},
-			wantResolved: []string{
-				"https://runtimeconditions.io/common-integrations:v1alpha1",
+			wantResolved: []ExtensionReference{
+				ExtensionReference{ID: "https://runtimeconditions.io/common-integrations", Version: "v1alpha1"},
 			},
 		},
 		{
@@ -277,13 +277,13 @@ var _ = common.Cache("request-cache",
 				"github.com/runtimeconditions/extensions/env-configuration/go":   envPath,
 			},
 			targetBindingDir: envPath,
-			wantExtensions: []string{
-				"https://runtimeconditions.io/common-integrations:v1alpha1",
-				"https://runtimeconditions.io/env-configuration:v1alpha1",
+			wantExtensions: []ExtensionReference{
+				ExtensionReference{ID: "https://runtimeconditions.io/common-integrations", Version: "v1alpha1"},
+				ExtensionReference{ID: "https://runtimeconditions.io/env-configuration", Version: "v1alpha1"},
 			},
-			wantResolved: []string{
-				"https://runtimeconditions.io/common-integrations:v1alpha1",
-				"https://runtimeconditions.io/env-configuration:v1alpha1",
+			wantResolved: []ExtensionReference{
+				ExtensionReference{ID: "https://runtimeconditions.io/common-integrations", Version: "v1alpha1"},
+				ExtensionReference{ID: "https://runtimeconditions.io/env-configuration", Version: "v1alpha1"},
 			},
 		},
 	}
@@ -337,7 +337,7 @@ var _ = common.Cache("request-cache",
 			if err != nil {
 				t.Fatal(err)
 			}
-			validateGoBindingVocabularyForTest(t, binding, resolveExtensionDefinitionsForTest(t, []string{binding.ExtensionID}, catalog))
+			validateGoBindingVocabularyForTest(t, binding, resolveExtensionDefinitionsForTest(t, []ExtensionReference{binding.ExtensionID}, catalog))
 		})
 	}
 }
@@ -353,7 +353,7 @@ func TestDiscoverGoBindingsAcceptsBindingsManifestName(t *testing.T) {
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/example
+  id: https://example.com/runtimeconditions/example
   version: v1alpha1
 
 spec:
@@ -367,7 +367,7 @@ spec:
 kind: RuntimeConditionsBinding
 
 metadata:
-  extension: https://example.com/runtimeconditions/example:v1alpha1
+  extension: {id: https://example.com/runtimeconditions/example, version: v1alpha1}
   extensionDefinition: ../example-v1alpha1.yaml
   language: go
 
@@ -390,7 +390,7 @@ go:
 	if len(bindings) != 1 {
 		t.Fatalf("expected 1 binding, got %d", len(bindings))
 	}
-	if bindings[0].ExtensionID != "https://example.com/runtimeconditions/example:v1alpha1" {
+	if bindings[0].ExtensionID != (ExtensionReference{ID: "https://example.com/runtimeconditions/example", Version: "v1alpha1"}) {
 		t.Fatalf("unexpected extension id: %s", bindings[0].ExtensionID)
 	}
 }
@@ -438,7 +438,7 @@ func writeAuditLog(ctx context.Context) error {
 		t.Fatal(err)
 	}
 
-	if !slices.Equal(profile.Extensions, []string{"https://example.com/runtimeconditions/event-sink:v1alpha1"}) {
+	if !slices.Equal(profile.Extensions, []ExtensionReference{ExtensionReference{ID: "https://example.com/runtimeconditions/event-sink", Version: "v1alpha1"}}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
 	if len(profile.Conditions) != 1 {
@@ -568,9 +568,9 @@ var _ = common.API(settings.APIName,
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !slices.Equal(profile.Extensions, []string{
-		"https://runtimeconditions.io/common-integrations:v1alpha1",
-		"https://runtimeconditions.io/env-configuration:v1alpha1",
+	if !slices.Equal(profile.Extensions, []ExtensionReference{
+		ExtensionReference{ID: "https://runtimeconditions.io/common-integrations", Version: "v1alpha1"},
+		ExtensionReference{ID: "https://runtimeconditions.io/env-configuration", Version: "v1alpha1"},
 	}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
@@ -639,7 +639,7 @@ func TestExtractDirValidatesPackageManifestBeforeExtraction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	data = []byte(strings.Replace(string(data), "https://example.com/runtimeconditions/event-sink:v1alpha1", "https://example.com/runtimeconditions/other:v1alpha1", 1))
+	data = []byte(strings.Replace(string(data), "https://example.com/runtimeconditions/event-sink", "https://example.com/runtimeconditions/other", 1))
 	if err := os.WriteFile(manifestPath, data, 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -669,7 +669,7 @@ func writeAuditLog(ctx context.Context) error {
 	if err == nil {
 		t.Fatal("expected package manifest validation error")
 	}
-	if !strings.Contains(err.Error(), "binding extension id https://example.com/runtimeconditions/other:v1alpha1 does not match extension definition https://example.com/runtimeconditions/event-sink:v1alpha1") {
+	if !strings.Contains(err.Error(), "binding extension id https://example.com/runtimeconditions/other@v1alpha1 does not match extension definition https://example.com/runtimeconditions/event-sink@v1alpha1") {
 		t.Fatalf("unexpected error: %v", err)
 	}
 }
@@ -757,7 +757,7 @@ func writeObject(ctx context.Context) error {
 		t.Fatal(err)
 	}
 
-	if !slices.Equal(profile.Extensions, []string{"https://aws.example.com/aws/object-store:v1alpha1"}) {
+	if !slices.Equal(profile.Extensions, []ExtensionReference{ExtensionReference{ID: "https://aws.example.com/runtimeconditions/object-store/v1alpha1/runtimeconditions.extension.yaml", Version: "v1alpha1"}}) {
 		t.Fatalf("unexpected extensions: %#v", profile.Extensions)
 	}
 	if len(profile.Conditions) != 1 {
@@ -893,10 +893,10 @@ var _ = common.API(42)
 	}
 }
 
-type extensionCatalogForTest map[string]extensionDefinitionForTest
+type extensionCatalogForTest map[ExtensionReference]extensionDefinitionForTest
 
 type resolvedExtensionDefinitionsForTest struct {
-	definitions map[string]extensionDefinitionForTest
+	definitions map[ExtensionReference]extensionDefinitionForTest
 }
 
 type extensionDefinitionForTest struct {
@@ -904,14 +904,14 @@ type extensionDefinitionForTest struct {
 	Kind       string `yaml:"kind"`
 	APIVersion string `yaml:"apiVersion"`
 	Metadata   struct {
-		URI     string `yaml:"uri"`
+		ID      string `yaml:"id"`
 		Version string `yaml:"version"`
 	} `yaml:"metadata"`
 	Spec extensionSpecForTest `yaml:"spec"`
 }
 
 type extensionSpecForTest struct {
-	Dependencies    []string                         `yaml:"dependencies"`
+	Dependencies    []ExtensionReference             `yaml:"dependencies"`
 	Kinds           []extensionKindForTest           `yaml:"kinds"`
 	InterfaceTypes  []extensionInterfaceTypeForTest  `yaml:"interfaceTypes"`
 	ConditionFields []extensionConditionFieldForTest `yaml:"conditionFields"`
@@ -977,7 +977,7 @@ func loadExtensionCatalogForTest(t *testing.T) extensionCatalogForTest {
 		}
 		definition.Path = path
 		id := definition.id()
-		if id == "" {
+		if !id.Valid() {
 			return nil
 		}
 		if existing, ok := catalog[id]; ok {
@@ -992,15 +992,15 @@ func loadExtensionCatalogForTest(t *testing.T) extensionCatalogForTest {
 	return catalog
 }
 
-func (d extensionDefinitionForTest) id() string {
-	return d.Metadata.URI + ":" + d.Metadata.Version
+func (d extensionDefinitionForTest) id() ExtensionReference {
+	return ExtensionReference{ID: d.Metadata.ID, Version: d.Metadata.Version}
 }
 
-func resolveExtensionDefinitionsForTest(t *testing.T, ids []string, catalog extensionCatalogForTest) resolvedExtensionDefinitionsForTest {
+func resolveExtensionDefinitionsForTest(t *testing.T, ids []ExtensionReference, catalog extensionCatalogForTest) resolvedExtensionDefinitionsForTest {
 	t.Helper()
-	resolved := resolvedExtensionDefinitionsForTest{definitions: make(map[string]extensionDefinitionForTest)}
-	var visit func(string)
-	visit = func(id string) {
+	resolved := resolvedExtensionDefinitionsForTest{definitions: make(map[ExtensionReference]extensionDefinitionForTest)}
+	var visit func(ExtensionReference)
+	visit = func(id ExtensionReference) {
 		if _, ok := resolved.definitions[id]; ok {
 			return
 		}
@@ -1019,12 +1019,12 @@ func resolveExtensionDefinitionsForTest(t *testing.T, ids []string, catalog exte
 	return resolved
 }
 
-func (r resolvedExtensionDefinitionsForTest) ids() []string {
-	ids := make([]string, 0, len(r.definitions))
+func (r resolvedExtensionDefinitionsForTest) ids() []ExtensionReference {
+	ids := make([]ExtensionReference, 0, len(r.definitions))
 	for id := range r.definitions {
 		ids = append(ids, id)
 	}
-	slices.Sort(ids)
+	slices.SortFunc(ids, ExtensionReference.Compare)
 	return ids
 }
 
@@ -1266,7 +1266,7 @@ func (c *Client) Publish(ctx context.Context, event Event) error {
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/event-sink
+  id: https://example.com/runtimeconditions/event-sink
   version: v1alpha1
 
 spec:
@@ -1297,7 +1297,8 @@ metadata:
   language: go
 
 extension:
-  id: https://example.com/runtimeconditions/event-sink:v1alpha1
+  id: https://example.com/runtimeconditions/event-sink
+  version: v1alpha1
 
 go:
   importPath: github.com/example/eventstream/service/events
@@ -1378,11 +1379,11 @@ func writeModule(t *testing.T, dir string, replacements map[string]string) {
 	}
 }
 
-func resolveExtensionsForTest(t *testing.T, roots []string, definitions map[string]string) []string {
+func resolveExtensionsForTest(t *testing.T, roots []ExtensionReference, definitions map[ExtensionReference]string) []ExtensionReference {
 	t.Helper()
-	seen := make(map[string]bool)
-	var visit func(string)
-	visit = func(id string) {
+	seen := make(map[ExtensionReference]bool)
+	var visit func(ExtensionReference)
+	visit = func(id ExtensionReference) {
 		if seen[id] {
 			return
 		}
@@ -1394,15 +1395,15 @@ func resolveExtensionsForTest(t *testing.T, roots []string, definitions map[stri
 	for _, root := range roots {
 		visit(root)
 	}
-	resolved := make([]string, 0, len(seen))
+	resolved := make([]ExtensionReference, 0, len(seen))
 	for id := range seen {
 		resolved = append(resolved, id)
 	}
-	slices.Sort(resolved)
+	slices.SortFunc(resolved, ExtensionReference.Compare)
 	return resolved
 }
 
-func extensionDependencies(t *testing.T, path string) []string {
+func extensionDependencies(t *testing.T, path string) []ExtensionReference {
 	t.Helper()
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -1410,7 +1411,7 @@ func extensionDependencies(t *testing.T, path string) []string {
 	}
 	var document struct {
 		Spec struct {
-			Dependencies []string `yaml:"dependencies"`
+			Dependencies []ExtensionReference `yaml:"dependencies"`
 		} `yaml:"spec"`
 	}
 	if err := yaml.Unmarshal(data, &document); err != nil {

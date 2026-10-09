@@ -30,7 +30,7 @@ const (
 // Binding is one extension's Go API, as declared by its manifest.
 type Binding struct {
 	ManifestPath            string
-	ExtensionID             string
+	ExtensionID             profile.ExtensionReference
 	ExtensionDefinitionPath string
 	ImportPath              string
 	PackageName             string
@@ -96,13 +96,14 @@ type document struct {
 	APIVersion string `yaml:"apiVersion"`
 	Kind       string `yaml:"kind"`
 	Metadata   struct {
-		Extension           string `yaml:"extension"`
-		ExtensionDefinition string `yaml:"extensionDefinition"`
-		Package             string `yaml:"package"`
-		Language            string `yaml:"language"`
+		Extension           profile.ExtensionReference `yaml:"extension"`
+		ExtensionDefinition string                     `yaml:"extensionDefinition"`
+		Package             string                     `yaml:"package"`
+		Language            string                     `yaml:"language"`
 	} `yaml:"metadata"`
 	Extension struct {
 		ID         string `yaml:"id"`
+		Version    string `yaml:"version"`
 		Definition string `yaml:"definition"`
 	} `yaml:"extension"`
 	Go struct {
@@ -135,14 +136,14 @@ func Read(path string) (*Binding, error) {
 	extensionID := parsed.Metadata.Extension
 	extensionDefinition := parsed.Metadata.ExtensionDefinition
 	if parsed.Kind == "RuntimeConditionsPackage" {
-		extensionID = parsed.Extension.ID
+		extensionID = profile.ExtensionReference{ID: parsed.Extension.ID, Version: parsed.Extension.Version}
 		extensionDefinition = parsed.Extension.Definition
 	}
-	if extensionID == "" {
+	if !extensionID.Valid() {
 		if parsed.Kind == "RuntimeConditionsPackage" {
-			return nil, fmt.Errorf("%s: extension.id is required", path)
+			return nil, fmt.Errorf("%s: extension.id and extension.version are required", path)
 		}
-		return nil, fmt.Errorf("%s: metadata.extension is required", path)
+		return nil, fmt.Errorf("%s: metadata.extension.id and metadata.extension.version are required", path)
 	}
 	if parsed.Metadata.Language == "" {
 		return nil, fmt.Errorf("%s: metadata.language is required", path)

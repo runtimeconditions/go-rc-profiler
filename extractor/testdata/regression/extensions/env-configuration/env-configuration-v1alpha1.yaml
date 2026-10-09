@@ -2,7 +2,7 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://runtimeconditions.io/env-configuration
+  id: https://runtimeconditions.io/env-configuration
   version: v1alpha1
 
 spec:

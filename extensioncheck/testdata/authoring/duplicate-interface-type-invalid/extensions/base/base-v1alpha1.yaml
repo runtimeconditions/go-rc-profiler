@@ -2,7 +2,7 @@ apiVersion: runtimeconditions.io/v1alpha1
 kind: RuntimeConditionsExtensionDefinition
 
 metadata:
-  uri: https://example.com/runtimeconditions/duplicate-interface-base
+  id: https://example.com/runtimeconditions/duplicate-interface-base
   version: v1alpha1
 
 spec:

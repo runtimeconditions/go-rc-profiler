@@ -3,7 +3,6 @@ package check
 import (
 	"fmt"
 	"slices"
-	"strings"
 
 	"github.com/runtimeconditions/go-rc-profiler/extensioncheck/internal/catalog"
 	"github.com/runtimeconditions/go-rc-profiler/extensioncheck/internal/diag"
@@ -36,7 +35,7 @@ func (p *ProfileChecker) Validate(profile catalog.ProfileDocument, rawConditions
 		p.report.Addf("extensions must declare the extension dependency closure used by conditions")
 	}
 
-	declared := make(map[string]bool)
+	declared := make(map[catalog.ExtensionReference]bool)
 	for _, id := range profile.Extensions {
 		if declared[id] {
 			p.report.Addf("duplicate extension id %s", id)
@@ -70,10 +69,10 @@ func (p *ProfileChecker) Validate(profile catalog.ProfileDocument, rawConditions
 	}
 }
 
-func (p *ProfileChecker) extensionClosure(ids []string) map[string]bool {
-	seen := make(map[string]bool)
-	var visit func(string)
-	visit = func(id string) {
+func (p *ProfileChecker) extensionClosure(ids []catalog.ExtensionReference) map[catalog.ExtensionReference]bool {
+	seen := make(map[catalog.ExtensionReference]bool)
+	var visit func(catalog.ExtensionReference)
+	visit = func(id catalog.ExtensionReference) {
 		if seen[id] {
 			return
 		}
@@ -92,7 +91,7 @@ func (p *ProfileChecker) extensionClosure(ids []string) map[string]bool {
 	return seen
 }
 
-func (p *ProfileChecker) vocabulary(ids map[string]bool) catalog.Vocabulary {
+func (p *ProfileChecker) vocabulary(ids map[catalog.ExtensionReference]bool) catalog.Vocabulary {
 	var nodes []*catalog.Node
 	for id := range ids {
 		if node := p.checker.catalog.Nodes[id]; node != nil {
@@ -100,7 +99,7 @@ func (p *ProfileChecker) vocabulary(ids map[string]bool) catalog.Vocabulary {
 		}
 	}
 	slices.SortFunc(nodes, func(left *catalog.Node, right *catalog.Node) int {
-		return strings.Compare(left.ID, right.ID)
+		return left.ID.Compare(right.ID)
 	})
 	return catalog.NewVocabulary(nodes)
 }

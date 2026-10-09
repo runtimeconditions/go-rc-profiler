@@ -24,11 +24,11 @@ func (v Vocabulary) Nodes() []*Node {
 
 // Resolve returns the vocabulary of id together with its transitive
 // dependencies, ordered dependencies first.
-func (c *Catalog) Resolve(id string) Vocabulary {
-	seen := make(map[string]bool)
+func (c *Catalog) Resolve(id ExtensionReference) Vocabulary {
+	seen := make(map[ExtensionReference]bool)
 	var nodes []*Node
-	var visit func(string)
-	visit = func(current string) {
+	var visit func(ExtensionReference)
+	visit = func(current ExtensionReference) {
 		if seen[current] {
 			return
 		}

@@ -3,4 +3,4 @@ root: extensions/app
 languages:
   - go
 requireLanguagePackage: false
-wantErrorContains: "dependency https://example.com/runtimeconditions/missing:v1alpha1 cannot be resolved"
+wantErrorContains: "dependency https://example.com/runtimeconditions/missing@v1alpha1 cannot be resolved"
