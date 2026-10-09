@@ -13,7 +13,8 @@ import (
 // DefaultExtensionFile is the conventional file name for an extension definition.
 const DefaultExtensionFile = "runtimeconditions.extension.yaml"
 
-// ExtensionReference is the parsed form of an extension identifier string.
+// ExtensionReference identifies an extension release. Manifests and dependencies
+// use an id/version object; profiles also accept the scalar reference form.
 type ExtensionReference struct {
 	ID      string `yaml:"id" json:"id"`
 	Version string `yaml:"version" json:"version"`
@@ -29,8 +30,21 @@ func (r ExtensionReference) Compare(other ExtensionReference) int {
 }
 
 func (r *ExtensionReference) UnmarshalYAML(node *yaml.Node) error {
+	if node.Kind == yaml.MappingNode {
+		var fields map[string]any
+		if err := node.Decode(&fields); err != nil {
+			return err
+		}
+		id, idOK := fields["id"].(string)
+		version, versionOK := fields["version"].(string)
+		if len(fields) != 2 || !idOK || id == "" || !versionOK || version == "" {
+			return fmt.Errorf("extension reference must contain non-empty string id and version")
+		}
+		r.ID, r.Version = id, version
+		return nil
+	}
 	if node.Kind != yaml.ScalarNode || node.Tag != "!!str" || node.Value == "" {
-		return fmt.Errorf("extension reference must be a non-empty string")
+		return fmt.Errorf("extension reference must be an id/version object or a non-empty string")
 	}
 	value := node.Value
 	separator := strings.LastIndex(value, ":")
