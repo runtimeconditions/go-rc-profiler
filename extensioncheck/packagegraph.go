@@ -1,6 +1,7 @@
 package extensioncheck
 
 import (
+	"archive/zip"
 	"bytes"
 	"context"
 	"crypto/sha256"
@@ -13,9 +14,12 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	"golang.org/x/mod/modfile"
+	"golang.org/x/mod/module"
 	"golang.org/x/mod/semver"
+	modzip "golang.org/x/mod/zip"
 )
 
 func resolvePackageClosure(ctx context.Context, workloadDir string, listed map[string]goListPackage, modules map[string]goListModule, roots []string) ([]*VerifiedGoPackage, error) {
@@ -164,12 +168,20 @@ func verifyDirectDependencySet(pkg *VerifiedGoPackage, deps map[string]*Verified
 			continue
 		}
 		for _, value := range array(item, "dependencies") {
-			direct[extensionReference(value.(map[string]any))] = true
+			reference, err := modelExtensionReference(pkg.Model, value)
+			if err != nil {
+				return err
+			}
+			direct[reference] = true
 		}
 	}
 	defined := map[ExtensionReference]bool{}
 	for _, value := range array(object(pkg.Extension, "spec"), "dependencies") {
-		defined[extensionReference(value.(map[string]any))] = true
+		reference, err := modelExtensionReference(pkg.Model, value)
+		if err != nil {
+			return err
+		}
+		defined[reference] = true
 	}
 	if len(direct) != len(defined) {
 		return fmt.Errorf("normalized model root dependencies differ from packaged extension definition")
@@ -246,7 +258,11 @@ func verifyInstalledExtensionClosure(pkg *VerifiedGoPackage, byPath map[string]*
 }
 
 func verifyGoPackageDependency(ctx context.Context, workloadDir string, parent *VerifiedGoPackage, entry map[string]any, dep *VerifiedGoPackage) error {
-	if extensionReference(object(entry, "extension")) != dep.ExtensionReference() || stringValue(entry, "coordinate") != dep.ImportPath || stringValue(entry, "name") != dep.name {
+	reference, err := modelExtensionReference(parent.Model, entry["extension"])
+	if err != nil {
+		return err
+	}
+	if reference != dep.ExtensionReference() || stringValue(entry, "coordinate") != dep.ImportPath || stringValue(entry, "name") != dep.name {
 		return fmt.Errorf("package identity differs from installed package")
 	}
 	tested := stringValue(entry, "testedVersion")
@@ -299,8 +315,67 @@ func verifyGoPackageDependency(ctx context.Context, workloadDir string, parent *
 	if _, err := io.Copy(checksum, file); err != nil {
 		return err
 	}
-	if stringValue(object(entry, "artifact"), "kind") != "go-module-zip" || hex.EncodeToString(checksum.Sum(nil)) != stringValue(object(entry, "artifact"), "sha256") {
+	artifactInfo := object(entry, "artifact")
+	if stringValue(artifactInfo, "kind") != "go-module-zip" {
 		return fmt.Errorf("dependency Go module archive SHA-256 mismatch")
 	}
+	expected := stringValue(artifactInfo, "sha256")
+	if hex.EncodeToString(checksum.Sum(nil)) != expected {
+		// Go proxies may encode identical module files in different ZIP bytes.
+		// Reproduce the publisher's archive before comparing its byte checksum.
+		// This still verifies every filename and file byte against that checksum.
+		digest, err := publishedModuleZipSHA256(artifact.Zip, module.Version{Path: dep.module.Path, Version: tested})
+		if err != nil {
+			return err
+		}
+		if digest != expected {
+			return fmt.Errorf("dependency Go module archive SHA-256 mismatch")
+		}
+	}
 	return nil
+}
+
+// Matches the binding publisher's deterministic ZIP: sorted files, deflate,
+// 1980-01-01 UTC, and mode 0644. A valid module ZIP can differ in compression
+// headers, timestamps, and permissions without changing its module contents.
+func publishedModuleZipSHA256(path string, version module.Version) (string, error) {
+	if _, err := modzip.CheckZip(version, path); err != nil {
+		return "", fmt.Errorf("dependency Go module archive: %w", err)
+	}
+	reader, err := zip.OpenReader(path)
+	if err != nil {
+		return "", err
+	}
+	defer reader.Close()
+	sort.Slice(reader.File, func(i, j int) bool { return reader.File[i].Name < reader.File[j].Name })
+	checksum := sha256.New()
+	writer := zip.NewWriter(checksum)
+	for _, file := range reader.File {
+		if file.FileInfo().IsDir() {
+			continue
+		}
+		header := &zip.FileHeader{Name: file.Name, Method: zip.Deflate}
+		header.SetModTime(time.Date(1980, 1, 1, 0, 0, 0, 0, time.UTC))
+		header.SetMode(0644)
+		stream, err := writer.CreateHeader(header)
+		if err != nil {
+			return "", err
+		}
+		source, err := file.Open()
+		if err != nil {
+			return "", err
+		}
+		_, copyErr := io.Copy(stream, source)
+		closeErr := source.Close()
+		if copyErr != nil {
+			return "", copyErr
+		}
+		if closeErr != nil {
+			return "", closeErr
+		}
+	}
+	if err := writer.Close(); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(checksum.Sum(nil)), nil
 }

@@ -61,8 +61,8 @@ func FinalizeGeneratedProfile(ctx context.Context, workloadDir string, profile m
 	listed := make([]any, len(direct))
 	for i, id := range direct {
 		listed[i] = id.ID
-		if id.Version != "" {
-			listed[i] = id.ID + ":" + id.Version
+		if version := stringValue(object(byID[id].Manifest, "extension"), "version"); version != "" {
+			listed[i] = id.ID + ":" + version
 		}
 	}
 	result["extensions"] = listed
@@ -126,13 +126,15 @@ func verifyVocabularyOwnership(packages []*VerifiedGoPackage) error {
 	return nil
 }
 
-// Vocabulary provenance supplies the owner ID and semantic digest; the model
-// closure supplies the corresponding exact release.
+// Vocabulary nodes supply an owner ID and semantic digest. Owner inventory
+// entries carry just the ID. Resolve both through the verified model closure,
+// rejecting an ambiguous ID and checking any digest supplied by the node.
 func vocabularyReference(model, item map[string]any) (ExtensionReference, error) {
 	reference := ExtensionReference{}
+	owner, digest := stringValue(item, "owner"), stringValue(item, "extensionSha256")
 	for _, entry := range array(model, "extensions") {
 		identity := entry.(map[string]any)
-		if stringValue(identity, "id") != stringValue(item, "owner") || stringValue(identity, "semanticSha256") != stringValue(item, "extensionSha256") {
+		if stringValue(identity, "id") != owner || (digest != "" && stringValue(identity, "semanticSha256") != digest) {
 			continue
 		}
 		if reference.Valid() {
@@ -391,7 +393,11 @@ func installedClosure(direct []ExtensionReference, byID map[ExtensionReference]*
 		}
 		closure[id] = true
 		for _, entry := range array(pkg.Release, "packageDependencies") {
-			if err := visit(extensionReference(object(entry.(map[string]any), "extension"))); err != nil {
+			reference, err := modelExtensionReference(pkg.Model, entry.(map[string]any)["extension"])
+			if err != nil {
+				return err
+			}
+			if err := visit(reference); err != nil {
 				return err
 			}
 		}

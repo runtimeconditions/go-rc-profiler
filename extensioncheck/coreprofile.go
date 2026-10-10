@@ -42,10 +42,26 @@ func loadCoreProfileSchema(packages []*VerifiedGoPackage) (*jsonschema.Schema, e
 	for _, binding := range packages {
 		identity := object(binding.Model, "coreProfileSchema")
 		if stringValue(identity, "id") != id || stringValue(identity, "semanticSha256") != digest || stringValue(identity, "version") != version {
-			return nil, fmt.Errorf("core profile schema identity, version, or digest differs from model in %s", binding.ImportPath)
+			if !compatibleCoreProfileInput(identity, id, version, digest) {
+				return nil, fmt.Errorf("core profile schema identity, version, or digest differs from model in %s", binding.ImportPath)
+			}
 		}
 	}
 	return compileDraft2020(document, id)
+}
+
+// Published v0.1.0 bindings were normalized against core 0.2.0. Core 0.4.0
+// retains that profile structure and relaxes extension identifier syntax to
+// accept complete definition URIs. Validate output with the installed 0.4.0
+// schema while accepting only this exact, approved older generator input.
+// Both digests are required; a version label alone cannot authorize migration.
+func compatibleCoreProfileInput(identity map[string]any, installedID, installedVersion, installedDigest string) bool {
+	return installedID == "https://runtimeconditions.io/schemas/profile/0.4.0/runtimeconditions.profile.schema.yaml" &&
+		installedVersion == "0.4.0" &&
+		installedDigest == "ed447dccefd7507d905b0b6177b1386d8ee96a1d053b731939a9a7ae973d5af1" &&
+		stringValue(identity, "id") == "https://runtimeconditions.io/schemas/profile/0.2.0/runtimeconditions.profile.schema.yaml" &&
+		stringValue(identity, "version") == "0.2.0" &&
+		stringValue(identity, "semanticSha256") == "a090a8016d045f9c3fa872a67f8df293b77ca2809a1bea5ae9fa31a27a06109a"
 }
 
 func compileDraft2020(document map[string]any, uri string) (*jsonschema.Schema, error) {

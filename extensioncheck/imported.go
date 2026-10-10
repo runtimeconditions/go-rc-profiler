@@ -246,8 +246,11 @@ func validateImportedGoPackage(pkg goListPackage) (*VerifiedGoPackage, error) {
 	manifestExtension := object(manifest, "extension")
 	rootID := stringValue(rootInfo, "id")
 	rootDigest := stringValue(rootInfo, "semanticSha256")
-	if extensionReference(manifestExtension) != extensionReference(rootInfo) || stringValue(manifestExtension, "semanticSha256") != rootDigest {
+	if stringValue(manifestExtension, "id") != rootID || stringValue(manifestExtension, "semanticSha256") != rootDigest {
 		return nil, fmt.Errorf("root extension identity mismatch between package resources")
+	}
+	if version := stringValue(manifestExtension, "version"); version != "" && version != stringValue(rootInfo, "version") {
+		return nil, fmt.Errorf("legacy binding manifest extension version differs from normalized model")
 	}
 	schemaBytes, err := bindingSchemas.ReadFile("schema/runtimeconditions.extension-semantic.schema.yaml")
 	if err != nil {
@@ -282,6 +285,35 @@ func validateImportedGoPackage(pkg goListPackage) (*VerifiedGoPackage, error) {
 
 func extensionReference(value map[string]any) ExtensionReference {
 	return ExtensionReference{ID: stringValue(value, "id"), Version: stringValue(value, "version")}
+}
+
+// Current references identify an extension by its complete ID. Resolve its
+// optional version annotation from the model rather than parsing the URI.
+// Legacy object references continue to carry an explicit version identity.
+func modelExtensionReference(model map[string]any, value any) (ExtensionReference, error) {
+	if legacy, ok := value.(map[string]any); ok {
+		return extensionReference(legacy), nil
+	}
+	id, ok := value.(string)
+	if !ok || id == "" {
+		return ExtensionReference{}, fmt.Errorf("invalid extension reference %v", value)
+	}
+	var reference ExtensionReference
+	found := false
+	for _, entry := range array(model, "extensions") {
+		item := entry.(map[string]any)
+		if stringValue(item, "id") != id {
+			continue
+		}
+		if found {
+			return ExtensionReference{}, fmt.Errorf("ambiguous extension ID %s in normalized model", id)
+		}
+		reference, found = extensionReference(item), true
+	}
+	if !found {
+		return ExtensionReference{}, fmt.Errorf("extension ID %s is absent from normalized model", id)
+	}
+	return reference, nil
 }
 
 func (p ImportedGoPackage) ExtensionReference() ExtensionReference {

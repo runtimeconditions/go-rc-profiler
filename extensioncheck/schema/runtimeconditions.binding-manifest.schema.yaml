@@ -41,7 +41,7 @@ properties:
   extension:
     type: object
     additionalProperties: false
-    required: [id, version, semanticSha256]
+    required: [id, semanticSha256]
     properties:
       id: {$ref: '#/$defs/extensionIdentifier'}
       version: {type: string, minLength: 1}

@@ -51,12 +51,15 @@ $defs:
     type: string
     minLength: 1
   extensionReference:
-    type: object
-    additionalProperties: false
-    required: [id, version]
-    properties:
-      id: {$ref: '#/$defs/extensionIdentifier'}
-      version: {type: string, minLength: 1}
+    description: An extension ID, or a legacy ID and version reference.
+    oneOf:
+      - {$ref: '#/$defs/extensionIdentifier'}
+      - type: object
+        additionalProperties: false
+        required: [id, version]
+        properties:
+          id: {$ref: '#/$defs/extensionIdentifier'}
+          version: {type: string, minLength: 1}
   sha256:
     type: string
     pattern: '^[0-9a-f]{64}$'
@@ -77,7 +80,7 @@ $defs:
       normalizer: {$ref: '#/$defs/toolIdentity'}
   artifactIdentity:
     type: object
-    required: [id, version, semanticSha256]
+    required: [id, semanticSha256]
     additionalProperties: false
     properties:
       id: {$ref: '#/$defs/extensionIdentifier'}
@@ -93,7 +96,7 @@ $defs:
       semanticSha256: {$ref: '#/$defs/sha256'}
   resolvedExtension:
     type: object
-    required: [id, version, semanticSha256]
+    required: [id, semanticSha256]
     additionalProperties: false
     properties:
       id: {$ref: '#/$defs/extensionIdentifier'}

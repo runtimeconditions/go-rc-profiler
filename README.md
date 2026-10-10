@@ -17,9 +17,8 @@ or competing project. Start at https://runtimeconditions.github.io/.
   core profile schema. Download the archive for your platform from
   [GitHub Releases](https://github.com/runtimeconditions/go-rc-profiler/releases).
 - A published generated Go binding module available through your normal Go
-  package management configuration. Public binding modules are not yet
-  published by this project; the modules in the conformance suite are test
-  infrastructure.
+  package management configuration, such as `runtimeconditions.io/x/rc/common`
+  or `runtimeconditions.io/x/rc/env`.
 
 The developer does not need an `extensions`, `spec`, or profiler source
 checkout. The Go module download supplies each binding package. Its generated
@@ -41,33 +40,43 @@ The [release workflow](.github/workflows/release.yaml) runs on `vMAJOR.MINOR.PAT
 tags, including prereleases. It runs the test workflow, builds and checks each
 executable on its native platform, and publishes archives plus `checksums.txt`
 only after all jobs pass. The core schema is downloaded from the pinned `spec`
-release `v0.1.0`, checked against the digest in
+release `v0.4.0`, checked against the digest in
 [the build script](scripts/build-with-core-schema.sh), and embedded in each
 binary. A manual workflow run builds artifacts without publishing a release.
 
 ## Generate a profile
 
 Set `PROJECT_DIR` to the absolute path of the Go project you want to profile.
-Use the *published Go module path and version* supplied by the binding
-publisher; the following module name is illustrative.
+Install the published binding modules needed by your project:
 
 ```sh
 PROJECT_DIR="$HOME/work/my-service"
-go -C "$PROJECT_DIR" get github.com/acme/rc-service-binding@v1.2.3
+go -C "$PROJECT_DIR" get runtimeconditions.io/x/rc/common@v0.1.0 runtimeconditions.io/x/rc/env@v0.1.0
 ```
 
-Import that binding package in the project's Go source and use its generated
-declaration API. For example, if the published package provides these names:
+Import the binding packages in the project's Go source and use their generated
+declaration APIs. For example:
 
 ```go
-package service
+package main
 
-import binding "github.com/acme/rc-service-binding"
-
-var _ = binding.Service(
-    binding.Http{Endpoint: "https://api.example.com"},
-    binding.Region("eu"),
+import (
+    "runtimeconditions.io/x/rc/common"
+    "runtimeconditions.io/x/rc/env"
 )
+
+func init() {
+    _ = common.Cache(
+        common.KeyValue{Engine: &[]common.KeyValueEngine{common.KeyValueEngineRedis}[0]},
+        env.KeyValueConfiguration{
+            Env: env.KeyValueConfigurationEnv{
+                {Name: "REDIS_URL", Property: env.KeyValueConfigurationEnvPropertyUrl},
+            },
+        },
+    )
+}
+
+func main() {}
 ```
 
 Use the real declarations and types supplied by your binding package. The
@@ -97,20 +106,32 @@ Omit `-out` to print YAML to stdout. If you omit the identity flags, the
 defaults are the project directory name for `-name`, its Go module path for
 `-workload-uri`, and `dev` for `-workload-version`.
 
-The Go import path identifies the **binding package**. Profile `extensions`
-entries are strings formed from the extension definition's `metadata.id`, with
-`:metadata.version` appended only when a version is declared:
+The Go import path identifies the **binding package**. Current bindings identify
+extensions by their complete definition URI. Profile `extensions` entries use
+that URI directly:
 
 ```yaml
 extensions:
-  - https://extensions.example.com/provider/service:v1alpha1
+  - https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml
+  - https://runtimeconditions.io/extensions/env-configuration/v1alpha1/runtimeconditions.extension.yaml
 ```
 
-`metadata.id` is required and `metadata.version` is optional. Profile identifiers
-may be bare IDs or append any version string after a colon. The profiler checks
-the full dependency closure, including validation-only dependencies, using the
-installed binding resources. Profiles use core schema `0.4.0`. Profile consumers
-resolve the declared references through their configured extension resolver.
+`metadata.id` is required and `metadata.version` is an optional annotation.
+Legacy binding manifests that explicitly identify an extension by both ID and
+version remain supported and produce `id:version` profile entries. The profiler
+checks the full dependency closure, including validation-only dependencies,
+using the installed binding resources. Profiles use core schema `0.4.0`.
+The exact approved `0.2.0` core input recorded in the published `v0.1.0`
+bindings is also supported; output is validated with core `0.4.0`, which accepts
+complete definition URIs. Other core identities or digests must match the
+installed schema. Profile consumers resolve the declared references through
+their configured extension resolver.
+
+Dependency archive checks accept the publisher's exact ZIP bytes or reproduce
+its deterministic ZIP from Go's downloaded module files before comparing the
+recorded SHA-256. This permits proxy ZIP metadata differences while retaining
+the file inventory and content check. Go's module checksum verification also
+runs before package inspection.
 
 To inspect installed binding packages before generation, use their Go import
 paths:
@@ -119,7 +140,7 @@ paths:
 go-rc-profiler validate-extensions -dir "$PROJECT_DIR"
 go-rc-profiler validate-extension \
   -dir "$PROJECT_DIR" \
-  -package github.com/acme/rc-service-binding
+  -package runtimeconditions.io/x/rc/common
 ```
 
 `generate` already performs the checks needed for its output. These separate

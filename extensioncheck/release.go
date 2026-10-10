@@ -82,7 +82,11 @@ func checkDependencyLock(release, model map[string]any, dir string) error {
 				return fmt.Errorf("binding release dependency lock %s %s differs from normalized model", id, key)
 			}
 		}
-		if !equalReferenceSets(array(item, "dependencies"), array(modelExtension, "dependencies")) {
+		equal, err := equalReferenceSets(model, array(item, "dependencies"), array(modelExtension, "dependencies"))
+		if err != nil {
+			return err
+		}
+		if !equal {
 			return fmt.Errorf("binding release dependency lock %s dependencies differ from normalized model", id)
 		}
 		if id == rootID {
@@ -102,18 +106,26 @@ func checkDependencyLock(release, model map[string]any, dir string) error {
 	return nil
 }
 
-func equalReferenceSets(a, b []any) bool {
+func equalReferenceSets(model map[string]any, a, b []any) (bool, error) {
 	if len(a) != len(b) {
-		return false
+		return false, nil
 	}
 	left, right := make([]ExtensionReference, len(a)), make([]ExtensionReference, len(b))
 	for i := range a {
-		left[i] = extensionReference(a[i].(map[string]any))
+		var err error
+		left[i], err = modelExtensionReference(model, a[i])
+		if err != nil {
+			return false, err
+		}
 	}
 	for i := range b {
-		right[i] = extensionReference(b[i].(map[string]any))
+		var err error
+		right[i], err = modelExtensionReference(model, b[i])
+		if err != nil {
+			return false, err
+		}
 	}
 	slices.SortFunc(left, ExtensionReference.Compare)
 	slices.SortFunc(right, ExtensionReference.Compare)
-	return slices.Equal(left, right)
+	return slices.Equal(left, right), nil
 }
