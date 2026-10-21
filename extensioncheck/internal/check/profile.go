@@ -36,16 +36,18 @@ func (p *ProfileChecker) Validate(profile catalog.ProfileDocument, rawConditions
 	}
 
 	declared := make(map[catalog.ExtensionReference]bool)
-	for _, id := range profile.Extensions {
+	for index, reference := range profile.Extensions {
+		id, err := p.checker.catalog.ResolveReference(reference)
+		if err != nil {
+			p.report.Addf("%v", err)
+			continue
+		}
+		profile.Extensions[index] = id
 		if declared[id] {
 			p.report.Addf("duplicate extension id %s", id)
 			continue
 		}
 		declared[id] = true
-		if p.checker.catalog.Nodes[id] == nil {
-			p.report.Addf("missing extension definition for %s", id)
-			continue
-		}
 		p.checker.ValidateNode(id)
 	}
 
@@ -73,6 +75,12 @@ func (p *ProfileChecker) extensionClosure(ids []catalog.ExtensionReference) map[
 	seen := make(map[catalog.ExtensionReference]bool)
 	var visit func(catalog.ExtensionReference)
 	visit = func(id catalog.ExtensionReference) {
+		resolved, err := p.checker.catalog.ResolveReference(id)
+		if err != nil {
+			// ValidateNode has already reported the failure.
+			return
+		}
+		id = resolved
 		if seen[id] {
 			return
 		}

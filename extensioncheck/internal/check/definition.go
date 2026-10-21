@@ -32,7 +32,7 @@ func (c *Checker) validateDefinition(node *catalog.Node) {
 		c.collector.Addf(node.DefinitionPath, "spec must define at least one vocabulary item or schema")
 	}
 	for _, dependency := range def.Spec.Dependencies {
-		if c.catalog.Nodes[dependency] == nil {
+		if _, err := c.catalog.ResolveReference(dependency); err != nil {
 			c.collector.Addf(node.DefinitionPath, "dependency %s cannot be resolved", dependency)
 		}
 	}
