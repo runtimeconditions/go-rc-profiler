@@ -44,6 +44,18 @@ release `v0.4.0`, checked against the digest in
 [the build script](scripts/build-with-core-schema.sh), and embedded in each
 binary. A manual workflow run builds artifacts without publishing a release.
 
+## Use as a library
+
+Package `cli` exposes the command line as `cli.Run(ctx, args, stdout, stderr)`, and `cli.Exit` turns its
+error into an exit code. The `go` toolchain must be on `PATH`. The core schema is never committed, so a
+program that imports `cli` must pass the same link-time flag as the release build:
+
+```sh
+go build -ldflags "-X github.com/runtimeconditions/go-rc-profiler/extensioncheck.installedCoreSchemaBase64=$(base64 < schema.yaml | tr -d '\r\n')"
+```
+
+`--version --json` prints the name, version and supported core schemas for callers such as `rc`.
+
 ## Generate a profile
 
 Set `PROJECT_DIR` to the absolute path of the Go project you want to profile.

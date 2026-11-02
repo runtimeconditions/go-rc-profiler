@@ -28,6 +28,6 @@ if [[ ! "$build_version" =~ ^[A-Za-z0-9.+-]+$ || ! "$build_commit" =~ ^[A-Za-z0-
 fi
 script_dir=$(cd -- "$(dirname -- "$0")" && pwd)
 cd "$script_dir/.."
-linker_flags="-X github.com/runtimeconditions/go-rc-profiler/extensioncheck.installedCoreSchemaBase64=$schema_base64 -X main.version=$build_version -X main.commit=$build_commit"
+linker_flags="-X github.com/runtimeconditions/go-rc-profiler/extensioncheck.installedCoreSchemaBase64=$schema_base64 -X github.com/runtimeconditions/go-rc-profiler/cli.version=$build_version -X github.com/runtimeconditions/go-rc-profiler/cli.commit=$build_commit"
 go test -ldflags "$linker_flags" ./extensioncheck
 CGO_ENABLED=0 go build -trimpath -ldflags "$linker_flags" -o "$output_binary" .
