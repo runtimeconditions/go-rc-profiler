@@ -3,6 +3,7 @@
 package catalog
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -164,4 +165,31 @@ func pathWithin(root string, path string) bool {
 		return false
 	}
 	return rel == "." || (!strings.HasPrefix(rel, ".."+string(filepath.Separator)) && rel != "..")
+}
+
+// ResolveReference maps a current ID-only reference to its unique catalog release.
+// metadata.version is an annotation for those references. Legacy references with
+// an explicit version still require an exact match and never select another one.
+func (c *Catalog) ResolveReference(ref ExtensionReference) (ExtensionReference, error) {
+	if ref.Version != "" {
+		if c.Nodes[ref] != nil {
+			return ref, nil
+		}
+		return ExtensionReference{}, fmt.Errorf("missing extension definition for %s", ref)
+	}
+	var matches []ExtensionReference
+	for id := range c.Nodes {
+		if id.ID == ref.ID {
+			matches = append(matches, id)
+		}
+	}
+	slices.SortFunc(matches, ExtensionReference.Compare)
+	switch len(matches) {
+	case 0:
+		return ExtensionReference{}, fmt.Errorf("missing extension definition for %s", ref)
+	case 1:
+		return matches[0], nil
+	default:
+		return ExtensionReference{}, fmt.Errorf("ambiguous extension ID %s: %v", ref.ID, matches)
+	}
 }

@@ -137,15 +137,17 @@ func ResolveExtensionClosure(ids []ExtensionReference, opts ProfileOptions) ([]E
 	seen := make(map[ExtensionReference]bool)
 	var visit func(ExtensionReference)
 	visit = func(id ExtensionReference) {
+		resolved, err := loaded.ResolveReference(id)
+		if err != nil {
+			collector.Addf(id.String(), "%v", err)
+			return
+		}
+		id = resolved
 		if seen[id] {
 			return
 		}
 		seen[id] = true
 		node := loaded.Nodes[id]
-		if node == nil {
-			collector.Addf(id.String(), "missing extension definition for %s", id)
-			return
-		}
 		checker.ValidateNode(id)
 		for _, dependency := range node.Definition.Spec.Dependencies {
 			visit(dependency)
