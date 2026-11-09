@@ -116,6 +116,25 @@ $defs:
       name: {$ref: '#/$defs/nonEmptyString'}
       version: {$ref: '#/$defs/nonEmptyString'}
       sha256: {$ref: '#/$defs/sha256'}
+  profilerIdentity:
+    oneOf:
+      - {$ref: '#/$defs/toolIdentity'}
+      - {$ref: '#/$defs/linkedGoProfilerIdentity'}
+  linkedGoProfilerIdentity:
+    description: Exact linked Go profiler dependency, distinct from an executable digest.
+    type: object
+    additionalProperties: false
+    required: [kind, name, version, module, moduleSum]
+    properties:
+      kind: {const: go-module}
+      name: {const: go-rc-profiler}
+      version:
+        type: string
+        pattern: '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\.(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(\+incompatible)?$'
+      module: {const: github.com/runtimeconditions/go-rc-profiler}
+      moduleSum:
+        type: string
+        pattern: '^h1:[A-Za-z0-9+/]{42}[AEIMQUYcgkosw048]=$'
   package:
     description: >-
       Matches the emitter target and runtimeconditions.bindings.yaml package.
@@ -266,7 +285,7 @@ $defs:
     properties:
       mode: {const: test-fixture}
       fixtureAssembler: {$ref: '#/$defs/toolIdentity'}
-      profiler: {$ref: '#/$defs/toolIdentity'}
+      profiler: {$ref: '#/$defs/profilerIdentity'}
   productionProvenance:
     description: >-
       Phase 5 and later committed package assembly. Source directory and tag
@@ -278,7 +297,7 @@ $defs:
     properties:
       mode: {const: production}
       orchestrator: {$ref: '#/$defs/toolIdentity'}
-      profiler: {$ref: '#/$defs/toolIdentity'}
+      profiler: {$ref: '#/$defs/profilerIdentity'}
       sourceDirectory:
         type: string
         pattern: '^bindings/[a-z0-9]+(?:-[a-z0-9]+)*/(go|python)$'
