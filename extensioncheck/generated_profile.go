@@ -60,10 +60,7 @@ func FinalizeGeneratedProfile(ctx context.Context, workloadDir string, profile m
 	}
 	listed := make([]any, len(direct))
 	for i, id := range direct {
-		listed[i] = id.ID
-		if version := stringValue(object(byID[id].Manifest, "extension"), "version"); version != "" {
-			listed[i] = id.ID + ":" + version
-		}
+		listed[i] = id.ProfileString()
 	}
 	result["extensions"] = listed
 	coreSchema, err := loadCoreProfileSchema(packages)

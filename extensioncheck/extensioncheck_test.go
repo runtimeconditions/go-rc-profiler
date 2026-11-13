@@ -448,3 +448,37 @@ func writeFiles(t *testing.T, files map[string]string) {
 		}
 	}
 }
+
+func TestValidateProfileYAMLAcceptsAShortExtensionReference(t *testing.T) {
+	root := t.TempDir()
+	writeFiles(t, map[string]string{
+		filepath.Join(root, "jobs.yaml"): `apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+metadata:
+  id: https://example.com/rc/jobs/v1/runtimeconditions.extension.yaml
+  version: v1
+spec:
+  kinds:
+  - name: job
+  interfaceTypes:
+  - name: queue
+    targetKind: job
+`,
+	})
+	profile := func(extension string) []byte {
+		return []byte("apiVersion: runtimeconditions.io/v1alpha1\nkind: RuntimeConditionsProfile\nextensions:\n- " + extension + "\nconditions:\n- kind: job\n  interface:\n    type: queue\n")
+	}
+	options := ProfileOptions{CatalogRoots: []string{root}}
+	for _, extension := range []string{
+		"https://example.com/rc/jobs:v1",
+		"https://example.com/rc/jobs/v1/runtimeconditions.extension.yaml:v1",
+	} {
+		if err := ValidateProfileYAML(profile(extension), options); err != nil {
+			t.Fatalf("%s: %v", extension, err)
+		}
+	}
+	err := ValidateProfileYAML(profile("https://example.com/rc/jobs:v2"), options)
+	if err == nil || !strings.Contains(err.Error(), "missing extension definition") {
+		t.Fatalf("unknown version should be rejected, got %v", err)
+	}
+}

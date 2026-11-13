@@ -35,8 +35,20 @@ func (p *ProfileChecker) Validate(profile catalog.ProfileDocument, rawConditions
 		p.report.Addf("extensions must declare the extension dependency closure used by conditions")
 	}
 
+	// A profile names an extension as <short-url>:<version>. Look each one up by the
+	// full id and version of its definition when the catalog holds it that way.
+	extensions := make([]catalog.ExtensionReference, len(profile.Extensions))
+	for i, id := range profile.Extensions {
+		extensions[i] = id
+		if p.checker.catalog.Nodes[id] == nil {
+			if expanded := catalog.ExpandProfileReference(id); p.checker.catalog.Nodes[expanded] != nil {
+				extensions[i] = expanded
+			}
+		}
+	}
+
 	declared := make(map[catalog.ExtensionReference]bool)
-	for _, id := range profile.Extensions {
+	for _, id := range extensions {
 		if declared[id] {
 			p.report.Addf("duplicate extension id %s", id)
 			continue
@@ -51,7 +63,7 @@ func (p *ProfileChecker) Validate(profile catalog.ProfileDocument, rawConditions
 
 	// A profile must name every extension it depends on, not just the ones it
 	// uses directly, so that its vocabulary is reproducible from the list alone.
-	closure := p.extensionClosure(profile.Extensions)
+	closure := p.extensionClosure(extensions)
 	for id := range closure {
 		if !declared[id] {
 			p.report.Addf("extensions missing dependency %s", id)
