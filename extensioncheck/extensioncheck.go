@@ -4,6 +4,7 @@
 package extensioncheck
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -137,6 +138,12 @@ func ResolveExtensionClosure(ids []ExtensionReference, opts ProfileOptions) ([]E
 	seen := make(map[ExtensionReference]bool)
 	var visit func(ExtensionReference)
 	visit = func(id ExtensionReference) {
+		if resolved, err := loaded.Lookup(id); err == nil {
+			id = resolved
+		} else if errors.Is(err, catalog.ErrAmbiguous) {
+			collector.Addf(id.String(), "%v", err)
+			return
+		}
 		if seen[id] {
 			return
 		}

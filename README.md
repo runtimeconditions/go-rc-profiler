@@ -131,7 +131,11 @@ extensions:
 
 An id that is not an https URL ending that way is written whole, and an extension
 with no version is written as its bare id. When it validates a profile, the profiler
-expands a short entry back to the definition's full id and version.
+expands a short entry back to the definition's full id and version. A dependency, or
+a profile entry, that names an extension by its id alone resolves to the one definition
+with that id, whatever `metadata.version` it carries. An id shared by several versions
+is ambiguous and is rejected until a version is given, and an explicit version must
+match exactly.
 
 `metadata.id` is required and `metadata.version` is an optional annotation. The profiler
 checks the full dependency closure, including validation-only dependencies,

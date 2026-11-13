@@ -1,6 +1,7 @@
 package check
 
 import (
+	"errors"
 	"fmt"
 	"slices"
 
@@ -35,15 +36,15 @@ func (p *ProfileChecker) Validate(profile catalog.ProfileDocument, rawConditions
 		p.report.Addf("extensions must declare the extension dependency closure used by conditions")
 	}
 
-	// A profile names an extension as <short-url>:<version>. Look each one up by the
-	// full id and version of its definition when the catalog holds it that way.
+	// A profile entry may be a short <url>:<version> reference or an id without a
+	// version. Look each one up as the definition it names.
 	extensions := make([]catalog.ExtensionReference, len(profile.Extensions))
 	for i, id := range profile.Extensions {
 		extensions[i] = id
-		if p.checker.catalog.Nodes[id] == nil {
-			if expanded := catalog.ExpandProfileReference(id); p.checker.catalog.Nodes[expanded] != nil {
-				extensions[i] = expanded
-			}
+		if resolved, err := p.checker.catalog.Lookup(id); err == nil {
+			extensions[i] = resolved
+		} else if errors.Is(err, catalog.ErrAmbiguous) {
+			p.report.Addf("%v", err)
 		}
 	}
 
@@ -94,6 +95,9 @@ func (p *ProfileChecker) extensionClosure(ids []catalog.ExtensionReference) map[
 			return
 		}
 		for _, dependency := range node.Definition.Spec.Dependencies {
+			if resolved, err := p.checker.catalog.Lookup(dependency); err == nil {
+				dependency = resolved
+			}
 			visit(dependency)
 		}
 	}

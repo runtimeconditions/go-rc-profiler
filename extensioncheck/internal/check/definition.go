@@ -1,6 +1,7 @@
 package check
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/runtimeconditions/go-rc-profiler/extensioncheck/internal/catalog"
@@ -32,7 +33,9 @@ func (c *Checker) validateDefinition(node *catalog.Node) {
 		c.collector.Addf(node.DefinitionPath, "spec must define at least one vocabulary item or schema")
 	}
 	for _, dependency := range def.Spec.Dependencies {
-		if c.catalog.Nodes[dependency] == nil {
+		if _, err := c.catalog.Lookup(dependency); errors.Is(err, catalog.ErrAmbiguous) {
+			c.collector.Addf(node.DefinitionPath, "dependency %s is ambiguous: %v", dependency, err)
+		} else if err != nil {
 			c.collector.Addf(node.DefinitionPath, "dependency %s cannot be resolved", dependency)
 		}
 	}
