@@ -61,10 +61,39 @@ func (r *ExtensionReference) UnmarshalYAML(node *yaml.Node) error {
 }
 
 func (r ExtensionReference) MarshalYAML() (any, error) {
+	return r.ProfileString(), nil
+}
+
+// ProfileString is the reference as a profile writes it: <short-url>:<version>.
+// The short URL is the extension id without its trailing
+// /<version>/runtimeconditions.extension.yaml. An id that is not an https URL
+// ending that way is kept whole, and a reference without a version is the bare id.
+func (r ExtensionReference) ProfileString() string {
 	if r.Version == "" {
-		return r.ID, nil
+		return r.ID
 	}
-	return r.ID + ":" + r.Version, nil
+	if short, ok := r.shortID(); ok {
+		return short + ":" + r.Version
+	}
+	return r.ID + ":" + r.Version
+}
+
+func (r ExtensionReference) shortID() (string, bool) {
+	tail := "/" + r.Version + "/" + DefaultExtensionFile
+	if r.Version != "" && strings.HasPrefix(r.ID, "https://") && strings.HasSuffix(r.ID, tail) {
+		return strings.TrimSuffix(r.ID, tail), true
+	}
+	return "", false
+}
+
+// ExpandProfileReference turns a short <url>:<version> profile reference back into
+// the full id and version of a definition. A reference that already names a
+// definition, or that has no version, is returned unchanged.
+func ExpandProfileReference(r ExtensionReference) ExtensionReference {
+	if r.Version == "" || !strings.HasPrefix(r.ID, "https://") || strings.HasSuffix(r.ID, "/"+DefaultExtensionFile) {
+		return r
+	}
+	return ExtensionReference{ID: r.ID + "/" + r.Version + "/" + DefaultExtensionFile, Version: r.Version}
 }
 
 // ExtensionDefinition is a RuntimeConditionsExtensionDefinition document. It

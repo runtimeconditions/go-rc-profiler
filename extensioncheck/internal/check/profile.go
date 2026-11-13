@@ -1,6 +1,7 @@
 package check
 
 import (
+	"errors"
 	"fmt"
 	"slices"
 
@@ -35,8 +36,20 @@ func (p *ProfileChecker) Validate(profile catalog.ProfileDocument, rawConditions
 		p.report.Addf("extensions must declare the extension dependency closure used by conditions")
 	}
 
+	// A profile entry may be a short <url>:<version> reference or an id without a
+	// version. Look each one up as the definition it names.
+	extensions := make([]catalog.ExtensionReference, len(profile.Extensions))
+	for i, id := range profile.Extensions {
+		extensions[i] = id
+		if resolved, err := p.checker.catalog.Lookup(id); err == nil {
+			extensions[i] = resolved
+		} else if errors.Is(err, catalog.ErrAmbiguous) {
+			p.report.Addf("%v", err)
+		}
+	}
+
 	declared := make(map[catalog.ExtensionReference]bool)
-	for _, id := range profile.Extensions {
+	for _, id := range extensions {
 		if declared[id] {
 			p.report.Addf("duplicate extension id %s", id)
 			continue
@@ -51,7 +64,7 @@ func (p *ProfileChecker) Validate(profile catalog.ProfileDocument, rawConditions
 
 	// A profile must name every extension it depends on, not just the ones it
 	// uses directly, so that its vocabulary is reproducible from the list alone.
-	closure := p.extensionClosure(profile.Extensions)
+	closure := p.extensionClosure(extensions)
 	for id := range closure {
 		if !declared[id] {
 			p.report.Addf("extensions missing dependency %s", id)
@@ -82,6 +95,9 @@ func (p *ProfileChecker) extensionClosure(ids []catalog.ExtensionReference) map[
 			return
 		}
 		for _, dependency := range node.Definition.Spec.Dependencies {
+			if resolved, err := p.checker.catalog.Lookup(dependency); err == nil {
+				dependency = resolved
+			}
 			visit(dependency)
 		}
 	}

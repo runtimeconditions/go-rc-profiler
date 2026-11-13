@@ -3,6 +3,8 @@
 package catalog
 
 import (
+	"errors"
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -30,6 +32,43 @@ type Node struct {
 // indexed by extension id.
 type Catalog struct {
 	Nodes map[ExtensionReference]*Node
+}
+
+// ErrNotFound and ErrAmbiguous classify a failed Lookup.
+var (
+	ErrNotFound  = errors.New("no extension definition")
+	ErrAmbiguous = errors.New("more than one extension definition")
+)
+
+// Lookup returns the key of the definition a reference names. An exact
+// (id, version) match wins. A reference with a version may instead be a short
+// <url>:<version> profile reference, which names the definition at the full id
+// built from it. A reference without a version names the one definition with
+// that id, whatever version annotation it carries; two or more is ambiguous.
+func (c *Catalog) Lookup(reference ExtensionReference) (ExtensionReference, error) {
+	if c.Nodes[reference] != nil {
+		return reference, nil
+	}
+	if reference.Version != "" {
+		if expanded := ExpandProfileReference(reference); c.Nodes[expanded] != nil {
+			return expanded, nil
+		}
+		return reference, fmt.Errorf("%w for %s", ErrNotFound, reference)
+	}
+	var matches []ExtensionReference
+	for key := range c.Nodes {
+		if key.ID == reference.ID {
+			matches = append(matches, key)
+		}
+	}
+	switch len(matches) {
+	case 0:
+		return reference, fmt.Errorf("%w for %s", ErrNotFound, reference)
+	case 1:
+		return matches[0], nil
+	}
+	slices.SortFunc(matches, ExtensionReference.Compare)
+	return reference, fmt.Errorf("%w with id %s: %v", ErrAmbiguous, reference.ID, matches)
 }
 
 // Load walks roots and indexes every extension definition it finds. Problems

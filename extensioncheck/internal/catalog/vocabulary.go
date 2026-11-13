@@ -32,6 +32,12 @@ func (c *Catalog) Resolve(id ExtensionReference) Vocabulary {
 		if seen[current] {
 			return
 		}
+		if resolved, err := c.Lookup(current); err == nil {
+			current = resolved
+		}
+		if seen[current] {
+			return
+		}
 		seen[current] = true
 		node := c.Nodes[current]
 		if node == nil {

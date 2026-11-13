@@ -119,18 +119,25 @@ defaults are the project directory name for `-name`, its Go module path for
 `-workload-uri`, and `dev` for `-workload-version`.
 
 The Go import path identifies the **binding package**. Current bindings identify
-extensions by their complete definition URI. Profile `extensions` entries use
-that URI directly:
+extensions by their complete definition URI. A profile `extensions` entry is the
+extension id without its trailing `/<version>/runtimeconditions.extension.yaml`,
+followed by `:<version>` (the version comes from the binding model):
 
 ```yaml
 extensions:
-  - https://runtimeconditions.io/extensions/common-integrations/v1alpha1/runtimeconditions.extension.yaml
-  - https://runtimeconditions.io/extensions/env-configuration/v1alpha1/runtimeconditions.extension.yaml
+  - https://runtimeconditions.io/extensions/rc/common-integrations:v1alpha1
+  - https://runtimeconditions.io/extensions/rc/env-configuration:v1alpha1
 ```
 
-`metadata.id` is required and `metadata.version` is an optional annotation.
-Legacy binding manifests that explicitly identify an extension by both ID and
-version remain supported and produce `id:version` profile entries. The profiler
+An id that is not an https URL ending that way is written whole, and an extension
+with no version is written as its bare id. When it validates a profile, the profiler
+expands a short entry back to the definition's full id and version. A dependency, or
+a profile entry, that names an extension by its id alone resolves to the one definition
+with that id, whatever `metadata.version` it carries. An id shared by several versions
+is ambiguous and is rejected until a version is given, and an explicit version must
+match exactly.
+
+`metadata.id` is required and `metadata.version` is an optional annotation. The profiler
 checks the full dependency closure, including validation-only dependencies,
 using the installed binding resources. Profiles use core schema `0.4.0`.
 The exact approved `0.2.0` core input recorded in the published `v0.1.0`

@@ -3,6 +3,7 @@
 package check
 
 import (
+	"errors"
 	"github.com/runtimeconditions/go-rc-profiler/extensioncheck/internal/catalog"
 	"github.com/runtimeconditions/go-rc-profiler/extensioncheck/internal/diag"
 )
@@ -45,6 +46,12 @@ func New(cat *catalog.Catalog, opts Options, collector *diag.Collector) *Checker
 // Dependencies are validated first, so that a definition is only checked against
 // vocabulary that has itself been checked.
 func (c *Checker) ValidateNode(id catalog.ExtensionReference) {
+	if resolved, err := c.catalog.Lookup(id); err == nil {
+		id = resolved
+	} else if errors.Is(err, catalog.ErrAmbiguous) {
+		c.collector.Addf(id.String(), "%v", err)
+		return
+	}
 	switch c.states[id] {
 	case inProgress:
 		c.collector.Addf(id.String(), "extension dependency cycle includes %s", id)

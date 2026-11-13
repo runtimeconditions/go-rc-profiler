@@ -448,3 +448,126 @@ func writeFiles(t *testing.T, files map[string]string) {
 		}
 	}
 }
+
+func TestValidateProfileYAMLAcceptsAShortExtensionReference(t *testing.T) {
+	root := t.TempDir()
+	writeFiles(t, map[string]string{
+		filepath.Join(root, "jobs.yaml"): `apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+metadata:
+  id: https://example.com/rc/jobs/v1/runtimeconditions.extension.yaml
+  version: v1
+spec:
+  kinds:
+  - name: job
+  interfaceTypes:
+  - name: queue
+    targetKind: job
+`,
+	})
+	profile := func(extension string) []byte {
+		return []byte("apiVersion: runtimeconditions.io/v1alpha1\nkind: RuntimeConditionsProfile\nextensions:\n- " + extension + "\nconditions:\n- kind: job\n  interface:\n    type: queue\n")
+	}
+	options := ProfileOptions{CatalogRoots: []string{root}}
+	for _, extension := range []string{
+		"https://example.com/rc/jobs:v1",
+		"https://example.com/rc/jobs/v1/runtimeconditions.extension.yaml:v1",
+	} {
+		if err := ValidateProfileYAML(profile(extension), options); err != nil {
+			t.Fatalf("%s: %v", extension, err)
+		}
+	}
+	err := ValidateProfileYAML(profile("https://example.com/rc/jobs:v2"), options)
+	if err == nil || !strings.Contains(err.Error(), "missing extension definition") {
+		t.Fatalf("unknown version should be rejected, got %v", err)
+	}
+}
+
+const baseDefinition = `apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+metadata:
+  id: https://example.com/rc/base/v1/runtimeconditions.extension.yaml
+  version: v1
+spec:
+  kinds:
+  - name: job
+  interfaceTypes:
+  - name: queue
+    targetKind: job
+`
+
+const topDefinition = `apiVersion: runtimeconditions.io/v1alpha1
+kind: RuntimeConditionsExtensionDefinition
+metadata:
+  id: https://example.com/rc/top/v1/runtimeconditions.extension.yaml
+  version: v1
+spec:
+  dependencies:
+  - https://example.com/rc/base/v1/runtimeconditions.extension.yaml
+  conditionFields:
+  - name: retries
+    appliesToKinds: [job]
+`
+
+func profileWith(extensions ...string) []byte {
+	text := "apiVersion: runtimeconditions.io/v1alpha1\nkind: RuntimeConditionsProfile\nextensions:\n"
+	for _, extension := range extensions {
+		text += "- " + extension + "\n"
+	}
+	return []byte(text + "conditions:\n- kind: job\n  retries: 3\n  interface:\n    type: queue\n")
+}
+
+func TestIDOnlyDependenciesResolveToTheDefinitionVersion(t *testing.T) {
+	root := t.TempDir()
+	writeFiles(t, map[string]string{
+		filepath.Join(root, "base.yaml"): baseDefinition,
+		filepath.Join(root, "top.yaml"):  topDefinition,
+	})
+	options := ProfileOptions{CatalogRoots: []string{root}}
+	for name, extensions := range map[string][]string{
+		"short references": {"https://example.com/rc/top:v1", "https://example.com/rc/base:v1"},
+		"ids without a version": {
+			"https://example.com/rc/top/v1/runtimeconditions.extension.yaml",
+			"https://example.com/rc/base/v1/runtimeconditions.extension.yaml",
+		},
+		"full ids with a version": {
+			"https://example.com/rc/top/v1/runtimeconditions.extension.yaml:v1",
+			"https://example.com/rc/base/v1/runtimeconditions.extension.yaml:v1",
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			if err := ValidateProfileYAML(profileWith(extensions...), options); err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+	// The closure resolves the same way.
+	closure, err := ResolveExtensionClosure([]ExtensionReference{{ID: "https://example.com/rc/top/v1/runtimeconditions.extension.yaml"}}, options)
+	if err != nil || len(closure) != 2 {
+		t.Fatalf("closure %v, %v", closure, err)
+	}
+	// A profile that leaves out the dependency is still rejected.
+	err = ValidateProfileYAML(profileWith("https://example.com/rc/top:v1"), options)
+	if err == nil || !strings.Contains(err.Error(), "extensions missing dependency") {
+		t.Fatalf("missing dependency should be rejected, got %v", err)
+	}
+}
+
+func TestAnIDWithTwoVersionsIsAmbiguousWithoutAVersion(t *testing.T) {
+	root := t.TempDir()
+	writeFiles(t, map[string]string{
+		filepath.Join(root, "base-v1.yaml"): baseDefinition,
+		filepath.Join(root, "base-v2.yaml"): strings.ReplaceAll(baseDefinition, "version: v1", "version: v2"),
+	})
+	options := ProfileOptions{CatalogRoots: []string{root}}
+	id := "https://example.com/rc/base/v1/runtimeconditions.extension.yaml"
+	err := ValidateProfileYAML(profileWith(id), options)
+	if err == nil || !strings.Contains(err.Error(), "more than one extension definition") {
+		t.Fatalf("an id shared by two versions needs a version, got %v", err)
+	}
+	for _, exact := range []string{id + ":v1", id + ":v2"} {
+		if err := ValidateProfileYAML(profileWith(exact), options); err != nil {
+			t.Fatalf("%s: %v", exact, err)
+		}
+	}
+}
