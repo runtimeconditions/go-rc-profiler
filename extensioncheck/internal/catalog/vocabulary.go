@@ -29,6 +29,12 @@ func (c *Catalog) Resolve(id ExtensionReference) Vocabulary {
 	var nodes []*Node
 	var visit func(ExtensionReference)
 	visit = func(current ExtensionReference) {
+		resolved, err := c.ResolveReference(current)
+		if err != nil {
+			// The checker reports unresolved/ambiguous references.
+			return
+		}
+		current = resolved
 		if seen[current] {
 			return
 		}

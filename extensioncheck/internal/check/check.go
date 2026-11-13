@@ -45,6 +45,12 @@ func New(cat *catalog.Catalog, opts Options, collector *diag.Collector) *Checker
 // Dependencies are validated first, so that a definition is only checked against
 // vocabulary that has itself been checked.
 func (c *Checker) ValidateNode(id catalog.ExtensionReference) {
+	canonical, err := c.catalog.ResolveReference(id)
+	if err != nil {
+		c.collector.Addf(id.String(), "%v", err)
+		return
+	}
+	id = canonical
 	switch c.states[id] {
 	case inProgress:
 		c.collector.Addf(id.String(), "extension dependency cycle includes %s", id)
@@ -53,10 +59,6 @@ func (c *Checker) ValidateNode(id catalog.ExtensionReference) {
 		return
 	}
 	node := c.catalog.Nodes[id]
-	if node == nil {
-		c.collector.Addf(id.String(), "missing extension definition for dependency %s", id)
-		return
-	}
 	c.states[id] = inProgress
 	for _, dependency := range node.Definition.Spec.Dependencies {
 		c.ValidateNode(dependency)

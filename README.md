@@ -130,7 +130,8 @@ extensions:
 
 `metadata.id` is required and `metadata.version` is an optional annotation.
 Legacy binding manifests that explicitly identify an extension by both ID and
-version remain supported and produce `id:version` profile entries. The profiler
+version remain supported and produce `id:version` profile entries.
+The profiler
 checks the full dependency closure, including validation-only dependencies,
 using the installed binding resources. Profiles use core schema `0.4.0`.
 The exact approved `0.2.0` core input recorded in the published `v0.1.0`
@@ -138,6 +139,13 @@ bindings is also supported; output is validated with core `0.4.0`, which accepts
 complete definition URIs. Other core identities or digests must match the
 installed schema. Profile consumers resolve the declared references through
 their configured extension resolver.
+
+The catalog-based `ResolveExtensionClosure` and `ValidateProfileYAML` APIs also
+resolve ID-only references using the catalog definition's optional version
+annotation. An ID must identify exactly one definition; multiple releases with
+the same ID are ambiguous unless an explicit version is supplied. Explicit
+versions require an exact match and never fall back to another release. Resolution
+changes only the internal reference keys, not Profile or definition bytes.
 
 Dependency archive checks accept the publisher's exact ZIP bytes or reproduce
 its deterministic ZIP from Go's downloaded module files before comparing the
