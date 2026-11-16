@@ -1,5 +1,0 @@
-mode: extension
-root: extensions/env
-languages:
-  - go
-requireLanguagePackage: true

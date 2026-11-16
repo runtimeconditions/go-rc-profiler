@@ -45,19 +45,6 @@ func (s *Semantic) absorb(info *types.Info) {
 	}
 }
 
-// StringValue reports the compile-time string an expression resolves to,
-// following named constants across package boundaries.
-func (s *Semantic) StringValue(expr ast.Expr) (string, bool) {
-	if s == nil {
-		return "", false
-	}
-	object, ok := s.ObjectForExpr(expr).(*types.Const)
-	if !ok || object.Val().Kind() != constant.String {
-		return "", false
-	}
-	return constant.StringVal(object.Val()), true
-}
-
 // ConstantValue returns the value determined by Go's type checker. It covers
 // literals, named constants, arithmetic, and constant type conversions without
 // evaluating application code.
@@ -106,34 +93,6 @@ func (s *Semantic) ObjectForExpr(expr ast.Expr) types.Object {
 	default:
 		return nil
 	}
-}
-
-// IsDefinition reports whether an identifier declares a new object rather than
-// referring to an existing one. Reassignment to an existing variable invalidates
-// any value previously tracked for it.
-func (s *Semantic) IsDefinition(ident *ast.Ident) bool {
-	if s == nil {
-		return false
-	}
-	return s.defs[ident] != nil
-}
-
-// ReceiverTypeForSelector reports the package path and type name of the value a
-// method is being called on, which is how a method call is attributed to the
-// module that declares its receiver.
-func (s *Semantic) ReceiverTypeForSelector(selector *ast.SelectorExpr) (string, string, bool) {
-	if s == nil {
-		return "", "", false
-	}
-	if selection := s.selections[selector]; selection != nil {
-		if pkgPath, typeName, ok := NamedTypeIdentity(selection.Recv()); ok {
-			return pkgPath, typeName, true
-		}
-	}
-	if typ, ok := s.TypeOf(selector.X); ok {
-		return NamedTypeIdentity(typ)
-	}
-	return "", "", false
 }
 
 // NamedTypeIdentity reduces a type to the package path and name of the named

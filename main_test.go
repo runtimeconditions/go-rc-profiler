@@ -164,7 +164,3 @@ func requireExitCode(t *testing.T, result profilerResult, want int) {
 		t.Fatalf("expected exit code %d, got %d\nstdout: %s\nstderr: %s", want, result.exitCode, result.stdout, result.stderr)
 	}
 }
-
-func regressionPath(parts ...string) string {
-	return filepath.Join(append([]string{"extractor", "testdata", "regression"}, parts...)...)
-}

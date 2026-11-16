@@ -1,5 +1,0 @@
-mode: extension
-root: extensions/constructor
-languages:
-  - go
-requireLanguagePackage: true

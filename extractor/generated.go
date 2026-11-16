@@ -1,3 +1,11 @@
+// Package extractor generates a Runtime Conditions Profile from Go source.
+//
+// A profile is reconstructed from the generated binding declarations a workload makes, using the
+// Go toolchain's type information, and is verified against the installed bindings before it is
+// returned.
+//
+// Nothing in the target workload is executed. The Go toolchain is used to type-check it, which is
+// what makes a declaration attributable to the package that generates it.
 package extractor
 
 import (
@@ -12,8 +20,7 @@ import (
 )
 
 // GeneratedOptions contains only profile identity supplied by the caller. The
-// generated-binding path has no syntax-only, validation, catalog, or SDK
-// mapping bypasses.
+// generated-binding path has no syntax-only, validation, or catalog bypasses.
 type GeneratedOptions struct {
 	Name            string
 	WorkloadURI     string
