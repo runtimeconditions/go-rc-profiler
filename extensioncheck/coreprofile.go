@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -15,13 +16,28 @@ import (
 // The schema source is never checked into this profiler repository.
 var installedCoreSchemaBase64 string
 
-func loadCoreProfileSchema(packages []*VerifiedGoPackage) (*jsonschema.Schema, error) {
+// ErrNoInstalledCoreSchema is returned by InstalledCoreSchema when the profiler binary was built
+// without embedding the verified core profile schema (such as during a plain go build).
+var ErrNoInstalledCoreSchema = errors.New("installed profiler has no verified core profile schema")
+
+// InstalledCoreSchema returns the verified core profile schema embedded into the profiler
+// binary at build time. Plain go builds leave it unset, returning ErrNoInstalledCoreSchema so
+// callers fail closed.
+func InstalledCoreSchema() ([]byte, error) {
 	if installedCoreSchemaBase64 == "" {
-		return nil, fmt.Errorf("installed profiler has no verified core profile schema")
+		return nil, ErrNoInstalledCoreSchema
 	}
 	data, err := base64.StdEncoding.DecodeString(installedCoreSchemaBase64)
 	if err != nil {
 		return nil, fmt.Errorf("installed core profile schema encoding: %w", err)
+	}
+	return data, nil
+}
+
+func loadCoreProfileSchema(packages []*VerifiedGoPackage) (*jsonschema.Schema, error) {
+	data, err := InstalledCoreSchema()
+	if err != nil {
+		return nil, err
 	}
 	document, err := parseDocument(data)
 	if err != nil {
